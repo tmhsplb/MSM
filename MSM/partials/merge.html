@@ -1,0 +1,98 @@
+﻿ <div>
+    <table style="width:100%;border:solid;">
+        <tr>
+         
+            <td>QB File</td>
+            <td>
+             
+                    <input type="file" ng-model-instant id="QBFileToUpload" onchange="angular.element(this).scope().setFiles(this);" />
+                
+             </td>          
+            <td>
+                <input type="button" value="Upload" ng-click="QBUpload();" />
+            </td>
+         
+        </tr>
+        
+        <tr>
+            <td>
+                Uploaded File
+            </td>
+            <td>{{QBUploadedFile}}</td>
+        </tr>
+
+        <tr>
+            <td>AP File</td>
+            <td>
+                <input type="file" ng-model-instant id="APFileToUpload" onchange="angular.element(this).scope().setFiles(this)" />
+            </td>
+            <td>
+                <input type="button" value="Upload" ng-click="APUpload();" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Uploaded FIle
+            </td>
+            <td>{{APUploadedFile}}</td>
+        </tr>
+
+        <tr>
+            <td>
+                <input type="button" value="Merge" ng-click="Merge" />
+            </td>
+        </tr>
+       
+    </table>
+</div>  
+
+
+<div>
+    <table style="width:100%;border:solid;">
+        <tr>
+
+            <td>QB File</td>
+            <td>
+
+                <input type="file" ng-model-instant id="QBFileToUpload" onchange="angular.element(this).scope().setFiles(this);" />
+
+            </td>
+            <td>
+                <input type="button" value="Upload" ng-click="QBUpload();" />
+            </td>
+
+        </tr>
+
+        <tr>
+            <td>
+                Uploaded File
+            </td>
+            <td>{{QBUploadedFile}}</td>
+        </tr>
+
+        <tr>
+            <td>AP File</td>
+            <td>
+                <input type="file" ng-model-instant id="APFileToUpload" onchange="angular.element(this).scope().setFiles(this)" />
+            </td>
+            <td>
+                <input type="button" value="Upload" ng-click="APUpload();" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                File Upload Status
+            </td>
+            <td>{{APUploadStatus}}</td>
+        </tr>
+
+        <tr>
+            <td>
+                <input type="button" value="Merge" ng-click="Merge" />
+            </td>
+        </tr>
+
+    </table>
+</div>

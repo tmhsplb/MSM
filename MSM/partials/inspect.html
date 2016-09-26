@@ -1,0 +1,25 @@
+﻿<div>
+    <table>
+        <tr>
+            <td>Select file to inspect:</td>
+            <td>&nbsp;&nbsp;</td>
+            <td>
+                <select ng-model="selectedFile" ng-change="changedValue(selectedFile)">
+                    <option ng-repeat="x in uploadedFiles" value="{{x.type}}">{{x.file}}</option>
+                </select>
+            </td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+    </table>
+</div>
+
+    <table style="width:100%;border:solid;">
+        <tr>
+            <td>
+                <div ng-controller="datatableController as myTable">
+                    <table datatable="" dt-options="myTable.dtOptions" dt-columns="myTable.dtColumns" class="row-border hover"></table>
+                </div>
+            </td>
+
+        </tr>
+    </table>
