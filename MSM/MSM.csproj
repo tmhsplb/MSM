@@ -93,7 +93,8 @@
     <Content Include="angularcontrollers\datatableController.js" />
     <Content Include="angularcontrollers\homeController.js" />
     <Content Include="angularcontrollers\inspectController.js" />
-    <Content Include="angularcontrollers\mergecontroller.js" />
+    <Content Include="angularcontrollers\mergeController.js" />
+    <Content Include="angularcontrollers\reviewController.js" />
     <Content Include="angularservices\fileservices.js" />
     <Content Include="angularservices\mergeservices.js" />
     <Content Include="app.js" />
@@ -244,15 +245,17 @@
     <Content Include="Content\DataTables\swf\flashExport.swf" />
     <Content Include="Content\images\msmlogo.png" />
     <Content Include="Content\styles\angular-datatables.css" />
+    <Content Include="Content\styles\datatables.bootstrap.min.css" />
     <Content Include="Content\styles\site.css" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
-    <Content Include="App_Data\data.json" />
     <Content Include="partials\home.html" />
     <Content Include="partials\inspect.html" />
     <Content Include="partials\merge.html" />
     <Content Include="partials\quickbooks.html" />
+    <Content Include="partials\review.html" />
     <Content Include="routes.js" />
+    <Content Include="Scripts\angulardatatables\angular-datatables.bootstrap.min.js" />
     <Content Include="Scripts\angulardatatables\angular-datatables.directive.js" />
     <Content Include="Scripts\angulardatatables\angular-datatables.factory.js" />
     <Content Include="Scripts\angulardatatables\angular-datatables.instances.js" />
@@ -263,6 +266,7 @@
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
+    <Content Include="App_Data\Check Disposition Template.csv" />
     <None Include="Scripts\jquery-1.7.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
@@ -352,6 +356,7 @@
     <Compile Include="Models\EmptyCol.cs" />
     <Compile Include="Models\Check.cs" />
     <Compile Include="Models\DispositionRow.cs" />
+    <Compile Include="Models\MergeStats.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

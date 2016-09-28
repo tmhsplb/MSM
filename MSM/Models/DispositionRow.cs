@@ -21,5 +21,8 @@ namespace MSM.Models
 
         public int MBVDCheckNum { get; set; }
         public string MBVDCheckDisposition { get; set; }
+
+        public int SDCheckNum { get; set; }
+        public string SDCheckDisposition { get; set; }
     }
 }

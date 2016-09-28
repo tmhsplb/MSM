@@ -6,7 +6,7 @@
 // Added to the download solution using code found at Stack Overflow. See link below.
 MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager', 'MergeManager',
         function ($scope, $http, $window, FileManager, MergeManager) {
-            $scope.UploadStatus = "";
+            $scope.mergeStatus = "";
 
             $scope.QBUploadedFile = FileManager.getQBFileName();
             $scope.APUploadedFile = FileManager.getAPFileName();
@@ -167,13 +167,25 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
             }
 
             $scope.Merge = function () {
-                var qbFile = FileManager.getQBFileName();
+                var qbFileName = FileManager.getQBFileName();
                 var qbFileType = FileManager.getQBFileType();
 
-                var apFile = FileManager.getAPFileName();
+                var apFileName = FileManager.getAPFileName();
                 var apFileType = FileManager.getAPFileType();
 
-                MergeManager.merge(qbFile, qbFiletype, apFile, apFileType);
+                if (false && (qbFileName == 'unknown' || apFileName == 'unknown')) {
+                    alert("Please upload both a QB file and a AP file");
+                }
+                else {
+                    $scope.mergeStatus = "Merging...";
+                    MergeManager.merge(qbFileName, qbFileType, apFileName, apFileType).then(function (ms) {
+
+                   // MergeManager.merge("QB", "XLSX", "AR", "XLSX").then(function (ms) {
+                        
+                        $scope.mergeStatus = "Completed merge";
+                        MergeManager.summarize(ms);
+                    });
+                }
             }
         }
 ]);

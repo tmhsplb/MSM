@@ -1,11 +1,11 @@
-﻿MSMApp.controller('datatableController', ['$scope', '$http', '$q', 'FileManager', 'DTOptionsBuilder', 'DTColumnBuilder',
-     function ($scope, $http, $q, FileManager, DTOptionsBuilder, DTColumnBuilder) {
+﻿MSMApp.controller('datatableController', ['$scope', '$http', '$q', 'FileManager', 'MergeManager', 'DTOptionsBuilder', 'DTColumnBuilder',
+     function ($scope, $http, $q, FileManager, MergeManager, DTOptionsBuilder, DTColumnBuilder) {
 
          var vm = this;
-         $scope.pleaseSelect = false;
+         $scope.pleaseAct = false;
+        
 
-
-         if (FileManager.getSelectedFile() == "Quickbooks") {
+         if ($scope.tab == 'inspect' && FileManager.getSelectedFile() == "Quickbooks") {
             // alert("datatableController fname = " + FileManager.getQBFileName() + " ftype = " + FileManager.getQBFileType());
  
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
@@ -24,7 +24,7 @@
                    //  DTColumnBuilder.newColumn('InterviewRecordID').withTitle('Record ID').notVisible()
                  ];
          }
-         else if (FileManager.getSelectedFile() == "Apricot")
+         else if ($scope.tab == 'inspect' && FileManager.getSelectedFile() == "Apricot")
          {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
@@ -46,10 +46,28 @@
                  DTColumnBuilder.newColumn('MBVDCheckDisposition').withTitle('MBVD Check Disposition')
              ];
          }
+         else if ($scope.tab == 'review' && MergeManager.performedMerge() == true)
+         {
+             vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
+                 var defer = $q.defer();
+                 $http.get('http://localhost/msm/api/unmatched', { params: { "recent": true } }).then(function (result) {
+                     defer.resolve(result.data);
+                 });
+                 return defer.promise;
+             }).withPaginationType('full_numbers');
+             vm.dtColumns = [
+                 DTColumnBuilder.newColumn('InterviewRecordID').withTitle('Interview Record ID'),
+                 DTColumnBuilder.newColumn('Date').withTitle('Date'),
+                 DTColumnBuilder.newColumn('Num').withTitle('Check Number'),
+                
+                 DTColumnBuilder.newColumn('Service').withTitle('Service'),
+                 DTColumnBuilder.newColumn('Type').withTitle('Type')
+             ];
+         }
          else
          {
             // alert("Load the empty file to avoid a controller error");
-             $scope.pleaseSelect = true;
+             $scope.pleaseAct = true;
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
                  $http.get('http://localhost/msm/api/emptyfile', { params: { "emptyFile": "Empty", "fileType": "XLSX" } }).then(function (result) {

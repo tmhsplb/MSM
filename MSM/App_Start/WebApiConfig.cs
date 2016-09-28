@@ -40,9 +40,20 @@ namespace MSM
           config.Routes.MapHttpRoute(
              name: "GetEmptyFile",
              routeTemplate: "api/emptyfile",
-                  defaults: new { controller = "FileUploader" }
+             defaults: new { controller = "FileUploader" }
+          );
+
+          config.Routes.MapHttpRoute(
+             name: "Merge",
+             routeTemplate: "api/merge",
+             defaults: new { controller = "Merge" }
+          );
+
+          config.Routes.MapHttpRoute(
+               name: "Unmamtched",
+               routeTemplate: "api/unmatched",
+               defaults: new { controller = "Merge" }
             );
-            
 
             /*
             config.Routes.MapHttpRoute(

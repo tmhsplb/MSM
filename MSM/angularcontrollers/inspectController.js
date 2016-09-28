@@ -1,9 +1,10 @@
 ﻿
  
-MSMApp.controller('inspectController', ['$scope', '$http', '$q', '$route', 'FileManager','DTOptionsBuilder', 'DTColumnBuilder',
-     function ($scope, $http, $q, $route, FileManager, DTOptionsBuilder, DTColumnBuilder) {
+MSMApp.controller('inspectController', ['$scope', '$http', '$q', '$route', 'FileManager',
+     function ($scope, $http, $q, $route, FileManager) {
        
          $scope.menuFiles = FileManager.getMenuFiles();
+         $scope.tab = 'inspect'
         
          $scope.changedValue = function () {
              if ($scope.selectedFile == "Quickbooks") {
