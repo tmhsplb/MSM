@@ -7,18 +7,30 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     };
 
     var uploadedFiles = {};
+    var menuFiles = [];
 
      
-    uploadedFiles.apFile = 'unknown';
-
+    uploadedFiles.apFileName = 'unknown';
     uploadedFiles.qbFileName = 'unknown';
+
+    var addToMenuFiles = function (ftype, fname, extension)
+    {
+        fileName = fname + "." + extension;
+        menuFiles.push({type: ftype, file: fileName});
+    }
 
     var setQBUploadFile = function (fileObj) {
         var fparts = fileObj.name.split(".");
-      //  uploadedFiles.apFileName = 'unknown';
-        uploadedFiles.qbFileName = fparts[0];
-        uploadedFiles.qbFileType = fparts[1];
-      //  alert("setQBUploadFile: uploadedFiles.apFileName = " + uploadedFiles.apFileName);
+        var fname = fparts[0];
+        var ftype = fparts[1];
+        var qbUploaded = uploadedFiles.qbFileName;
+
+        if (qbUploaded == 'unknown' || qbUploaded != fname) {
+            uploadedFiles.qbFileName = fname;
+            uploadedFiles.qbFileType = ftype;
+            addToMenuFiles("Quickbooks", fname, ftype);
+        }
+      
     }
 
     var getQBFileName = function () {
@@ -31,10 +43,15 @@ FileServices.factory('FileManager', ['$http', function ($http) {
 
     var setAPUploadFile = function (fileObj) {
         var fparts = fileObj.name.split(".");
-      //  uploadedFiles.qbFileName = 'unknown';
-        uploadedFiles.apFileName = fparts[0];
-        uploadedFiles.apFileType = fparts[1];
-      //  alert("setAPUploadFile: uploadedFiles.qbFileName = " + uploadedFiles.qbFileName);
+        var fname = fparts[0];
+        var ftype = fparts[1];
+        var apUploaded = uploadedFiles.apFileName;
+
+        if (apUploaded == 'unknown' || apUploaded != fname) {
+            uploadedFiles.apFileName = fname;
+            uploadedFiles.apFileType = ftype;
+            addToMenuFiles("Apricot", fname, ftype);
+        }
     }
 
     var setSelectedFile = function(ftype)
@@ -50,9 +67,10 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         return uploadedFiles.apFileType;
     }
 
-    var getUploadedFiles = function () {
-       // alert("Here!");
-        return [{type: "Quickbooks", file: "QB.XLSX"}, {type: "Apricot", file: "AP.XLSX"}];
+    var getMenuFiles = function () {
+       // alert("menuFiles = " + menuFiles);
+        return menuFiles;
+      //  return [{type: "Quickbooks", file: "QB.XLSX"}, {type: "Apricot", file: "AP.XLSX"}];
     }
 
     var getSelectedFile = function() {
@@ -68,7 +86,7 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         setAPUploadFile: setAPUploadFile,
         getAPFileName: getAPFileName,
         getAPFileType: getAPFileType,
-        getUploadedFiles: getUploadedFiles,
+        getMenuFiles: getMenuFiles,
         setSelectedFile: setSelectedFile,
         getSelectedFile: getSelectedFile
     };

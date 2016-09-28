@@ -2,9 +2,11 @@
      function ($scope, $http, $q, FileManager, DTOptionsBuilder, DTColumnBuilder) {
 
          var vm = this;
+         $scope.pleaseSelect = false;
+
 
          if (FileManager.getSelectedFile() == "Quickbooks") {
-             alert("datatableController fname = " + FileManager.getQBFileName() + " ftype = " + FileManager.getQBFileType());
+            // alert("datatableController fname = " + FileManager.getQBFileName() + " ftype = " + FileManager.getQBFileType());
  
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
@@ -13,7 +15,6 @@
                  });
                  return defer.promise;
              }).withPaginationType('full_numbers');
-               //  alert("After api/qbfile");
                  vm.dtColumns = [
                      DTColumnBuilder.newColumn('Date').withTitle('Date'),
                      DTColumnBuilder.newColumn('Num').withTitle('Check Number'),
@@ -47,8 +48,8 @@
          }
          else
          {
-             alert("Load the empty file to avoid a controller error");
-
+            // alert("Load the empty file to avoid a controller error");
+             $scope.pleaseSelect = true;
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
                  $http.get('http://localhost/msm/api/emptyfile', { params: { "emptyFile": "Empty", "fileType": "XLSX" } }).then(function (result) {
@@ -56,7 +57,6 @@
                  });
                  return defer.promise;
              }).withPaginationType('full_numbers');
-         //    alert("After api/emptyFile");
              vm.dtColumns = [
                  DTColumnBuilder.newColumn('Empty').withTitle('Empty'),
              ];

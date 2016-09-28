@@ -5,7 +5,7 @@
             <td>&nbsp;&nbsp;</td>
             <td>
                 <select ng-model="selectedFile" ng-change="changedValue(selectedFile)">
-                    <option ng-repeat="x in uploadedFiles" value="{{x.type}}">{{x.file}}</option>
+                    <option ng-repeat="x in menuFiles" value="{{x.type}}">{{x.file}}</option>
                 </select>
             </td>
         </tr>
@@ -13,13 +13,20 @@
     </table>
 </div>
 
+  
     <table style="width:100%;border:solid;">
         <tr>
             <td>
                 <div ng-controller="datatableController as myTable">
-                    <table datatable="" dt-options="myTable.dtOptions" dt-columns="myTable.dtColumns" class="row-border hover"></table>
+                    <div ng-show="pleaseSelect">
+                        Please select a file to inspect from the dropdown menu.
+                    </div>
+                    <div ng-hide="pleaseSelect">
+                      <table datatable="" dt-options="myTable.dtOptions" dt-columns="myTable.dtColumns" class="row-border hover"></table>
+                    </div>
                 </div>
             </td>
-
         </tr>
     </table>
+
+

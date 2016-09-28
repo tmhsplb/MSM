@@ -4,8 +4,8 @@
 // Moved downloading to angular service called fileservices. Was not able to move
 // the uploading process to this service.
 // Added to the download solution using code found at Stack Overflow. See link below.
-MSMApp.controller('mergeController', ['$scope', '$rootScope', '$http', '$window', 'FileManager', 'MergeManager',
-        function ($scope, $rootScope, $http, $window, FileManager, MergeManager) {
+MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager', 'MergeManager',
+        function ($scope, $http, $window, FileManager, MergeManager) {
             $scope.UploadStatus = "";
 
             $scope.QBUploadedFile = FileManager.getQBFileName();
@@ -34,6 +34,7 @@ MSMApp.controller('mergeController', ['$scope', '$rootScope', '$http', '$window'
                         console.log($scope.files[0]);
                      //   alert("QB scope.files[0].name = " + $scope.files[0].name);
                         FileManager.setQBUploadFile($scope.files[0]);
+                        $scope.QBUploadedFile = FileManager.getQBFileName();
                     })
                 }
                 else {
@@ -65,6 +66,7 @@ MSMApp.controller('mergeController', ['$scope', '$rootScope', '$http', '$window'
                         $scope.APUploadStatus = "Upload Complete";
                      //   alert("AP scope.files[0].name = " + $scope.files[0].name);
                         FileManager.setAPUploadFile($scope.files[0]);
+                        $scope.APUploadedFile = FileManager.getAPFileName();
                     })
                 }
                 else {
