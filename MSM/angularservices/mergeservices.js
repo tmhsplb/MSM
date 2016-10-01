@@ -6,16 +6,18 @@ MergeServices.factory('MergeManager', ['$http', function ($http) {
     summary.unmatched = 0;
     summary.merge = "unavailable";
 
-    var merge = function (qbFileName, qbFileType, apFileName, apFileType) {
+    var merge = function (vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType) {
         if (debugging == true) {
             return $http.get("http://localhost/msm/api/merge",
                  {
                      params:
                         {
-                            "qbFileName": qbFileName,
-                            "qbFileType": qbFileType,
+                            "vcFileName": vcFileName,
+                            "vcFileType": vcFileType,
                             "apFileName": apFileName,
-                            "apFileType": apFileType
+                            "apFileType": apFileType,
+                            "qbFileName": qbFileName,
+                            "qbFileType": qbFileType
                         }
                  }).then(function (result) {
                      return result.data;

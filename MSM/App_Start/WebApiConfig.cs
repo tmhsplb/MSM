@@ -50,7 +50,7 @@ namespace MSM
           );
 
           config.Routes.MapHttpRoute(
-               name: "Unmamtched",
+               name: "Unmatched",
                routeTemplate: "api/unmatched",
                defaults: new { controller = "Merge" }
             );

@@ -267,6 +267,8 @@
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
     <Content Include="App_Data\Check Disposition Template.csv" />
+    <Content Include="App_Data\QBEmpty.xlsx" />
+    <Content Include="App_Data\VCEmpty.xlsx" />
     <None Include="Scripts\jquery-1.7.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />

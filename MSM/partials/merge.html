@@ -1,23 +1,20 @@
 ﻿ <div>
     <table style="width:100%;">
         <tr>
-            <td>QB File</td>
+            <td>VC File</td>
             <td>
-             
-                    <input type="file" ng-model-instant id="QBFileToUpload" onchange="angular.element(this).scope().setFiles(this);" />
-                
-             </td>          
-            <td>
-                <input type="button" value="Upload" ng-click="QBUpload();" />
+                <input type="file" ng-model-instant id="VCFileToUpload" onchange="angular.element(this).scope().setFiles(this)" />
             </td>
-         
+            <td>
+                <input type="button" value="Upload" ng-click="VCUpload();" />
+            </td>
         </tr>
-        
+
         <tr>
             <td>
                 Uploaded File
             </td>
-            <td>{{QBUploadedFile}}</td>
+            <td>{{VCUploadedFile}}</td>
         </tr>
         <tr><td>&nbsp;</td></tr>
         <tr>
@@ -37,16 +34,41 @@
             <td>{{APUploadedFile}}</td>
         </tr>
         <tr><td>&nbsp;</td></tr>
+        
+        <tr>
+            <td>QB File</td>
+            <td>
+
+                <input type="file" ng-model-instant id="QBFileToUpload" onchange="angular.element(this).scope().setFiles(this);" />
+
+            </td>
+            <td>
+                <input type="button" value="Upload" ng-click="QBUpload();" />
+            </td>
+
+        </tr>
+
+        <tr>
+            <td>
+                Uploaded File
+            </td>
+            <td>{{QBUploadedFile}}</td>
+        </tr>
+
+        <tr><td>&nbsp;</td></tr>
+
         <tr>
             <td>
                 <input type="button" value="Merge" ng-click="Merge()" />
             </td>
         </tr>
+
         <tr>
-            <td>Merge status:</td><td>&nbsp;</td><td>{{mergeStatus}}</td>
+            <td>Merge status:</td>
+            <td>&nbsp;</td>
+            <td>{{mergeStatus}}</td>
         </tr>
-        <tr><td>&nbsp;</td></tr>
-       
+        
     </table>
 </div>  
 

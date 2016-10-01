@@ -10,6 +10,7 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     var menuFiles = [];
 
      
+    uploadedFiles.vcFileName = 'unknown';
     uploadedFiles.apFileName = 'unknown';
     uploadedFiles.qbFileName = 'unknown';
 
@@ -54,6 +55,19 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         }
     }
 
+    var setVCUploadFile = function (fileObj) {
+        var fparts = fileObj.name.split(".");
+        var fname = fparts[0];
+        var ftype = fparts[1];
+        var vcUploaded = uploadedFiles.vcFileName;
+
+        if (vcUploaded == 'unknown' || vcUploaded != fname) {
+            uploadedFiles.vcFileName = fname;
+            uploadedFiles.vcFileType = ftype;
+            addToMenuFiles("Quickbooks", fname, ftype);
+        }
+    }
+
     var setSelectedFile = function(ftype)
     {
         uploadedFiles.selectedFile = ftype;
@@ -62,9 +76,17 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     var getAPFileName = function () {
         return uploadedFiles.apFileName;
     }
-
+   
     var getAPFileType = function () {
         return uploadedFiles.apFileType;
+    }
+
+    var getVCFileName = function () {
+        return uploadedFiles.vcFileName;
+    }
+
+    var getVCFileType = function () {
+        return uploadedFiles.vcFileType;
     }
 
     var getMenuFiles = function () {
@@ -86,6 +108,9 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         setAPUploadFile: setAPUploadFile,
         getAPFileName: getAPFileName,
         getAPFileType: getAPFileType,
+        getVCFileName: getVCFileName,
+        getVCFileType: getVCFileType,
+        setVCUploadFile: setVCUploadFile,
         getMenuFiles: getMenuFiles,
         setSelectedFile: setSelectedFile,
         getSelectedFile: getSelectedFile

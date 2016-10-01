@@ -32,7 +32,7 @@ namespace MSM.Controllers
                 case "V":
                     return "Voided";
                 default:
-                    return "Unknown";
+                    return "Voided";
             }
         }
 
@@ -205,7 +205,7 @@ namespace MSM.Controllers
             {
                 foreach (DispositionRow d in updatedRows)
                 {
-                    string csvRow = string.Format(",{0},{1},{2},{3},{4},{5},{6},{7},{8}",
+                    string csvRow = string.Format(",{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
                         d.RecordID,
                         d.LBVDCheckNum,
                         d.LBVDCheckDisposition,
@@ -223,46 +223,8 @@ namespace MSM.Controllers
             }
         }
 
-
-        [HttpGet]
-        public MergeStats GetMerge(string qbFileName, string qbFileType, string apFileName, string apFileType)
+        private static void ProcessChecks(IEnumerable<Check> checks, IEnumerable<DispositionRow> originalRows, List<DispositionRow> updatedRows)
         {
-            string pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", qbFileName, qbFileType));
-            string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", apFileName, apFileType));
-            string sheetName = "Sheet1";
-            int z;
-
-            var quickbooksFile = new ExcelQueryFactory(pathToQuickbooksFile);
-            var apricotReportFile = new ExcelQueryFactory(pathToApricotReportFile);
-
-            // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
-            quickbooksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
-
-            apricotReportFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
-
-            apricotReportFile.AddMapping("RecordID", "Interview Record ID");
-            apricotReportFile.AddMapping("Date", "OPID Interview Date");
-            apricotReportFile.AddMapping("LBVDCheckNum", "LBVD Check Number");
-            apricotReportFile.AddMapping("LBVDCheckDisposition", "LBVD Check Disposition");
-
-            apricotReportFile.AddMapping("TIDCheckNum", "TID Check Number");
-            apricotReportFile.AddMapping("TIDCheckDisposition", "TID Check Disposition");
-
-            apricotReportFile.AddMapping("TDLCheckNum", "TDL Check Number");
-            apricotReportFile.AddMapping("TDLCheckDisposition", "TDL Check Disposition");
-
-            apricotReportFile.AddMapping("MBVDCheckNum", "MBVD Check Number");
-            apricotReportFile.AddMapping("MBVDCheckDisposition", "MBVD Check Disposition");
-
-            apricotReportFile.AddMapping("SDCheckNum", "SD Check Number");
-            apricotReportFile.AddMapping("SDCheckDisposition", "SD Check Disposition");
-
-            var checks = from c in quickbooksFile.Worksheet<Check>(sheetName) select c;
-            var originalRows = from d in apricotReportFile.Worksheet<DispositionRow>(sheetName) select d;
-
-            matched = new List<int>();
-            List<DispositionRow> updatedRows = new List<DispositionRow>();
-
             foreach (var check in checks)
             {
                 if (check.Num > 0)
@@ -301,6 +263,96 @@ namespace MSM.Controllers
                     }
                 }
             }
+        }
+
+
+        [HttpGet]
+        public MergeStats GetMerge(string vcFileName, string vcFileType, string apFileName, string apFileType, string qbFileName, string qbFileType)
+        {
+            string pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", (vcFileName == "unknown" ? "VCEmpty" : vcFileName), vcFileType));
+            string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", apFileName, apFileType));
+            string pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", (qbFileName == "unknown" ? "QBEmpty" : qbFileName), qbFileType));
+
+            string sheetName = "Sheet1";
+            int z;
+
+            var voidedChecksFile = new ExcelQueryFactory(pathToVoidedChecksFile);
+            var apricotReportFile = new ExcelQueryFactory(pathToApricotReportFile);
+            var quickbooksFile = new ExcelQueryFactory(pathToQuickbooksFile);
+
+
+            // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
+            quickbooksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+            apricotReportFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+            voidedChecksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+
+            apricotReportFile.AddMapping("RecordID", "Interview Record ID");
+            apricotReportFile.AddMapping("Date", "OPID Interview Date");
+            apricotReportFile.AddMapping("LBVDCheckNum", "LBVD Check Number");
+            apricotReportFile.AddMapping("LBVDCheckDisposition", "LBVD Check Disposition");
+
+            apricotReportFile.AddMapping("TIDCheckNum", "TID Check Number");
+            apricotReportFile.AddMapping("TIDCheckDisposition", "TID Check Disposition");
+
+            apricotReportFile.AddMapping("TDLCheckNum", "TDL Check Number");
+            apricotReportFile.AddMapping("TDLCheckDisposition", "TDL Check Disposition");
+
+            apricotReportFile.AddMapping("MBVDCheckNum", "MBVD Check Number");
+            apricotReportFile.AddMapping("MBVDCheckDisposition", "MBVD Check Disposition");
+
+            apricotReportFile.AddMapping("SDCheckNum", "SD Check Number");
+            apricotReportFile.AddMapping("SDCheckDisposition", "SD Check Disposition");
+
+            var checks = from c in quickbooksFile.Worksheet<Check>(sheetName) select c;
+            var originalRows = from d in apricotReportFile.Worksheet<DispositionRow>(sheetName) select d;
+            var voidedChecks = from vc in voidedChecksFile.Worksheet<Check>(sheetName) select vc;
+
+            matched = new List<int>();
+            List<DispositionRow> updatedRows = new List<DispositionRow>();
+
+            ProcessChecks(voidedChecks, originalRows, updatedRows);
+            ProcessChecks(checks, originalRows, updatedRows);
+
+            /*
+            foreach (var check in checks)
+            {
+                if (check.Num > 0)
+                {
+                    DispositionRow d = (from r in updatedRows
+                                        where r.LBVDCheckNum == check.Num
+                                              || r.TIDCheckNum == check.Num
+                                              || r.TDLCheckNum == check.Num
+                                              || r.MBVDCheckNum == check.Num
+                                              || r.SDCheckNum == check.Num
+                                        select r).FirstOrDefault();
+
+                    if (d == null)
+                    {
+                        d = (from r in originalRows
+                             where r.LBVDCheckNum == check.Num
+                                   || r.TIDCheckNum == check.Num
+                                   || r.TDLCheckNum == check.Num
+                                   || r.MBVDCheckNum == check.Num
+                                   || r.SDCheckNum == check.Num
+                             select r).FirstOrDefault();
+
+                        if (d != null)
+                        {
+                            UpdateDisposition(check.Num == d.LBVDCheckNum, check.Num == d.TIDCheckNum, check.Num == d.TDLCheckNum, check.Num == d.MBVDCheckNum, check.Num == d.SDCheckNum, d, check);
+                            updatedRows.Add(d);
+                        }
+                    }
+
+                    else
+                    {
+                        // Found row among already updated rows. There is more than one check
+                        // check number on this row. In other words, the client had more than
+                        // one check written for the visit this row corresponds to.
+                        UpdateDisposition(check.Num == d.LBVDCheckNum, check.Num == d.TIDCheckNum, check.Num == d.TDLCheckNum, check.Num == d.MBVDCheckNum, check.Num == d.SDCheckNum, d, check);
+                    }
+                }
+            }
+            */
 
             PrepareImportFile(updatedRows);
             UpdateUnmatched(originalRows, checks);
