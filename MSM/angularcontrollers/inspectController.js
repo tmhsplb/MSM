@@ -15,6 +15,10 @@ MSMApp.controller('inspectController', ['$scope', '$http', '$q', '$route', 'File
                  FileManager.setSelectedFile("Apricot");
                  $route.reload();
              }
+             else if ($scope.selectedFile == "Voidedchecks") {
+                 FileManager.setSelectedFile("Voidedchecks");
+                 $route.reload();
+             }
              else {
                  alert("FileManager.getQBFileName = " + FileManager.getQBFileName() + " FileManager.getAPFileName() = " + FileManager.getAPFileName());
              }

@@ -104,6 +104,22 @@ namespace MSM.Controllers
             return checks.ToArray();
         }
 
+        [HttpGet]
+        public Check[] GetVoidedchecksFile(string voidedchecksFile, string fileType)
+        {
+            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", voidedchecksFile, fileType));
+            var voidchecksFile = new ExcelQueryFactory(filePath);
+
+            // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
+           voidchecksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+
+            var checks = from c in voidchecksFile.Worksheet<Check>("Sheet1") select c;
+
+            //  Checks = checks.ToList();
+
+            return checks.ToArray();
+        }
+
         
         [HttpGet]
         public DispositionRow[] GetApricotFile(string apricotFile, string fileType)

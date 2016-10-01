@@ -18,11 +18,27 @@
                  vm.dtColumns = [
                      DTColumnBuilder.newColumn('Date').withTitle('Date'),
                      DTColumnBuilder.newColumn('Num').withTitle('Check Number'),
+                     DTColumnBuilder.newColumn('Memo').withTitle('Memo'),
                    //  DTColumnBuilder.newColumn('Service').withTitle('Service').notVisible(),
                      DTColumnBuilder.newColumn('Clr').withTitle('Status'),
                    //  DTColumnBuilder.newColumn('Type').withTitle('Type').notVisible(),
                    //  DTColumnBuilder.newColumn('InterviewRecordID').withTitle('Record ID').notVisible()
                  ];
+         }
+         else if ($scope.tab == 'inspect' && FileManager.getSelectedFile() == "Voidedchecks")
+         {
+             vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
+                 var defer = $q.defer();
+                 $http.get('http://localhost/msm/api/vcfile', { params: { "voidedchecksFile": FileManager.getVCFileName(), "fileType": FileManager.getVCFileType() } }).then(function (result) {
+                     defer.resolve(result.data);
+                 });
+                 return defer.promise;
+             }).withPaginationType('full_numbers');
+             vm.dtColumns = [
+                 DTColumnBuilder.newColumn('Date').withTitle('Date'),
+                 DTColumnBuilder.newColumn('Num').withTitle('Check Number'),
+                 DTColumnBuilder.newColumn('Memo').withTitle('Memo')
+             ];
          }
          else if ($scope.tab == 'inspect' && FileManager.getSelectedFile() == "Apricot")
          {

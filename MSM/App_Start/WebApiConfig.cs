@@ -31,6 +31,12 @@ namespace MSM
                   defaults: new { controller = "FileUploader"}
             );
 
+            config.Routes.MapHttpRoute(
+            name: "GetVCFile",
+            routeTemplate: "api/vcfile",
+                 defaults: new { controller = "FileUploader" }
+           );
+
           config.Routes.MapHttpRoute(
            name: "GetAPFile",
            routeTemplate: "api/apfile",

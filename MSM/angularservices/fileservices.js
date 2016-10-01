@@ -64,7 +64,7 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         if (vcUploaded == 'unknown' || vcUploaded != fname) {
             uploadedFiles.vcFileName = fname;
             uploadedFiles.vcFileType = ftype;
-            addToMenuFiles("Quickbooks", fname, ftype);
+            addToMenuFiles("Voidedchecks", fname, ftype);
         }
     }
 

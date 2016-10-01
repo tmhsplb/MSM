@@ -11,6 +11,8 @@ namespace MSM.Models
 
         public int Num { get; set; }
 
+        public string Memo { get; set; }
+
         public string Service { get; set; }
 
         public string Clr { get; set; }
