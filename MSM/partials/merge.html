@@ -1,9 +1,9 @@
 ﻿ <div>
     <table style="width:100%;">
         <tr>
-            <td>VC File</td>
+            <td>Voided Checks File</td>
             <td>
-                <input type="file" ng-model-instant id="VCFileToUpload" onchange="angular.element(this).scope().setFiles(this)" />
+                <input type="file" ng-model-instant id="VCFileToUpload" onchange="angular.element(this).scope().setFiles('VC', this)" />
             </td>
             <td>
                 <input type="button" value="Upload" ng-click="VCUpload();" />
@@ -18,9 +18,9 @@
         </tr>
         <tr><td>&nbsp;</td></tr>
         <tr>
-            <td>AP File</td>
+            <td>Apricot Report File</td>
             <td>
-                <input type="file" ng-model-instant id="APFileToUpload" onchange="angular.element(this).scope().setFiles(this)" />
+                <input type="file" ng-model-instant id="APFileToUpload" onchange="angular.element(this).scope().setFiles('AP', this)" />
             </td>
             <td>
                 <input type="button" value="Upload" ng-click="APUpload();" />
@@ -36,10 +36,10 @@
         <tr><td>&nbsp;</td></tr>
         
         <tr>
-            <td>QB File</td>
+            <td>Quickbooks File</td>
             <td>
 
-                <input type="file" ng-model-instant id="QBFileToUpload" onchange="angular.element(this).scope().setFiles(this);" />
+                <input type="file" ng-model-instant id="QBFileToUpload" onchange="angular.element(this).scope().setFiles('QB', this);" />
 
             </td>
             <td>
@@ -68,6 +68,16 @@
             <td>&nbsp;</td>
             <td>{{mergeStatus}}</td>
         </tr>
+
+        <tr><td>&nbsp;</td></tr>
+
+        <tr>
+            <td>
+                <input type="button" value="Download importme.csv" ng-click="Download()" />
+            </td>
+        </tr>
+
+        <tr><td>&nbsp;</td></tr>
         
     </table>
 </div>  

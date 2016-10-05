@@ -24,5 +24,6 @@ namespace MSM.Models
 
         public int SDCheckNum { get; set; }
         public string SDCheckDisposition { get; set; }
+
     }
 }

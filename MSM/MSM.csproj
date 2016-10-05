@@ -350,6 +350,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\InspectController.cs" />
     <Compile Include="Controllers\FileUploaderController.cs" />
     <Compile Include="Controllers\MergeController.cs" />
     <Compile Include="Global.asax.cs">

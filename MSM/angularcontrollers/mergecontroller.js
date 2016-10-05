@@ -7,7 +7,7 @@
 MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager', 'MergeManager',
         function ($scope, $http, $window, FileManager, MergeManager) {
             $scope.mergeStatus = "";
-
+            $scope.files = [];
             $scope.VCUploadedFile = FileManager.getVCFileName();
             $scope.APUploadedFile = FileManager.getAPFileName();
             $scope.QBUploadedFile = FileManager.getQBFileName();
@@ -15,14 +15,19 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
             $scope.VCUpload = function () {
                 var fd = new FormData()
                 for (var i in $scope.files) {
-                    fd.append("uploadedFile", $scope.files[i])
+                    // i is an array index
+                    if ($scope.files[i].ftype == 'VC' && $scope.files[i].seen == "false") {
+                        //  console.log("Upload a VC file");
+                        fd.append("uploadedFile", $scope.files[i].file);
+                        fd.append("ftype", "VC");
+                       
+                        var xhr = new XMLHttpRequest();
+                        xhr.addEventListener("load", VCUploadComplete, false);
+                        xhr.open("POST", "http://localhost/MSM/api/FileUploader/UploadFile", true);
+                        $scope.progressVisible = true;
+                        xhr.send(fd);
+                    }
                 }
-
-                var xhr = new XMLHttpRequest();
-                xhr.addEventListener("load", VCUploadComplete, false);
-                xhr.open("POST", "http://localhost/MSM/api/FileUploader/UploadFile", true);
-                $scope.progressVisible = true;
-                xhr.send(fd);
             }
 
             function VCUploadComplete(evt) {
@@ -33,8 +38,28 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
                     $scope.$apply(function (scpe) {
                         $scope.VCUploadStatus = "Upload Complete";
                         //   alert("AP scope.files[0].name = " + $scope.files[0].name);
-                        FileManager.setVCUploadFile($scope.files[0]);
-                        $scope.VCUploadedFile = FileManager.getVCFileName();
+                        for (var i in $scope.files) {
+                            var jsonObj = $scope.files[i];
+                            if (jsonObj.ftype == 'VC' & jsonObj.seen == "false") {
+                                FileManager.getValidFile('VC', jsonObj.file).then(function (v) {
+                                    jsonObj.seen = "true";
+                                    $scope.VCUploadedFile = jsonObj.file.name;  
+                                    
+                                    // Don't know why have to set variable valid, but does not work otherwise.
+                                    var valid = (v === "true" ? true : false);
+
+                                    if (!valid)
+                                    {
+                                        $scope.VCUploadedFile = "Bad format. " + jsonObj.file.name + " does not look like a Voided Checks file.";
+                                        FileManager.setVCFileName($scope.VCUploadedFile);
+                                    }
+                                    else
+                                    {
+                                        FileManager.setVCUploadFile(jsonObj.file);
+                                    }
+                                })
+                            }
+                        }
                     })
                 }
                 else {
@@ -47,14 +72,18 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
             $scope.QBUpload = function () {
                 var fd = new FormData()
                 for (var i in $scope.files) {
-                    fd.append("uploadedFile", $scope.files[i])
-                }
+                    // i is an array index
+                    if ($scope.files[i].ftype == 'QB') {
+                        fd.append("uploadedFile", $scope.files[i].file);
+                        fd.append("ftype", "QB");
 
-                var xhr = new XMLHttpRequest();
-                xhr.addEventListener("load", QBUploadComplete, false);
-                xhr.open("POST", "http://localhost/MSM/api/FileUploader/UploadFile", true);
-                $scope.progressVisible = true;
-                xhr.send(fd);
+                        var xhr = new XMLHttpRequest();
+                        xhr.addEventListener("load", QBUploadComplete, false);
+                        xhr.open("POST", "http://localhost/MSM/api/FileUploader/UploadFile", true);
+                        $scope.progressVisible = true;
+                        xhr.send(fd);
+                    }
+                }
             }
 
             function QBUploadComplete(evt) {
@@ -64,10 +93,26 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
 
                     $scope.$apply(function (scpe) {
                         $scope.QBUploadStatus = "Upload Complete";
-                        console.log($scope.files[0]);
-                     //   alert("QB scope.files[0].name = " + $scope.files[0].name);
-                        FileManager.setQBUploadFile($scope.files[0]);
-                        $scope.QBUploadedFile = FileManager.getQBFileName();
+                        for (var i in $scope.files) {
+                            var jsonObj = $scope.files[i];
+                            if (jsonObj.ftype == 'QB' & jsonObj.seen == "false") {
+                                FileManager.getValidFile('QB', jsonObj.file).then(function (v) {
+                                    jsonObj.seen = "true";
+                                    $scope.QBUploadedFile = jsonObj.file.name;
+
+                                    // Don't know why have to set variable valid, but does not work otherwise.
+                                    var valid = (v === "true" ? true : false);
+
+                                    if (!valid) {
+                                        $scope.QBUploadedFile = "Bad format. " + jsonObj.file.name + " does not look like a Quickbooks file.";
+                                        FileManager.setQBFileName($scope.QBUploadedFile);
+                                    }
+                                    else {
+                                        FileManager.setQBUploadFile(jsonObj.file);
+                                    }
+                                })
+                            }
+                        }
                     })
                 }
                 else {
@@ -80,16 +125,22 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
             $scope.APUpload = function () {
                 var fd = new FormData()
                 for (var i in $scope.files) {
-                    fd.append("uploadedFile", $scope.files[i])
+                    // i as an arry index
+                    if ($scope.files[i].ftype == 'AP')
+                    {
+                        fd.append("uploadedFile", $scope.files[i].file);
+                        fd.append("ftype", "AP");
+                
+                        var xhr = new XMLHttpRequest();
+                        xhr.addEventListener("load", APUploadComplete, false);
+                        xhr.open("POST", "http://localhost/MSM/api/FileUploader/UploadFile", true);
+                        $scope.progressVisible = true;
+                        xhr.send(fd);
+                    }
                 }
-
-                var xhr = new XMLHttpRequest();
-                xhr.addEventListener("load", APUploadComplete, false);
-                xhr.open("POST", "http://localhost/MSM/api/FileUploader/UploadFile", true);
-                $scope.progressVisible = true;
-                xhr.send(fd);
             }
 
+           
             function APUploadComplete(evt) {
                 $scope.progressVisible = false;
                 if (evt.target.status == 201) {
@@ -97,9 +148,26 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
 
                     $scope.$apply(function (scpe) {
                         $scope.APUploadStatus = "Upload Complete";
-                     //   alert("AP scope.files[0].name = " + $scope.files[0].name);
-                        FileManager.setAPUploadFile($scope.files[0]);
-                        $scope.APUploadedFile = FileManager.getAPFileName();
+                        for (var i in $scope.files) {
+                            var jsonObj = $scope.files[i];
+                            if (jsonObj.ftype == 'AP' & jsonObj.seen == "false") {
+                                FileManager.getValidFile('AP', jsonObj.file).then(function (v) {
+                                    jsonObj.seen = "true";
+                                    $scope.APUploadedFile = jsonObj.file.name;
+
+                                    // Don't know why have to set variable valid, but does not work otherwise.
+                                    var valid = (v === "true" ? true : false);
+
+                                    if (!valid) {
+                                        $scope.APUploadedFile = "Bad format. " + jsonObj.file.name + " does not look like an Apricot Report file.";
+                                        FileManager.setAPFileName($scope.APUploadedFile);
+                                    }
+                                    else {
+                                        FileManager.setAPUploadFile(jsonObj.file);
+                                    }
+                                })
+                            }
+                        }
                     })
                 }
                 else {
@@ -109,7 +177,8 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
                 }
             }
 
-            $scope.fnDownLoad = function () {
+            $scope.Download = function () {
+                console.log("Donwload");
                 var filePromise = FileManager.getDownloadFile("ImportMe", "csv");
 
                 filePromise.then(function (result) {
@@ -124,9 +193,9 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
                     downloadLink.download = "importme.csv";
                     downloadLink.innerHtml = "Download IMPORTME File";
 
-                    if ($window.webkitURL != null) {
-                        // alert("Chrome!");
-                        downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+                    if ($window.URL != null) {
+                      //  console.log("Download using Chrome");
+                        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
                     }
                     else {
                         // alert("Firefox!");
@@ -188,12 +257,10 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
                 }
             }
 
-            $scope.setFiles = function (element) {
+            $scope.setFiles = function (type, element) {
                 $scope.$apply(function (scpe) {
-                    $scope.files = [];
                     for (var i = 0; i < element.files.length; i++) {
-                        // alert("files = " + element.files[i]);
-                        $scope.files.push(element.files[i]);
+                        $scope.files.push({ ftype: type, file: element.files[i], seen: "false" });
                     };
                     $scope.progressVisible = false
                 });

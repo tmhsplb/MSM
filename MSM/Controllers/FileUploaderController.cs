@@ -15,10 +15,7 @@ namespace MSM.Controllers
 {
     public class FileUploaderController : ApiController
     {
-        public static List<Check> Checks;
-
-        public static List<DispositionRow> OriginalRows;
-
+    
         [HttpPost]
         public HttpResponseMessage UploadFile()
         {
@@ -30,13 +27,15 @@ namespace MSM.Controllers
                 foreach (string file in httpRequest.Files)
                 {
                     var postedFile = httpRequest.Files[file];
+                    var ftype = httpRequest.Form["ftype"];
                    
                     string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}", postedFile.FileName));
                     postedFile.SaveAs(filePath);
-
+                    
                     docfiles.Add(filePath);
                 }
-                result = Request.CreateResponse(HttpStatusCode.Created, docfiles);
+              
+                result = Request.CreateResponse(HttpStatusCode.Created, docfiles);  
             }
             else
             {
@@ -45,9 +44,7 @@ namespace MSM.Controllers
             return result;
         }
 
-        /*
         [HttpGet]
-        [ActionName("DownloadFile")]
         public HttpResponseMessage DownloadFile(string fileName, string fileType)
         {
             Byte[] bytes = null;
@@ -75,7 +72,120 @@ namespace MSM.Controllers
             };
             return (result);
         }
-  */
+
+        [HttpGet]
+        public bool GetCheckvalidity(string ftype, string fname, string fext)
+        {
+            string fpath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", fname, fext));
+           
+            switch(ftype)
+            {
+                case "VC":
+                    return ValidateVCFile(fpath);
+                case "AP":
+                    return ValidateAPFile(fpath);
+                case "QB":
+                    return ValidateQBFile(fpath);
+                default:
+                    return false;
+            }
+        }
+
+        private bool ValidateVCFile(string fpath)
+        {
+           bool valid = true;
+
+           var voidedChecksFile = new ExcelQueryFactory(fpath);
+
+            // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
+            voidedChecksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+
+            try
+            {
+                var checks = from vc in voidedChecksFile.Worksheet<Check>("Sheet1") select vc;
+
+                var clr = (from c in checks
+                           where (c.Clr != null && c.Clr != "*")
+                           select c).FirstOrDefault();
+
+                if (clr != null)
+                {
+                    valid = false;
+                }
+            }
+            catch (Exception e)
+            {
+                valid = false;
+            }
+
+            return valid;
+        }
+
+        private bool ValidateAPFile(string fpath)
+        {
+            bool valid = true;
+
+            var apricotReportFile = new ExcelQueryFactory(fpath);
+
+            // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
+            apricotReportFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+            try
+            {
+                apricotReportFile.AddMapping("RecordID", "Interview Record ID");
+                apricotReportFile.AddMapping("Date", "OPID Interview Date");
+                apricotReportFile.AddMapping("LBVDCheckNum", "LBVD Check Number");
+                apricotReportFile.AddMapping("LBVDCheckDisposition", "LBVD Check Disposition");
+
+                apricotReportFile.AddMapping("TIDCheckNum", "TID Check Number");
+                apricotReportFile.AddMapping("TIDCheckDisposition", "TID Check Disposition");
+
+                apricotReportFile.AddMapping("TDLCheckNum", "TDL Check Number");
+                apricotReportFile.AddMapping("TDLCheckDisposition", "TDL Check Disposition");
+
+                apricotReportFile.AddMapping("MBVDCheckNum", "MBVD Check Number");
+                apricotReportFile.AddMapping("MBVDCheckDisposition", "MBVD Check Disposition");
+
+                apricotReportFile.AddMapping("SDCheckNum", "SD Check Number");
+                apricotReportFile.AddMapping("SDCheckDisposition", "SD Check Disposition");
+
+                var records = from d in apricotReportFile.Worksheet<DispositionRow>("Sheet1") select d;  
+
+                int zeroRecords = records.Count(r => r.RecordID == 0);
+
+                valid = (zeroRecords == 0);
+
+            } catch (Exception e)
+            {
+                valid = false;
+            }
+
+            return valid;
+        }
+
+        private bool ValidateQBFile(string fpath)
+        {
+            bool valid = true;
+
+            var quickbooksFile = new ExcelQueryFactory(fpath);
+
+            // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
+            quickbooksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+
+            try
+            {
+                var checks = from check in quickbooksFile.Worksheet<Check>("Sheet1") select check;
+
+                int starredRecords = checks.Count(c => c.Clr == "*");
+
+                valid = starredRecords == 0;
+            }
+            catch (Exception e)
+            {
+                valid = false;
+            }
+
+            return valid;
+        }
 
         [HttpGet]
         // The parameter names matter here because if the first parameter of this method is called fileName
@@ -87,6 +197,7 @@ namespace MSM.Controllers
         //    routeTemplate: "api/apfile
         // on WebAPIConfig.cs. The routing system is very hard to work with!
         // Use Postman when debugging routing.
+        // This method is used to return the Quickbooks file for inspection on the Inspect tab.
         public Check[] GetQuickbooksFile(string quickbooksFile, string fileType)
         {
             
@@ -99,12 +210,11 @@ namespace MSM.Controllers
 
             var checks = from c in qwickbooksFile.Worksheet<Check>("Sheet1") select c;
 
-          //  Checks = checks.ToList();
-
             return checks.ToArray();
         }
 
         [HttpGet]
+        // This method is used to return the Voided Checks file for inspection on the Inspect tab.
         public Check[] GetVoidedchecksFile(string voidedchecksFile, string fileType)
         {
             string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", voidedchecksFile, fileType));
@@ -122,9 +232,9 @@ namespace MSM.Controllers
 
         
         [HttpGet]
+        // This method is used to return the Apricot Report File for inspection on the Inspect tab.
         public DispositionRow[] GetApricotFile(string apricotFile, string fileType)
         {
-
             string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", apricotFile, fileType));
 
             var aprikotFile = new ExcelQueryFactory(filePath);
@@ -143,16 +253,20 @@ namespace MSM.Controllers
             aprikotFile.AddMapping("MBVDCheckNum", "MBVD Check Number");
             aprikotFile.AddMapping("MBVDCheckDisposition", "MBVD Check Disposition");
 
+            aprikotFile.AddMapping("SDCheckNum", "SD Check Number");
+            aprikotFile.AddMapping("SDCheckDisposition", "SD Check Disposition");
+
             // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
             aprikotFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
 
             var rows = from c in aprikotFile.Worksheet<DispositionRow>("Sheet1") select c;
 
-          //  OriginalRows = rows.ToList();
-
             return rows.ToArray();
         }
 
+        [HttpGet]
+        // This method is used to make sure that angular datatables don't crash if no file is supplied:
+        // at least supply an empty file!
         public EmptyCol[] GetEmptyFile(string emptyFile, string fileType)
         {
 

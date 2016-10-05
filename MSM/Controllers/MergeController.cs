@@ -76,6 +76,7 @@ namespace MSM.Controllers
 
         private static bool IsRecorded(int checkNum)
         {
+            /*
             foreach (int cnum in recorded)
             {
                 if (checkNum == cnum)
@@ -85,10 +86,15 @@ namespace MSM.Controllers
             }
 
             return false;
+            */
+
+            bool has = recorded.Any(cnum => cnum == checkNum);
+            return has;
         }
 
         private static bool IsMatched(int checkNum)
         {
+            /*
             foreach (int cnum in matched)
             {
                 if (checkNum == cnum)
@@ -98,6 +104,10 @@ namespace MSM.Controllers
             }
 
             return false;
+            */
+
+            bool has = matched.Any(cnum => cnum == checkNum);
+            return has;
         }
 
         private static void UpdateUnmatched(IQueryable<DispositionRow> originalRows, IQueryable<Check> checks)
@@ -312,47 +322,6 @@ namespace MSM.Controllers
 
             ProcessChecks(voidedChecks, originalRows, updatedRows);
             ProcessChecks(checks, originalRows, updatedRows);
-
-            /*
-            foreach (var check in checks)
-            {
-                if (check.Num > 0)
-                {
-                    DispositionRow d = (from r in updatedRows
-                                        where r.LBVDCheckNum == check.Num
-                                              || r.TIDCheckNum == check.Num
-                                              || r.TDLCheckNum == check.Num
-                                              || r.MBVDCheckNum == check.Num
-                                              || r.SDCheckNum == check.Num
-                                        select r).FirstOrDefault();
-
-                    if (d == null)
-                    {
-                        d = (from r in originalRows
-                             where r.LBVDCheckNum == check.Num
-                                   || r.TIDCheckNum == check.Num
-                                   || r.TDLCheckNum == check.Num
-                                   || r.MBVDCheckNum == check.Num
-                                   || r.SDCheckNum == check.Num
-                             select r).FirstOrDefault();
-
-                        if (d != null)
-                        {
-                            UpdateDisposition(check.Num == d.LBVDCheckNum, check.Num == d.TIDCheckNum, check.Num == d.TDLCheckNum, check.Num == d.MBVDCheckNum, check.Num == d.SDCheckNum, d, check);
-                            updatedRows.Add(d);
-                        }
-                    }
-
-                    else
-                    {
-                        // Found row among already updated rows. There is more than one check
-                        // check number on this row. In other words, the client had more than
-                        // one check written for the visit this row corresponds to.
-                        UpdateDisposition(check.Num == d.LBVDCheckNum, check.Num == d.TIDCheckNum, check.Num == d.TDLCheckNum, check.Num == d.MBVDCheckNum, check.Num == d.SDCheckNum, d, check);
-                    }
-                }
-            }
-            */
 
             PrepareImportFile(updatedRows);
             UpdateUnmatched(originalRows, checks);

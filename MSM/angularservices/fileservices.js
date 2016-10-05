@@ -9,7 +9,6 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     var uploadedFiles = {};
     var menuFiles = [];
 
-     
     uploadedFiles.vcFileName = 'unknown';
     uploadedFiles.apFileName = 'unknown';
     uploadedFiles.qbFileName = 'unknown';
@@ -36,6 +35,10 @@ FileServices.factory('FileManager', ['$http', function ($http) {
 
     var getQBFileName = function () {
         return uploadedFiles.qbFileName;
+    }
+
+    var setQBFileName = function (name) {
+        uploadedFiles.qbFileName = name;
     }
 
     var getQBFileType = function () {
@@ -76,6 +79,10 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     var getAPFileName = function () {
         return uploadedFiles.apFileName;
     }
+
+    var setAPFileName = function (name) {
+        uploadedFiles.apFileName = name;
+    }
    
     var getAPFileType = function () {
         return uploadedFiles.apFileType;
@@ -85,35 +92,56 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         return uploadedFiles.vcFileName;
     }
 
+    var setVCFileName = function(name) {
+        uploadedFiles.vcFileName = name;
+    }
+
     var getVCFileType = function () {
         return uploadedFiles.vcFileType;
     }
 
     var getMenuFiles = function () {
-       // alert("menuFiles = " + menuFiles);
         return menuFiles;
-      //  return [{type: "Quickbooks", file: "QB.XLSX"}, {type: "Apricot", file: "AP.XLSX"}];
     }
 
     var getSelectedFile = function() {
         return uploadedFiles.selectedFile;
     }
 
+    var getValidFile = function(ftype, fileObj)
+    {
+        var fparts = fileObj.name.split(".");
+        var fname = fparts[0];
+        var fext = fparts[1];
+        return $http.get("http://localhost/MSM/api/checkvalidity", { params: { "ftype": ftype, "fname": fname, "fext": fext } }).then(function (result) {
+            return result.data;
+        })
+    }
 
     return {
         getDownloadFile: getDownloadFile,
-        setQBUploadFile: setQBUploadFile,
+
+       
         getQBFileName: getQBFileName,
+        setQBFileName: setQBFileName,
         getQBFileType: getQBFileType,
-        setAPUploadFile: setAPUploadFile,
+        setQBUploadFile: setQBUploadFile,
+
+       
         getAPFileName: getAPFileName,
+        setAPFileName: setAPFileName,
         getAPFileType: getAPFileType,
+        setAPUploadFile: setAPUploadFile,
+
         getVCFileName: getVCFileName,
+        setVCFileName : setVCFileName,
         getVCFileType: getVCFileType,
         setVCUploadFile: setVCUploadFile,
+
         getMenuFiles: getMenuFiles,
         setSelectedFile: setSelectedFile,
-        getSelectedFile: getSelectedFile
+        getSelectedFile: getSelectedFile,
+        getValidFile: getValidFile
     };
 }]);
 
