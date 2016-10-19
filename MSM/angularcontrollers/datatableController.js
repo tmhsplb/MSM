@@ -60,8 +60,8 @@
                  DTColumnBuilder.newColumn('TDLCheckDisposition').withTitle('TDL Check Disposition'),
                  DTColumnBuilder.newColumn('MBVDCheckNum').withTitle('MBVD Check Number'),
                  DTColumnBuilder.newColumn('MBVDCheckDisposition').withTitle('MBVD Check Disposition'),
+                 DTColumnBuilder.newColumn('SDCheckNum').withTitle('SD Check Number'),
                  DTColumnBuilder.newColumn('SDCheckDisposition').withTitle('SD Check Disposition')
-             ];
              ];
          }
          else if ($scope.tab == 'review' && MergeManager.performedMerge() == true)

@@ -1,5 +1,6 @@
 ﻿using LinqToExcel;
 using MSM.Models;
+using MSM.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -95,10 +96,12 @@ namespace MSM.Controllers
         {
            bool valid = true;
 
-           var voidedChecksFile = new ExcelQueryFactory(fpath);
+         //  var voidedChecksFile = new ExcelQueryFactory(fpath);
 
             // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
-            voidedChecksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+           // voidedChecksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+
+            var voidedChecksFile = Linq2Excel.GetFactory(fpath);
 
             try
             {
@@ -125,12 +128,16 @@ namespace MSM.Controllers
         {
             bool valid = true;
 
-            var apricotReportFile = new ExcelQueryFactory(fpath);
+          //  var apricotReportFile = Linq2Excel.GetFactory(fpath);
+          //  Linq2Excel.PrepareApricotMapping(apricotReportFile);
 
-            // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
-            apricotReportFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+          //  var apricotReportFile = new ExcelQueryFactory(fpath);
+
+           
+          //  apricotReportFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
             try
             {
+                /*
                 apricotReportFile.AddMapping("RecordID", "Interview Record ID");
                 apricotReportFile.AddMapping("Date", "OPID Interview Date");
                 apricotReportFile.AddMapping("LBVDCheckNum", "LBVD Check Number");
@@ -147,10 +154,14 @@ namespace MSM.Controllers
 
                 apricotReportFile.AddMapping("SDCheckNum", "SD Check Number");
                 apricotReportFile.AddMapping("SDCheckDisposition", "SD Check Disposition");
+                */
 
-                var records = from d in apricotReportFile.Worksheet<DispositionRow>("Sheet1") select d;  
+                DispositionRow[] rows = Linq2Excel.GetDispositionRows(fpath);
+                int zeroRecords = rows.Count(r => r.RecordID == 0);
 
-                int zeroRecords = records.Count(r => r.RecordID == 0);
+              //  var records = from d in apricotReportFile.Worksheet<DispositionRow>("Sheet1") select d;  
+
+              //  int zeroRecords = records.Count(r => r.RecordID == 0);
 
                 valid = (zeroRecords == 0);
 
@@ -166,10 +177,12 @@ namespace MSM.Controllers
         {
             bool valid = true;
 
-            var quickbooksFile = new ExcelQueryFactory(fpath);
+          //  var quickbooksFile = new ExcelQueryFactory(fpath);
 
             // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
-            quickbooksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+          //  quickbooksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+
+            var quickbooksFile = Linq2Excel.GetFactory(fpath);
 
             try
             {
@@ -187,6 +200,7 @@ namespace MSM.Controllers
             return valid;
         }
 
+        /*
         [HttpGet]
         // The parameter names matter here because if the first parameter of this method is called fileName
         // and the first parameter of GetApricotFile is also called fileName, then the routing system will
@@ -263,7 +277,7 @@ namespace MSM.Controllers
 
             return rows.ToArray();
         }
-
+         
         [HttpGet]
         // This method is used to make sure that angular datatables don't crash if no file is supplied:
         // at least supply an empty file!
@@ -281,6 +295,7 @@ namespace MSM.Controllers
 
             return rows.ToArray();
         }
+         */
     }
         
 }

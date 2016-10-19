@@ -31,11 +31,11 @@ MergeServices.factory('MergeManager', ['$http', function ($http) {
         summary.merge = "available";
     }
 
-    var getMatched = function() {
+    var getMatchedChecks = function() {
         return summary.matched;
     }
 
-    var getUnmatched = function () {
+    var getUnmatchedChecks = function () {
         return summary.unmatched.length;
     }
 
@@ -47,8 +47,8 @@ MergeServices.factory('MergeManager', ['$http', function ($http) {
     return {
         merge: merge,
         summarize: summarize,
-        getMatched: getMatched,
-        getUnmatched: getUnmatched,
+        getMatchedChecks: getMatchedChecks,
+        getUnmatchedChecks: getUnmatchedChecks,
         performedMerge: performedMerge
 
     };

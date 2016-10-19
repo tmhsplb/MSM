@@ -1,5 +1,6 @@
 ﻿using LinqToExcel;
 using MSM.Models;
+using MSM.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,10 +16,11 @@ namespace MSM.Controllers
    
     public class MergeController : ApiController
     {
-        private static List<int> recorded = new List<int>();
-        private static List<int> matched = new List<int>();
+        private static List<int> usedChecks = new List<int>();
+        private static List<int> matchedChecks = new List<int>();
+        private static List<int> knownDisposition = new List<int>();
 
-        private static List<Check> unmatched;
+        private static List<Check> unmatchedChecks = new List<Check>();
 
         private static string QB = "QB";
         private static string AP = "AP";
@@ -32,6 +34,11 @@ namespace MSM.Controllers
                 case "V":
                     return "Voided";
                 default:
+                    if (check.Clr != null && check.Clr[0] == 0xD6)
+                    {
+                        // Check mark in Quickbooks is character 0xD6
+                        return "Cleared";
+                    }
                     return "Voided";
             }
         }
@@ -41,84 +48,84 @@ namespace MSM.Controllers
             if (lbvd)
             {
                 d.LBVDCheckDisposition = GetDispositionFromCheck(check);
-                matched.Add(d.LBVDCheckNum);
+                matchedChecks.Add(d.LBVDCheckNum);
             }
 
             if (tid)
             {
                 d.TIDCheckDisposition = GetDispositionFromCheck(check);
-                matched.Add(d.TIDCheckNum);
+                matchedChecks.Add(d.TIDCheckNum);
             }
 
             if (tdl)
             {
                 d.TDLCheckDisposition = GetDispositionFromCheck(check);
-                matched.Add(d.TDLCheckNum);
+                matchedChecks.Add(d.TDLCheckNum);
             }
 
             if (mbvd)
             {
                 d.MBVDCheckDisposition = GetDispositionFromCheck(check);
-                matched.Add(d.MBVDCheckNum);
+                matchedChecks.Add(d.MBVDCheckNum);
             }
 
             if (sd)
             {
                 d.SDCheckDisposition = GetDispositionFromCheck(check);
-                matched.Add(d.SDCheckNum);
+                matchedChecks.Add(d.SDCheckNum);
             }
 
             if (lbvd || tid || tdl || mbvd || sd)
             {
-                recorded.Add(check.Num);
+                // Parameter check belongs to the set of used checks if it
+                // provided the disposition for some check along the DispositionRow 
+                // in parameter d. After all checks have been processed, those whose
+                // check number is not among the set of used checks will be
+                // added to the set of unmatched checks. See the end of method
+                // UpdateUnmatched.
+                if (check.Num == 70510)
+                {
+                    int z;
+                    z = 2;
+                }
+                usedChecks.Add(check.Num);
             }
         }
 
-        private static bool IsRecorded(int checkNum)
+        private static bool IsUsed(int checkNum)
         {
-            /*
-            foreach (int cnum in recorded)
-            {
-                if (checkNum == cnum)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-            */
-
-            bool has = recorded.Any(cnum => cnum == checkNum);
+            bool has = usedChecks.Any(cnum => cnum == checkNum);
             return has;
         }
 
         private static bool IsMatched(int checkNum)
         {
-            /*
-            foreach (int cnum in matched)
-            {
-                if (checkNum == cnum)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-            */
-
-            bool has = matched.Any(cnum => cnum == checkNum);
+            bool has = matchedChecks.Any(cnum => cnum == checkNum);
             return has;
         }
 
-        private static void UpdateUnmatched(IQueryable<DispositionRow> originalRows, IQueryable<Check> checks)
+        private static bool IsUnmatched(int checkNum)
         {
-            unmatched = new List<Check>();
+            bool has = unmatchedChecks.Any(c => c.Num == checkNum);
+            return has;
+        }
+        private static bool IsKnownDisposition(int checkNum)
+        {
+            bool has = knownDisposition.Any(cnum => cnum == checkNum);
+            return has;
+        }
 
-            foreach (DispositionRow row in originalRows)
+        private static void UpdateLBVD(DispositionRow row)
+        {
+            if (row.LBVDCheckNum != 0 && !IsMatched(row.LBVDCheckNum) && !IsUnmatched(row.LBVDCheckNum))
             {
-                if (row.LBVDCheckNum != 0 && !IsMatched(row.LBVDCheckNum))
+                if (row.LBVDCheckDisposition != null)
                 {
-                    unmatched.Add(new Check
+                    knownDisposition.Add(row.LBVDCheckNum);
+                }
+                else
+                {
+                    unmatchedChecks.Add(new Check
                     {
                         InterviewRecordID = row.RecordID,
                         Num = row.LBVDCheckNum,
@@ -127,10 +134,20 @@ namespace MSM.Controllers
                         Service = "LBVD"
                     });
                 }
+            }
+        }
 
-                if (row.TIDCheckNum != 0 && !IsMatched(row.TIDCheckNum))
+        private static void UpdateTID(DispositionRow row)
+        {
+            if (row.TIDCheckNum != 0 && !IsMatched(row.TIDCheckNum) && !IsUnmatched(row.TIDCheckNum))
+            {
+                if (row.TIDCheckDisposition != null)
                 {
-                    unmatched.Add(new Check
+                    knownDisposition.Add(row.TIDCheckNum);
+                }
+                else
+                {
+                    unmatchedChecks.Add(new Check
                     {
                         InterviewRecordID = row.RecordID,
                         Num = row.TIDCheckNum,
@@ -139,22 +156,42 @@ namespace MSM.Controllers
                         Service = "TID"
                     });
                 }
+            }
+        }
 
-                if (row.TDLCheckNum != 0 && !IsMatched(row.TDLCheckNum))
+        private static void UpdateTDL(DispositionRow row)
+        {
+            if (row.TDLCheckNum != 0 && !IsMatched(row.TDLCheckNum) && !IsUnmatched(row.TDLCheckNum))
                 {
-                    unmatched.Add(new Check
+                    if (row.TDLCheckDisposition != null)
                     {
-                        InterviewRecordID = row.RecordID,
-                        Num = row.TDLCheckNum,
-                        Date = row.Date,
-                        Type = AP,
-                        Service = "TDL"
-                    });
+                        knownDisposition.Add(row.TDLCheckNum);
+                    }
+                    else
+                    {
+                        unmatchedChecks.Add(new Check
+                        {
+                            InterviewRecordID = row.RecordID,
+                            Num = row.TDLCheckNum,
+                            Date = row.Date,
+                            Type = AP,
+                            Service = "TDL"
+                        });
+                    }
                 }
+        }
 
-                if (row.MBVDCheckNum != 0 && !IsMatched(row.MBVDCheckNum))
+        private static void UpdateMBVD(DispositionRow row)
+        {
+            if (row.MBVDCheckNum != 0 && !IsMatched(row.MBVDCheckNum) && !IsUnmatched(row.MBVDCheckNum))
+            {
+                if (row.MBVDCheckDisposition != null)
                 {
-                    unmatched.Add(new Check
+                    knownDisposition.Add(row.MBVDCheckNum);
+                }
+                else
+                {
+                    unmatchedChecks.Add(new Check
                     {
                         InterviewRecordID = row.RecordID,
                         Num = row.MBVDCheckNum,
@@ -163,10 +200,20 @@ namespace MSM.Controllers
                         Service = "MBVD"
                     });
                 }
+            }
+        }
 
-                if (row.SDCheckNum != 0 && !IsMatched(row.SDCheckNum))
+        private static void UpdateSD(DispositionRow row)
+        {
+            if (row.SDCheckNum != 0 && !IsMatched(row.SDCheckNum) && !IsUnmatched(row.SDCheckNum))
+            {
+                if (row.SDCheckDisposition != null)
                 {
-                    unmatched.Add(new Check
+                    knownDisposition.Add(row.SDCheckNum);
+                }
+                else
+                {
+                    unmatchedChecks.Add(new Check
                     {
                         InterviewRecordID = row.RecordID,
                         Num = row.SDCheckNum,
@@ -176,28 +223,45 @@ namespace MSM.Controllers
                     });
                 }
             }
+        }
 
+        private static void UpdateUnmatchedChecks(IQueryable<DispositionRow> originalRows, IQueryable<Check> checks)
+        {
+            foreach (DispositionRow row in originalRows)
+            {
+                UpdateLBVD(row);
+                UpdateTID(row);
+                UpdateTDL(row);
+                UpdateMBVD(row);
+                UpdateSD(row);
+            }
+
+            // If a check number is not among the set of used checks or its disposition in not known,
+            // then it is an unmatched check.
             foreach (Check check in checks)
             {
-                if (check.Num > 0 && !IsRecorded(check.Num))
+                if (check.Num > 0 && !(IsUsed(check.Num) || IsKnownDisposition(check.Num)))
                 {
-                    unmatched.Add(new Check
+                    string service = (check.Clr != null ? check.Clr : "V");
+
+                    unmatchedChecks.Add(new Check
                     {
                         Num = check.Num,
                         Date = check.Date,
                         Clr = check.Clr,
-                        Type = QB
+                        Type = QB,
+                        Service = service
                     });
                 }
             }
-        }
+        } 
 
         private static void PrepareImportHeader()
         {
           //  var retainedLines = File.ReadAllLines(@"C:\\Methodist\\OPID\\Linq\\Check Disposition Template.csv");
           //  File.WriteAllLines(@"C:\\Methodist\\OPID\\Linq\\importme.csv", retainedLines);
 
-            string pathToDispositionTemplate = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Check Disposition Template.csv"));
+            string pathToDispositionTemplate = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Check Disposition Header.csv"));
             string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/importme.csv"));
             var retainedLines = File.ReadAllLines(pathToDispositionTemplate);
             File.WriteAllLines(pathToImportMeFile, retainedLines);
@@ -267,11 +331,45 @@ namespace MSM.Controllers
                     else
                     {
                         // Found row among already updated rows. There is more than one check
-                        // check number on this row. In other words, the client had more than
+                        // number on this row. In other words, the client had more than
                         // one check written for the visit this row corresponds to.
                         UpdateDisposition(check.Num == d.LBVDCheckNum, check.Num == d.TIDCheckNum, check.Num == d.TDLCheckNum, check.Num == d.MBVDCheckNum, check.Num == d.SDCheckNum, d, check);
                     }
                 }
+            }
+        }
+
+        private static void ProcessLongUnmatched()
+        {
+            using (var dbCtx = new MSMEntities())
+            {
+                var longUnmatched = dbCtx.Set<LongUnmatched>();
+
+                foreach (Check check in unmatchedChecks)
+                {
+                    LongUnmatched existing = (from c in longUnmatched
+                                              where c.InterviewRecordID == check.InterviewRecordID
+                                              select c).FirstOrDefault();
+
+                    if (existing == null)
+                    {
+                        LongUnmatched unm = new LongUnmatched
+                        {
+                            InterviewRecordID = check.InterviewRecordID,
+                            Num = check.Num,
+                            Date = check.Date,
+                            Type = check.Type,
+                            Service = check.Service,
+                            Matched = false
+                        };
+
+                        longUnmatched.Add(unm);
+                        // dbCtx.SaveChanges();
+
+                    }
+                }
+
+                dbCtx.SaveChanges();
             }
         }
 
@@ -286,16 +384,24 @@ namespace MSM.Controllers
             string sheetName = "Sheet1";
             int z;
 
-            var voidedChecksFile = new ExcelQueryFactory(pathToVoidedChecksFile);
-            var apricotReportFile = new ExcelQueryFactory(pathToApricotReportFile);
-            var quickbooksFile = new ExcelQueryFactory(pathToQuickbooksFile);
+           // var voidedChecksFile = new ExcelQueryFactory(pathToVoidedChecksFile);
+           // var quickbooksFile = new ExcelQueryFactory(pathToQuickbooksFile);
 
 
             // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
-            quickbooksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
-            apricotReportFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
-            voidedChecksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+           // quickbooksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+           // voidedChecksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
 
+            var voidedChecksFile = Linq2Excel.GetFactory(pathToVoidedChecksFile);
+            var quickbooksFile = Linq2Excel.GetFactory(pathToQuickbooksFile);
+
+          //  var apricotReportFile = new ExcelQueryFactory(pathToApricotReportFile);
+
+            var apricotReportFile = Linq2Excel.GetFactory(pathToApricotReportFile);
+            Linq2Excel.PrepareApricotMapping(apricotReportFile);
+
+            /*
+            apricotReportFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
             apricotReportFile.AddMapping("RecordID", "Interview Record ID");
             apricotReportFile.AddMapping("Date", "OPID Interview Date");
             apricotReportFile.AddMapping("LBVDCheckNum", "LBVD Check Number");
@@ -312,24 +418,34 @@ namespace MSM.Controllers
 
             apricotReportFile.AddMapping("SDCheckNum", "SD Check Number");
             apricotReportFile.AddMapping("SDCheckDisposition", "SD Check Disposition");
+            */
 
-            var checks = from c in quickbooksFile.Worksheet<Check>(sheetName) select c;
+            var qbChecks = from c in quickbooksFile.Worksheet<Check>(sheetName) select c;
             var originalRows = from d in apricotReportFile.Worksheet<DispositionRow>(sheetName) select d;
             var voidedChecks = from vc in voidedChecksFile.Worksheet<Check>(sheetName) select vc;
 
-            matched = new List<int>();
+            matchedChecks = new List<int>();  // initialize the gloabal variable matchedChecks
+            usedChecks = new List<int>();
+            knownDisposition = new List<int>();
+            unmatchedChecks = new List<Check>();
             List<DispositionRow> updatedRows = new List<DispositionRow>();
+           
+            
 
             ProcessChecks(voidedChecks, originalRows, updatedRows);
-            ProcessChecks(checks, originalRows, updatedRows);
+            ProcessChecks(qbChecks, originalRows, updatedRows);
 
             PrepareImportFile(updatedRows);
-            UpdateUnmatched(originalRows, checks);
+
+            UpdateUnmatchedChecks(originalRows, voidedChecks);
+            UpdateUnmatchedChecks(originalRows, qbChecks);
+
+            ProcessLongUnmatched();
 
             MergeStats ms = new MergeStats
             {
-                Matched = matched.Count,
-                Unmatched = unmatched
+                Matched = matchedChecks.Count,
+                Unmatched = unmatchedChecks
             };
 
             z = 2;
@@ -338,9 +454,9 @@ namespace MSM.Controllers
         }
 
         [HttpGet]
-        public List<Check> GetUnmatched(string recent)
+        public List<Check> GetUnmatchedChecks(string recent)
         {
-            return unmatched;
+            return unmatchedChecks;
         }
     }
 }

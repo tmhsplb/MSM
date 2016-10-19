@@ -1,5 +1,6 @@
 ﻿using LinqToExcel;
 using MSM.Models;
+using MSM.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -66,31 +67,35 @@ namespace MSM.Controllers
         {
             string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", apricotFile, fileType));
 
-            var aprikotFile = new ExcelQueryFactory(filePath);
+            /*
+            var apricotFile = new ExcelQueryFactory(filePath);
 
-            aprikotFile.AddMapping("RecordID", "Interview Record ID");
-            aprikotFile.AddMapping("Date", "OPID Interview Date");
-            aprikotFile.AddMapping("LBVDCheckNum", "LBVD Check Number");
-            aprikotFile.AddMapping("LBVDCheckDisposition", "LBVD Check Disposition");
+            apricotFile.AddMapping("RecordID", "Interview Record ID");
+            apricotFile.AddMapping("Date", "OPID Interview Date");
+            apricotFile.AddMapping("LBVDCheckNum", "LBVD Check Number");
+            apricotFile.AddMapping("LBVDCheckDisposition", "LBVD Check Disposition");
 
-            aprikotFile.AddMapping("TIDCheckNum", "TID Check Number");
-            aprikotFile.AddMapping("TIDCheckDisposition", "TID Check Disposition");
+            apricotFile.AddMapping("TIDCheckNum", "TID Check Number");
+            apricotFile.AddMapping("TIDCheckDisposition", "TID Check Disposition");
 
-            aprikotFile.AddMapping("TDLCheckNum", "TDL Check Number");
-            aprikotFile.AddMapping("TDLCheckDisposition", "TDL Check Disposition");
+            apricotFile.AddMapping("TDLCheckNum", "TDL Check Number");
+            apricotFile.AddMapping("TDLCheckDisposition", "TDL Check Disposition");
 
-            aprikotFile.AddMapping("MBVDCheckNum", "MBVD Check Number");
-            aprikotFile.AddMapping("MBVDCheckDisposition", "MBVD Check Disposition");
+            apricotFile.AddMapping("MBVDCheckNum", "MBVD Check Number");
+            apricotFile.AddMapping("MBVDCheckDisposition", "MBVD Check Disposition");
 
-            aprikotFile.AddMapping("SDCheckNum", "SD Check Number");
-            aprikotFile.AddMapping("SDCheckDisposition", "SD Check Disposition");
+            apricotFile.AddMapping("SDCheckNum", "SD Check Number");
+            apricotFile.AddMapping("SDCheckDisposition", "SD Check Disposition");
 
             // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
-            aprikotFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+            apricotFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
 
-            var rows = from c in aprikotFile.Worksheet<DispositionRow>("Sheet1") select c;
+            var rows = from c in apricotFile.Worksheet<DispositionRow>("Sheet1") select c;
 
             return rows.ToArray();
+            */
+
+            return Linq2Excel.GetDispositionRows(filePath);
         }
 
         [HttpGet]

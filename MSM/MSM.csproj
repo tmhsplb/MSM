@@ -38,6 +38,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="LinqToExcel">
       <HintPath>..\packages\LinqToExcel_x64.1.10.1\lib\LinqToExcel.dll</HintPath>
     </Reference>
@@ -59,6 +65,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -266,9 +274,26 @@
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
-    <Content Include="App_Data\Check Disposition Template.csv" />
+    <Content Include="App_Data\Check Disposition Header.csv" />
     <Content Include="App_Data\QBEmpty.xlsx" />
     <Content Include="App_Data\VCEmpty.xlsx" />
+    <EntityDeploy Include="MSM.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>MSM.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="MSM.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MSM.edmx</DependentUpon>
+      <LastGenOutput>MSM.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="MSM.edmx.diagram">
+      <DependentUpon>MSM.edmx</DependentUpon>
+    </Content>
+    <Content Include="MSM.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MSM.edmx</DependentUpon>
+      <LastGenOutput>MSM.cs</LastGenOutput>
+    </Content>
     <None Include="Scripts\jquery-1.7.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
@@ -356,11 +381,30 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="LongUnmatched.cs">
+      <DependentUpon>MSM.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\EmptyCol.cs" />
     <Compile Include="Models\Check.cs" />
     <Compile Include="Models\DispositionRow.cs" />
     <Compile Include="Models\MergeStats.cs" />
+    <Compile Include="MSM.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MSM.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSM.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MSM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSM.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MSM.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Linq2Excel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -371,7 +415,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
