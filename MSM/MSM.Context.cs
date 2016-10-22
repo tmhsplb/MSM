@@ -13,10 +13,10 @@ namespace MSM
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MSMEntities : DbContext
+    public partial class MSMEntities1 : DbContext
     {
-        public MSMEntities()
-            : base("name=MSMEntities")
+        public MSMEntities1()
+            : base("name=MSMEntities1")
         {
         }
     
@@ -25,6 +25,6 @@ namespace MSM
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<LongUnmatched> LongUnmatched { get; set; }
+        public virtual DbSet<LongUnmatched> LongUnmatcheds { get; set; }
     }
 }

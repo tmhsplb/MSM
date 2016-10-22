@@ -15,7 +15,9 @@ namespace MSM
     public partial class LongUnmatched
     {
         public int Id { get; set; }
+        public int RecordID { get; set; }
         public int InterviewRecordID { get; set; }
+        public string Name { get; set; }
         public int Num { get; set; }
         public System.DateTime Date { get; set; }
         public string Type { get; set; }

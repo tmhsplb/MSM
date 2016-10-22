@@ -16,7 +16,7 @@ namespace MSM.Controllers
 {
     public class InspectController : ApiController
     {
-    
+
         [HttpGet]
         // The parameter names matter here because if the first parameter of this method is called fileName
         // and the first parameter of GetApricotFile is also called fileName, then the routing system will
@@ -28,73 +28,46 @@ namespace MSM.Controllers
         // on WebAPIConfig.cs. The routing system is very hard to work with!
         // Use Postman when debugging routing.
         // This method is used to return the Quickbooks file for inspection on the Inspect tab.
-        public Check[] GetQuickbooksFile(string quickbooksFile, string fileType)
+        public List<Check> GetQuickbooksFile(string qbFile, string fileType)
         {
-            
-            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", quickbooksFile, fileType));
 
-            var qwickbooksFile = new ExcelQueryFactory(filePath);
+            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", qbFile, fileType));
+
+          //  var quickbooksFile = new ExcelQueryFactory(filePath);
 
             // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
-            qwickbooksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+          //  quickbooksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
 
-            var checks = from c in qwickbooksFile.Worksheet<Check>("Sheet1") select c;
+            var quickbooksFile = Linq2Excel.GetFactory(filePath);
 
-            return checks.ToArray();
+            var checks = from c in quickbooksFile.Worksheet<Check>("Sheet1") select c;
+
+            return checks.ToList();
         }
 
         [HttpGet]
         // This method is used to return the Voided Checks file for inspection on the Inspect tab.
-        public Check[] GetVoidedchecksFile(string voidedchecksFile, string fileType)
+        public List<Check> GetVoidedchecksFile(string vcFile, string fileType)
         {
-            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", voidedchecksFile, fileType));
-            var voidchecksFile = new ExcelQueryFactory(filePath);
+            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", vcFile, fileType));
+          //  var voidedChecksFile = new ExcelQueryFactory(filePath);
 
             // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
-           voidchecksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
+          //  voidedChecksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
 
-            var checks = from c in voidchecksFile.Worksheet<Check>("Sheet1") select c;
+            var voidedChecksFile = Linq2Excel.GetFactory(filePath);
 
-            //  Checks = checks.ToList();
+            var checks = from c in voidedChecksFile.Worksheet<Check>("Sheet1") select c;
 
-            return checks.ToArray();
+            return checks.ToList();
         }
 
         
         [HttpGet]
         // This method is used to return the Apricot Report File for inspection on the Inspect tab.
-        public DispositionRow[] GetApricotFile(string apricotFile, string fileType)
+        public List<DispositionRow> GetApricotFile(string apricotFile, string fileType)
         {
             string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", apricotFile, fileType));
-
-            /*
-            var apricotFile = new ExcelQueryFactory(filePath);
-
-            apricotFile.AddMapping("RecordID", "Interview Record ID");
-            apricotFile.AddMapping("Date", "OPID Interview Date");
-            apricotFile.AddMapping("LBVDCheckNum", "LBVD Check Number");
-            apricotFile.AddMapping("LBVDCheckDisposition", "LBVD Check Disposition");
-
-            apricotFile.AddMapping("TIDCheckNum", "TID Check Number");
-            apricotFile.AddMapping("TIDCheckDisposition", "TID Check Disposition");
-
-            apricotFile.AddMapping("TDLCheckNum", "TDL Check Number");
-            apricotFile.AddMapping("TDLCheckDisposition", "TDL Check Disposition");
-
-            apricotFile.AddMapping("MBVDCheckNum", "MBVD Check Number");
-            apricotFile.AddMapping("MBVDCheckDisposition", "MBVD Check Disposition");
-
-            apricotFile.AddMapping("SDCheckNum", "SD Check Number");
-            apricotFile.AddMapping("SDCheckDisposition", "SD Check Disposition");
-
-            // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
-            apricotFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
-
-            var rows = from c in apricotFile.Worksheet<DispositionRow>("Sheet1") select c;
-
-            return rows.ToArray();
-            */
-
             return Linq2Excel.GetDispositionRows(filePath);
         }
 

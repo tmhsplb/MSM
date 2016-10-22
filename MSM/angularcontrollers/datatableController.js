@@ -1,5 +1,5 @@
-﻿MSMApp.controller('datatableController', ['$scope', '$http', '$q', 'FileManager', 'MergeManager', 'DTOptionsBuilder', 'DTColumnBuilder',
-     function ($scope, $http, $q, FileManager, MergeManager, DTOptionsBuilder, DTColumnBuilder) {
+﻿MSMApp.controller('datatableController', ['$scope', '$http', '$q', '$filter', 'FileManager', 'MergeManager', 'DTOptionsBuilder', 'DTColumnBuilder',
+     function ($scope, $http, $q, $filter, FileManager, MergeManager, DTOptionsBuilder, DTColumnBuilder) {
 
          var vm = this;
          $scope.pleaseAct = false;
@@ -10,32 +10,34 @@
  
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 $http.get('http://localhost/msm/api/qbfile', { params: { "quickbooksFile": FileManager.getQBFileName(), "fileType": FileManager.getQBFileType() } }).then(function (result) {
+                 $http.get('http://localhost/msm/api/qbfile',
+                    { params: { "qbFile": FileManager.getQBFileName(), "fileType": FileManager.getQBFileType() } }).then(function (result) {
                      defer.resolve(result.data);
                  });
                  return defer.promise;
              }).withPaginationType('full_numbers');
-                 vm.dtColumns = [
-                     DTColumnBuilder.newColumn('Date').withTitle('Date'),
+             vm.dtColumns = [
+                     DTColumnBuilder.newColumn('Date').withTitle('Date').renderWith(function (data, type) {
+                         return $filter('date')(data, 'dd/MM/yyyy')
+                     }), 
                      DTColumnBuilder.newColumn('Num').withTitle('Check Number'),
                      DTColumnBuilder.newColumn('Memo').withTitle('Memo'),
-                   //  DTColumnBuilder.newColumn('Service').withTitle('Service').notVisible(),
-                     DTColumnBuilder.newColumn('Clr').withTitle('Status'),
-                   //  DTColumnBuilder.newColumn('Type').withTitle('Type').notVisible(),
-                   //  DTColumnBuilder.newColumn('InterviewRecordID').withTitle('Record ID').notVisible()
+                     DTColumnBuilder.newColumn('Clr').withTitle('Status')
                  ];
          }
          else if ($scope.tab == 'inspect' && FileManager.getSelectedFile() == "Voidedchecks")
          {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 $http.get('http://localhost/msm/api/vcfile', { params: { "voidedchecksFile": FileManager.getVCFileName(), "fileType": FileManager.getVCFileType() } }).then(function (result) {
+                 $http.get('http://localhost/msm/api/vcfile', { params: { "vcFile": FileManager.getVCFileName(), "fileType": FileManager.getVCFileType() } }).then(function (result) {
                      defer.resolve(result.data);
                  });
                  return defer.promise;
              }).withPaginationType('full_numbers');
              vm.dtColumns = [
-                 DTColumnBuilder.newColumn('Date').withTitle('Date'),
+                 DTColumnBuilder.newColumn('Date').withTitle('Date').renderWith(function (data, type) {
+                     return $filter('date')(data, 'dd/MM/yyyy')
+                 }),
                  DTColumnBuilder.newColumn('Num').withTitle('Check Number'),
                  DTColumnBuilder.newColumn('Memo').withTitle('Memo')
              ];
@@ -52,6 +54,9 @@
 
              vm.dtColumns = [
                  DTColumnBuilder.newColumn('RecordID').withTitle('Record ID'),
+                 DTColumnBuilder.newColumn('InterviewRecordID').withTitle('Interview Record ID'),
+                 DTColumnBuilder.newColumn('Lname').withTitle("Last Name"),
+                 DTColumnBuilder.newColumn('Fname').withTitle("First Name"),
                  DTColumnBuilder.newColumn('LBVDCheckNum').withTitle('LBVD Check Number'),
                  DTColumnBuilder.newColumn('LBVDCheckDisposition').withTitle('LBVD Check Disposition'),
                  DTColumnBuilder.newColumn('TIDCheckNum').withTitle('TID Check Number'),
@@ -64,27 +69,29 @@
                  DTColumnBuilder.newColumn('SDCheckDisposition').withTitle('SD Check Disposition')
              ];
          }
-         else if ($scope.tab == 'review' && MergeManager.performedMerge() == true)
+         else if ($scope.tab == 'research')
          {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 $http.get('http://localhost/msm/api/unmatched', { params: { "recent": true } }).then(function (result) {
+                 $http.get('http://localhost/msm/api/longunmatched').then(function (result) {
                      defer.resolve(result.data);
                  });
                  return defer.promise;
              }).withPaginationType('full_numbers');
              vm.dtColumns = [
+                 DTColumnBuilder.newColumn('Date').withTitle('Date').renderWith(function (data, type) {
+                       return $filter('date')(data, 'dd/MM/yyyy')
+                   }),
+                 DTColumnBuilder.newColumn('RecordID').withTitle('Record ID'),
                  DTColumnBuilder.newColumn('InterviewRecordID').withTitle('Interview Record ID'),
-                 DTColumnBuilder.newColumn('Date').withTitle('Date'),
+                 DTColumnBuilder.newColumn('Name').withTitle('Name'),
                  DTColumnBuilder.newColumn('Num').withTitle('Check Number'),
-                
                  DTColumnBuilder.newColumn('Service').withTitle('Service'),
-                 DTColumnBuilder.newColumn('Type').withTitle('Type')
+                 DTColumnBuilder.newColumn('Matched').withTitle('Matched')
              ];
          }
-         else
-         {
-            // alert("Load the empty file to avoid a controller error");
+         else { // If this final "else" clause is removed a controller error will occur. Do not remove!
+             // alert("Load the empty file to avoid a controller error");
              $scope.pleaseAct = true;
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
@@ -97,7 +104,6 @@
                  DTColumnBuilder.newColumn('Empty').withTitle('Empty'),
              ];
          }
-
          FileManager.setSelectedFile("Empty");
      }
 ]);

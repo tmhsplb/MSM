@@ -50,9 +50,15 @@ namespace MSM
 
           config.Routes.MapHttpRoute(
                name: "Unmatched",
-               routeTemplate: "api/unmatched",
+               routeTemplate: "api/longunmatched",
                defaults: new { controller = "Merge" }
             );
+
+          config.Routes.MapHttpRoute(
+                  name: "Upload",
+                  routeTemplate: "api/upload/{action}",
+                  defaults: new { controller = "FileUploader" }
+              );
 
           config.Routes.MapHttpRoute(
                  name: "Download",
@@ -67,12 +73,13 @@ namespace MSM
            );
 
             // Used when uploading a file
+            /*
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-            
+            */
 
             config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(
               config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml"));

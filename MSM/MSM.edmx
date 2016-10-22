@@ -10,7 +10,9 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecordID" Type="int" Nullable="false" />
           <Property Name="InterviewRecordID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Num" Type="int" Nullable="false" />
           <Property Name="Date" Type="smalldatetime" Nullable="false" />
           <Property Name="Type" Type="nvarchar" MaxLength="5" Nullable="false" />
@@ -30,27 +32,31 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RecordID" Type="Int32" Nullable="false" />
           <Property Name="InterviewRecordID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Num" Type="Int32" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Type" Type="String" MaxLength="5" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Service" Type="String" MaxLength="5" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Matched" Type="Boolean" Nullable="false" />
         </EntityType>
-        <EntityContainer Name="MSMEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="LongUnmatched" EntityType="Self.LongUnmatched" />
+        <EntityContainer Name="MSMEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="LongUnmatcheds" EntityType="Self.LongUnmatched" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="MSMModelStoreContainer" CdmEntityContainer="MSMEntities">
-          <EntitySetMapping Name="LongUnmatched">
+        <EntityContainerMapping StorageEntityContainer="MSMModelStoreContainer" CdmEntityContainer="MSMEntities1">
+          <EntitySetMapping Name="LongUnmatcheds">
             <EntityTypeMapping TypeName="MSMModel.LongUnmatched">
               <MappingFragment StoreEntitySet="LongUnmatched">
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RecordID" ColumnName="RecordID" />
                 <ScalarProperty Name="InterviewRecordID" ColumnName="InterviewRecordID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Num" ColumnName="Num" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
@@ -73,7 +79,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

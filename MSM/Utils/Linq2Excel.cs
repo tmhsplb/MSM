@@ -21,7 +21,10 @@ namespace MSM.Utils
 
         public static void PrepareApricotMapping(ExcelQueryFactory eqf)
         {
-            eqf.AddMapping("RecordID", "Interview Record ID");
+            eqf.AddMapping("RecordID", "Record ID");
+            eqf.AddMapping("Lname", "Last Name");
+            eqf.AddMapping("Fname", "First Name");
+            eqf.AddMapping("InterviewRecordID", "Interview Record ID");
             eqf.AddMapping("Date", "OPID Interview Date");
             eqf.AddMapping("LBVDCheckNum", "LBVD Check Number");
             eqf.AddMapping("LBVDCheckDisposition", "LBVD Check Disposition");
@@ -39,14 +42,14 @@ namespace MSM.Utils
             eqf.AddMapping("SDCheckDisposition", "SD Check Disposition");
         }
 
-        public static DispositionRow[] GetDispositionRows(string filePath)
+        public static List<DispositionRow> GetDispositionRows(string filePath)
         {
             ExcelQueryFactory eqf = GetFactory(filePath);
             PrepareApricotMapping(eqf);
 
             var rows = from c in eqf.Worksheet<DispositionRow>("Sheet1") select c;
 
-            return rows.ToArray();
+            return rows.ToList();
         }
     }
 }

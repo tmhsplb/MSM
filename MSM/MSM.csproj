@@ -102,7 +102,7 @@
     <Content Include="angularcontrollers\homeController.js" />
     <Content Include="angularcontrollers\inspectController.js" />
     <Content Include="angularcontrollers\mergeController.js" />
-    <Content Include="angularcontrollers\reviewController.js" />
+    <Content Include="angularcontrollers\researchController.js" />
     <Content Include="angularservices\fileservices.js" />
     <Content Include="angularservices\mergeservices.js" />
     <Content Include="app.js" />
@@ -261,7 +261,7 @@
     <Content Include="partials\inspect.html" />
     <Content Include="partials\merge.html" />
     <Content Include="partials\quickbooks.html" />
-    <Content Include="partials\review.html" />
+    <Content Include="partials\research.html" />
     <Content Include="routes.js" />
     <Content Include="Scripts\angulardatatables\angular-datatables.bootstrap.min.js" />
     <Content Include="Scripts\angulardatatables\angular-datatables.directive.js" />

@@ -8,6 +8,13 @@ namespace MSM.Models
     public class DispositionRow
     {
         public int RecordID { get; set; }
+
+        public string Lname { get; set; }
+        public string Fname { get; set; }
+        public string Name { get; set; }
+
+        public int InterviewRecordID { get; set; }
+
         public DateTime Date { get; set; }
 
         public int LBVDCheckNum { get; set; }

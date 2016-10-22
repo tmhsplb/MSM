@@ -23,7 +23,7 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
                        
                         var xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", VCUploadComplete, false);
-                        xhr.open("POST", "http://localhost/MSM/api/FileUploader/UploadFile", true);
+                        xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
                         $scope.progressVisible = true;
                         xhr.send(fd);
                     }
@@ -79,7 +79,7 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
 
                         var xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", QBUploadComplete, false);
-                        xhr.open("POST", "http://localhost/MSM/api/FileUploader/UploadFile", true);
+                        xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
                         $scope.progressVisible = true;
                         xhr.send(fd);
                     }
@@ -133,7 +133,7 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
                 
                         var xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", APUploadComplete, false);
-                        xhr.open("POST", "http://localhost/MSM/api/FileUploader/UploadFile", true);
+                        xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
                         $scope.progressVisible = true;
                         xhr.send(fd);
                     }
@@ -266,7 +266,7 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
                 });
             }
 
-            $scope.Merge = function () {
+            $scope.Merge = function () { // called when the Merge button is clicked on file merge.html
                
                 var vcFileName = FileManager.getVCFileName();
                 var vcFileType;
@@ -282,8 +282,15 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
                 
 
                 var apFileName = FileManager.getAPFileName();
-                var apFileType = FileManager.getAPFileType();
+                var apFileType;
 
+                if (apFileName == 'unknown') {
+                    apFileType = "xslx";
+                }
+                else {
+                    apFileType = FileManager.getAPFileType();
+                }
+                 
                 var qbFileName = FileManager.getQBFileName();
                 var qbFileType;
 
@@ -295,20 +302,17 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
                 }
 
 
-                if (false && (qbFileName == 'unknown' || apFileName == 'unknown')) {
-                    alert("Please upload both a QB file and a AP file");
-                }
-                else {
+                
                     $scope.mergeStatus = "Merging...";
 
                     console.log("vcFileName.vcFileType = " + vcFileName + "." + vcFileType);
                     console.log("apFileName.apFileType = " + apFileName + "." + apFileType);
                     console.log("qbFileName.qbFileType = " + qbFileName + "." + qbFileType);
                     MergeManager.merge(vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType).then(function (ms) {
-                        $scope.mergeStatus = "Completed merge";
-                        MergeManager.summarize(ms);
+                        $scope.mergeStatus = "Merge completed";
+                       // MergeManager.summarize(ms);
                     });
-                }
+                  
             }
         }
 ]);
