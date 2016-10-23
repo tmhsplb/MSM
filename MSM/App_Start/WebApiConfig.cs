@@ -45,13 +45,19 @@ namespace MSM
           config.Routes.MapHttpRoute(
              name: "Merge",
              routeTemplate: "api/merge",
-             defaults: new { controller = "Merge" }
+             defaults: new { controller = "Merge", action="PerformMerge"}
           );
 
           config.Routes.MapHttpRoute(
+                name: "Resolved",
+                routeTemplate: "api/resolved",
+                defaults: new { controller = "Resolved" }
+             );
+
+          config.Routes.MapHttpRoute(
                name: "Unmatched",
-               routeTemplate: "api/longunmatched",
-               defaults: new { controller = "Merge" }
+               routeTemplate: "api/research",
+               defaults: new { controller = "Research" }
             );
 
           config.Routes.MapHttpRoute(

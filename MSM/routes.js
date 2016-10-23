@@ -3,6 +3,7 @@
       .when('/', { controller: 'homeController', templateUrl: 'partials/home.html' })
       .when('/Merge', { controller: 'mergeController', templateUrl: 'partials/merge.html' })
       .when('/Inspect', { controller: 'inspectController', templateUrl: 'partials/inspect.html' })
+      .when('/Resolved', { controller: 'resolvedController', templateUrl: 'partials/resolved.html' })
       .when('/Research', { controller: 'researchController', templateUrl: 'partials/research.html' })
       .otherwise({ redirectTo: '/' });
 
