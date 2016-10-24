@@ -4,8 +4,8 @@
 // Moved downloading to angular service called fileservices. Was not able to move
 // the uploading process to this service.
 // Added to the download solution using code found at Stack Overflow. See link below.
-MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager', 'MergeManager',
-        function ($scope, $http, $window, FileManager, MergeManager) {
+MSMApp.controller('mergeController', ['$scope', '$http', 'FileManager', 'MergeManager',
+        function ($scope, $http, FileManager, MergeManager) {
             $scope.mergeStatus = "";
             $scope.files = [];
             $scope.VCUploadedFile = FileManager.getVCFileName();
@@ -177,41 +177,7 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
                 }
             }
 
-            $scope.Download = function () {
-                console.log("Donwload");
-                var filePromise = FileManager.getDownloadFile("ImportMe", "csv");
-
-                filePromise.then(function (result) {
-                    var textToWrite = result;
-                    // alert("download = " + textToWrite);
-                    // $window.open(textToWrite);
-
-                    // From: http://stackoverflow.com/questions/34870711/download-a-file-at-different-location-using-html5
-                    var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
-
-                    var downloadLink = document.createElement("a");
-                    downloadLink.download = "importme.csv";
-                    downloadLink.innerHtml = "Download IMPORTME File";
-
-                    if ($window.URL != null) {
-                      //  console.log("Download using Chrome");
-                        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-                    }
-                    else {
-                        // alert("Firefox!");
-                        // Firefox requires the link to be added to the DOM
-                        // before it can be clicked.
-                        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-                        downloadLink.onclick = destroyClickeElement;
-                        downloadLink.style.display = "none";
-                        document.body.appendChild(downloadLink);
-                    }
-
-                    downloadLink.click();
-
-                })
-            }
-
+          
             $scope.GetFileType = function (fileExtension) {
                 switch (fileExtension.toLowerCase()) {
                     case "doc":
@@ -310,9 +276,7 @@ MSMApp.controller('mergeController', ['$scope', '$http', '$window', 'FileManager
                     console.log("qbFileName.qbFileType = " + qbFileName + "." + qbFileType);
                     MergeManager.merge(vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType).then(function (ms) {
                         $scope.mergeStatus = "Merge completed";
-                       // MergeManager.summarize(ms);
-                    });
-                  
+                    });   
             }
         }
 ]);

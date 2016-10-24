@@ -51,13 +51,13 @@ namespace MSM
           config.Routes.MapHttpRoute(
                 name: "Resolved",
                 routeTemplate: "api/resolved",
-                defaults: new { controller = "Resolved" }
+                defaults: new { controller = "Resolved", action="GetResolvedChecks" }
              );
 
           config.Routes.MapHttpRoute(
                name: "Unmatched",
                routeTemplate: "api/research",
-               defaults: new { controller = "Research" }
+               defaults: new { controller = "Research", action="GetLongUnmatched" }
             );
 
           config.Routes.MapHttpRoute(
@@ -69,7 +69,7 @@ namespace MSM
           config.Routes.MapHttpRoute(
                  name: "Download",
                  routeTemplate: "api/download",
-                 defaults: new {  controller = "FileUploader"} 
+                 defaults: new {  controller = "FileUploader", action="DownloadFile"} 
              );
 
           config.Routes.MapHttpRoute(
@@ -77,6 +77,12 @@ namespace MSM
                routeTemplate: "api/checkvalidity",
                defaults: new { controller = "FileUploader" }
            );
+
+          config.Routes.MapHttpRoute(
+                name: "HaveResolvedChecks",
+                routeTemplate: "api/haveresolvedchecks",
+                defaults: new { controller = "Resolved", action="HaveResolvedChecks" }
+            );
 
             // Used when uploading a file
             /*

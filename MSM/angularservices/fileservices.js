@@ -1,7 +1,8 @@
 ﻿
 FileServices.factory('FileManager', ['$http', function ($http) {
     var getDownloadFile = function (fileName, fileType) {
-        return $http.get("http://localhost/MSM/api/FileUploader/DownloadFile", { params: { "fileName": fileName, "fileType": fileType } }).then(function (result) {
+       // return $http.get("http://localhost/MSM/api/FileUploader/DownloadFile", { params: { "fileName": fileName, "fileType": fileType } }).then(function (result) {
+        return $http.get("http://localhost/MSM/api/download", { params: { "fileName": fileName, "fileType": fileType } }).then(function (result) {
             return result.data;
         })
     };
@@ -118,16 +119,15 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         })
     }
 
+    
     return {
         getDownloadFile: getDownloadFile,
 
-       
         getQBFileName: getQBFileName,
         setQBFileName: setQBFileName,
         getQBFileType: getQBFileType,
         setQBUploadFile: setQBUploadFile,
 
-       
         getAPFileName: getAPFileName,
         setAPFileName: setAPFileName,
         getAPFileType: getAPFileType,
@@ -141,7 +141,8 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         getMenuFiles: getMenuFiles,
         setSelectedFile: setSelectedFile,
         getSelectedFile: getSelectedFile,
-        getValidFile: getValidFile
+        getValidFile: getValidFile,
+       
     };
 }]);
 

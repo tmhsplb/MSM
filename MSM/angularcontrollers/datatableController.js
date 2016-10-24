@@ -2,9 +2,9 @@
      function ($scope, $http, $q, $filter, FileManager, MergeManager, DTOptionsBuilder, DTColumnBuilder) {
 
          var vm = this;
+         var someResolved  = false;
          $scope.pleaseAct = false;
         
-
          if ($scope.tab == 'inspect' && FileManager.getSelectedFile() == "Quickbooks") {
             // alert("datatableController fname = " + FileManager.getQBFileName() + " ftype = " + FileManager.getQBFileType());
  
@@ -70,9 +70,13 @@
              ];
          }
          else if ($scope.tab == 'resolved') {
+             DisplayResolvedChecks();
+         }
+
+         else if ($scope.tab == 'research') {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 $http.get('http://localhost/msm/api/resolved').then(function (result) {
+                 $http.get('http://localhost/msm/api/research').then(function (result) {
                      defer.resolve(result.data);
                  });
                  return defer.promise;
@@ -86,32 +90,40 @@
                  DTColumnBuilder.newColumn('Name').withTitle('Name'),
                  DTColumnBuilder.newColumn('Num').withTitle('Check Number'),
                  DTColumnBuilder.newColumn('Service').withTitle('Service'),
-                 DTColumnBuilder.newColumn('Clr').withTitle('Status')
-             ];
-         }
-         else if ($scope.tab == 'research')
-         {
-             vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
-                 var defer = $q.defer();
-                 $http.get('http://localhost/msm/api/research').then(function (result) {
-                     defer.resolve(result.data);
-                 });
-                 return defer.promise;
-             }).withPaginationType('full_numbers');
-             vm.dtColumns = [
-                 DTColumnBuilder.newColumn('Date').withTitle('Date').renderWith(function (data, type) {
-                       return $filter('date')(data, 'dd/MM/yyyy')
-                   }),
-                 DTColumnBuilder.newColumn('RecordID').withTitle('Record ID'),
-                 DTColumnBuilder.newColumn('InterviewRecordID').withTitle('Interview Record ID'),
-                 DTColumnBuilder.newColumn('Name').withTitle('Name'),
-                 DTColumnBuilder.newColumn('Num').withTitle('Check Number'),
-                 DTColumnBuilder.newColumn('Service').withTitle('Service'),
                  DTColumnBuilder.newColumn('Matched').withTitle('Matched')
              ];
          }
          else { // If this final "else" clause is removed a controller error will occur. Do not remove!
              // alert("Load the empty file to avoid a controller error");
+             LoadTheEmptyFile();
+         }
+
+         FileManager.setSelectedFile("Empty");
+
+         function DisplayResolvedChecks() {  // There not be any. This is handled by returning an empty list of checks from the API.
+             vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
+                 var defer = $q.defer();
+                 $http.get('http://localhost/msm/api/resolved').then(function (result) {
+                     defer.resolve(result.data);
+                 });
+                 return defer.promise;
+             }).withPaginationType('full_numbers');
+
+             vm.dtColumns = [
+                      DTColumnBuilder.newColumn('Date').withTitle('Date').renderWith(function (data, type) {
+                          return $filter('date')(data, 'dd/MM/yyyy')
+                      }),
+                      DTColumnBuilder.newColumn('RecordID').withTitle('Record ID'),
+                      DTColumnBuilder.newColumn('InterviewRecordID').withTitle('Interview Record ID'),
+                      DTColumnBuilder.newColumn('Name').withTitle('Name'),
+                      DTColumnBuilder.newColumn('Num').withTitle('Check Number'),
+                      DTColumnBuilder.newColumn('Service').withTitle('Service'),
+                      DTColumnBuilder.newColumn('Clr').withTitle('Status')
+             ];
+         }
+
+         function LoadTheEmptyFile()
+         {
              $scope.pleaseAct = true;
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
@@ -124,6 +136,5 @@
                  DTColumnBuilder.newColumn('Empty').withTitle('Empty'),
              ];
          }
-         FileManager.setSelectedFile("Empty");
      }
-]);
+])
