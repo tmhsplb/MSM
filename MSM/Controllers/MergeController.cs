@@ -327,7 +327,6 @@ namespace MSM.Controllers
         }
 
        
-
         private static List<DispositionRow> GetLongUnmatchedDispositionRows()
         {
             List<DispositionRow> longUnmatchedDispositionRows = new List<DispositionRow>();
@@ -414,13 +413,12 @@ namespace MSM.Controllers
 
             AppendToLongUnmatched(unmatchedChecks);
 
-            MarkAsMatched(updatedRows);
+            UpdateResolvedChecks(updatedRows);
+            DeleteMatchedChecks();
 
             ResolvedController.SetResolved(resolvedChecks);
 
             ResolvedController.SetImportRows(updatedRows);
-
-         
         }
 
         private static void DetermineUnmatchedChecks(List<DispositionRow> rows)
@@ -435,7 +433,7 @@ namespace MSM.Controllers
             }
         }
 
-        private static void MarkAsMatched(List<DispositionRow> updatedRows)
+        private static void UpdateResolvedChecks(List<DispositionRow> updatedRows)
         {
             using (var dbCtx = new MSMEntities1())
             {
@@ -449,78 +447,95 @@ namespace MSM.Controllers
 
                     if (d != null)
                     {
-                        bool addCheck = false;
+                        Check existing = (from c in resolvedChecks
+                                          where c.InterviewRecordID == d.InterviewRecordID
+                                          select c).FirstOrDefault();
 
-                        Check resolvedCheck = new Check
+                        if (existing == null)
                         {
-                            RecordID = d.RecordID,
-                            InterviewRecordID = d.InterviewRecordID,
-                            Name = lu.Name, /* string.Format("{0}, {1}", d.Lname, d.Fname), */
-                            Date = d.Date
-                        };
+                            // Prevent addition of duplicates to list of resolvedChecks.
+                            bool addCheck = false;
 
-                        switch (lu.Service)
-                        {
-                            case "LBVD":
-                                if (d.LBVDCheckNum == lu.Num && d.LBVDCheckDisposition != null)
-                                {
-                                    addCheck = true;
-                                    lu.Matched = true;
-                                    resolvedCheck.Num = lu.Num;
-                                    resolvedCheck.Service = "LBVD";
-                                    resolvedCheck.Clr = d.LBVDCheckDisposition;
-                                }
-                                break;
-                            case "TID":
-                                if (d.TIDCheckNum == lu.Num && d.TIDCheckDisposition != null)
-                                {
-                                    addCheck = true;
-                                    lu.Matched = true;
-                                    resolvedCheck.Num = lu.Num;
-                                    resolvedCheck.Service = "TID";
-                                    resolvedCheck.Clr = d.TIDCheckDisposition;
-                                }
-                                break;
-                            case "TDL":
-                                if (d.TDLCheckNum == lu.Num && d.TDLCheckDisposition != null)
-                                {
-                                    addCheck = true;
-                                    lu.Matched = true;
-                                    resolvedCheck.Num = lu.Num;
-                                    resolvedCheck.Service = "TDL";
-                                    resolvedCheck.Clr = d.TDLCheckDisposition;
-                                }
-                                
-                                break;
-                            case "MBVD":
-                                if (d.MBVDCheckNum == lu.Num && d.MBVDCheckDisposition != null)
-                                {
-                                    addCheck = true;
-                                    lu.Matched = true;
-                                    resolvedCheck.Num = lu.Num;
-                                    resolvedCheck.Service = "MBVD";
-                                    resolvedCheck.Clr = d.MBVDCheckDisposition;
-                                }
-                                break;
-                            case "SD":
-                                if (d.SDCheckNum == lu.Num && d.SDCheckDisposition != null)
-                                {
-                                    addCheck = true;
-                                    lu.Matched = true;
-                                    resolvedCheck.Num = lu.Num;
-                                    resolvedCheck.Service = "SD";
-                                    resolvedCheck.Clr = d.SDCheckDisposition;
-                                }
-                                break;
-                        }
+                            Check resolvedCheck = new Check
+                            {
+                                RecordID = d.RecordID,
+                                InterviewRecordID = d.InterviewRecordID,
+                                Name = lu.Name, /* string.Format("{0}, {1}", d.Lname, d.Fname), */
+                                Date = d.Date
+                            };
 
-                        if (addCheck)
-                        {
-                            resolvedChecks.Add(resolvedCheck);
+                            switch (lu.Service)
+                            {
+                                case "LBVD":
+                                    if (d.LBVDCheckNum == lu.Num && d.LBVDCheckDisposition != null)
+                                    {
+                                        addCheck = true;
+                                        lu.Matched = true;
+                                        resolvedCheck.Num = lu.Num;
+                                        resolvedCheck.Service = "LBVD";
+                                        resolvedCheck.Clr = d.LBVDCheckDisposition;
+                                    }
+                                    break;
+                                case "TID":
+                                    if (d.TIDCheckNum == lu.Num && d.TIDCheckDisposition != null)
+                                    {
+                                        addCheck = true;
+                                        lu.Matched = true;
+                                        resolvedCheck.Num = lu.Num;
+                                        resolvedCheck.Service = "TID";
+                                        resolvedCheck.Clr = d.TIDCheckDisposition;
+                                    }
+                                    break;
+                                case "TDL":
+                                    if (d.TDLCheckNum == lu.Num && d.TDLCheckDisposition != null)
+                                    {
+                                        addCheck = true;
+                                        lu.Matched = true;
+                                        resolvedCheck.Num = lu.Num;
+                                        resolvedCheck.Service = "TDL";
+                                        resolvedCheck.Clr = d.TDLCheckDisposition;
+                                    }
+
+                                    break;
+                                case "MBVD":
+                                    if (d.MBVDCheckNum == lu.Num && d.MBVDCheckDisposition != null)
+                                    {
+                                        addCheck = true;
+                                        lu.Matched = true;
+                                        resolvedCheck.Num = lu.Num;
+                                        resolvedCheck.Service = "MBVD";
+                                        resolvedCheck.Clr = d.MBVDCheckDisposition;
+                                    }
+                                    break;
+                                case "SD":
+                                    if (d.SDCheckNum == lu.Num && d.SDCheckDisposition != null)
+                                    {
+                                        addCheck = true;
+                                        lu.Matched = true;
+                                        resolvedCheck.Num = lu.Num;
+                                        resolvedCheck.Service = "SD";
+                                        resolvedCheck.Clr = d.SDCheckDisposition;
+                                    }
+                                    break;
+                            }
+
+                            if (addCheck)
+                            {
+                                resolvedChecks.Add(resolvedCheck);
+                            }
                         }
                     }
                 }
 
+                dbCtx.SaveChanges();
+            }
+        }
+
+        private static void DeleteMatchedChecks()
+        {
+            using (var dbCtx = new MSMEntities1())
+            { 
+                dbCtx.LongUnmatcheds.RemoveRange(dbCtx.LongUnmatcheds.Where(lu => lu.Matched == true));
                 dbCtx.SaveChanges();
             }
         }
@@ -573,6 +588,7 @@ namespace MSM.Controllers
             DetermineUnmatchedChecks(originalRows);
             AppendToLongUnmatched(unmatchedChecks);
             MarkAsMatched(knownDisposition);
+            DeleteMatchedChecks();
         }
 
         private static void ResolveUnmatchedChecks(string vcFileName, string vcFileType, string apFileName, string apFileType, string qbFileName, string qbFileType)
@@ -606,7 +622,8 @@ namespace MSM.Controllers
 
             AppendToLongUnmatched(unmatchedChecks);
 
-            MarkAsMatched(updatedRows);
+            UpdateResolvedChecks(updatedRows);
+            DeleteMatchedChecks();
 
             ResolvedController.SetResolved(resolvedChecks);
 

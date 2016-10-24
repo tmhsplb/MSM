@@ -89,8 +89,7 @@
                  DTColumnBuilder.newColumn('InterviewRecordID').withTitle('Interview Record ID'),
                  DTColumnBuilder.newColumn('Name').withTitle('Name'),
                  DTColumnBuilder.newColumn('Num').withTitle('Check Number'),
-                 DTColumnBuilder.newColumn('Service').withTitle('Service'),
-                 DTColumnBuilder.newColumn('Matched').withTitle('Matched')
+                 DTColumnBuilder.newColumn('Service').withTitle('Service')
              ];
          }
          else { // If this final "else" clause is removed a controller error will occur. Do not remove!
