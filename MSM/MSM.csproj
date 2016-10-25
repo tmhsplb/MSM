@@ -279,9 +279,6 @@
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
-    <Content Include="App_Data\Check Disposition Header.csv" />
-    <Content Include="App_Data\QBEmpty.xlsx" />
-    <Content Include="App_Data\VCEmpty.xlsx" />
     <EntityDeploy Include="MSM.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>MSM.Designer.cs</LastGenOutput>
@@ -299,6 +296,9 @@
       <DependentUpon>MSM.edmx</DependentUpon>
       <LastGenOutput>MSM.cs</LastGenOutput>
     </Content>
+    <Content Include="App_Data\Private\Check Disposition Header.csv" />
+    <Content Include="App_Data\Private\QBEmpty.xlsx" />
+    <Content Include="App_Data\Private\VCEmpty.xlsx" />
     <None Include="Scripts\jquery-1.7.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
@@ -424,6 +424,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\Public\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

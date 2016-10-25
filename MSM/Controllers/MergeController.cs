@@ -326,7 +326,6 @@ namespace MSM.Controllers
             }
         }
 
-       
         private static List<DispositionRow> GetLongUnmatchedDispositionRows()
         {
             List<DispositionRow> longUnmatchedDispositionRows = new List<DispositionRow>();
@@ -391,9 +390,26 @@ namespace MSM.Controllers
         private static void ProcessLongUnmatched(List<DispositionRow> longUnmatchedDispositionRows, string vcFileName, string vcFileType, string qbFileName, string qbFileType)
         {
             string sheetName = "Sheet1";
-            string pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", (vcFileName == "unknown" ? "VCEmpty" : vcFileName), vcFileType));
-            string pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", (qbFileName == "unknown" ? "QBEmpty" : qbFileName), qbFileType));
+            string pathToVoidedChecksFile, pathToQuickbooksFile; 
+           
+            if (vcFileName.Equals("unknown"))
+            {
+                pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Private/{0}.{1}", "VCEmpty", vcFileType));
+            }
+            else
+            {
+                pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", vcFileName, vcFileType));
+            }
 
+            if (qbFileName.Equals("unknown"))
+            {
+                pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Private/{0}.{1}", "VCEmpty", vcFileType));
+            }
+            else
+            {
+                pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", vcFileName, vcFileType));
+            }
+            
             var voidedChecksFile = Linq2Excel.GetFactory(pathToVoidedChecksFile);
             var quickbooksFile = Linq2Excel.GetFactory(pathToQuickbooksFile);
 
@@ -561,7 +577,7 @@ namespace MSM.Controllers
         private static void UpdateLongUnmatched(string apFileName, string apFileType)
         {
             // Deliberately get the file VCEmpty.xlsx.
-            string pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", "VCEmpty", "xlsx"));
+            string pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Private/{0}.{1}", "VCEmpty", "xlsx"));
             string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", apFileName, apFileType));
 
             var voidedChecksFile = Linq2Excel.GetFactory(pathToVoidedChecksFile);
@@ -593,9 +609,27 @@ namespace MSM.Controllers
 
         private static void ResolveUnmatchedChecks(string vcFileName, string vcFileType, string apFileName, string apFileType, string qbFileName, string qbFileType)
         {
-            string pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", (vcFileName == "unknown" ? "VCEmpty" : vcFileName), vcFileType));
+            string pathToVoidedChecksFile; 
             string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", apFileName, apFileType));
-            string pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", (qbFileName == "unknown" ? "QBEmpty" : qbFileName), qbFileType));
+            string pathToQuickbooksFile;
+
+            if (vcFileName.Equals("unknown"))
+            {
+                pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Private/{0}.{1}", "VCEmpty", vcFileType));
+            }
+            else
+            {
+                pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", vcFileName, vcFileType));
+            }
+
+            if (qbFileName.Equals("unknown"))
+            {
+                pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Private/{0}.{1}", "QBEmpty", qbFileType));
+            }
+            else
+            {
+                pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", qbFileName, qbFileType));
+            }
 
             string sheetName = "Sheet1";
             int z;
