@@ -29,7 +29,7 @@ namespace MSM.Controllers
                     var postedFile = httpRequest.Files[file];
                     var ftype = httpRequest.Form["ftype"];
                    
-                    string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}", postedFile.FileName));
+                    string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}", postedFile.FileName));
                     postedFile.SaveAs(filePath);
                     
                     docfiles.Add(filePath);
@@ -50,7 +50,7 @@ namespace MSM.Controllers
             Byte[] bytes = null;
             if (fileName != null)
             {
-                string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", fileName, fileType));
+                string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", fileName, fileType));
                // string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}", fileName));
                 FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
                 BinaryReader br = new BinaryReader(fs);
@@ -75,7 +75,7 @@ namespace MSM.Controllers
         [HttpGet]
         public bool GetCheckvalidity(string ftype, string fname, string fext)
         {
-            string fpath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", fname, fext));
+            string fpath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", fname, fext));
            
             switch(ftype)
             {
