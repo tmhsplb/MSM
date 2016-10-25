@@ -15,7 +15,10 @@
                      defer.resolve(result.data);
                  });
                  return defer.promise;
-             }).withPaginationType('full_numbers');
+             }).withPaginationType('full_numbers')
+               .withDisplayLength(10)
+               .withOption('lengthChange', false);
+
              vm.dtColumns = [
                      DTColumnBuilder.newColumn('Date').withTitle('Date').renderWith(function (data, type) {
                          return $filter('date')(data, 'dd/MM/yyyy')
@@ -33,7 +36,10 @@
                      defer.resolve(result.data);
                  });
                  return defer.promise;
-             }).withPaginationType('full_numbers');
+             }).withPaginationType('full_numbers')
+               .withDisplayLength(10)
+               .withOption('lengthChange', false);
+
              vm.dtColumns = [
                  DTColumnBuilder.newColumn('Date').withTitle('Date').renderWith(function (data, type) {
                      return $filter('date')(data, 'dd/MM/yyyy')
@@ -50,7 +56,9 @@
                      defer.resolve(result.data);
                  });
                  return defer.promise;
-             }).withPaginationType('full_numbers');
+             }).withPaginationType('full_numbers')
+               .withDisplayLength(10)
+               .withOption('lengthChange', false);
 
              vm.dtColumns = [
                  DTColumnBuilder.newColumn('RecordID').withTitle('Record ID'),
@@ -81,7 +89,9 @@
                  });
                  return defer.promise;
              }).withPaginationType('full_numbers')
-             .withButtons(['print']);
+               .withDisplayLength(10)
+               .withOption('lengthChange', false)
+               .withButtons(['print']);
 
              vm.dtColumns = [
                  DTColumnBuilder.newColumn('Date').withTitle('Date').renderWith(function (data, type) {
@@ -109,6 +119,8 @@
                  });
                  return defer.promise;
              }).withPaginationType('full_numbers')
+               .withDisplayLength(10)
+               .withOption('lengthChange', false)
                .withButtons(['print']);
              
 
