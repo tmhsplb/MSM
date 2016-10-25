@@ -255,6 +255,7 @@
     <Content Include="Content\images\msmlogo.png" />
     <Content Include="Content\styles\angular-datatables.css" />
     <Content Include="Content\styles\datatables.bootstrap.min.css" />
+    <Content Include="Content\styles\main.css" />
     <Content Include="Content\styles\site.css" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
@@ -266,6 +267,8 @@
     <Content Include="partials\research.html" />
     <Content Include="routes.js" />
     <Content Include="Scripts\angulardatatables\angular-datatables.bootstrap.min.js" />
+    <Content Include="Scripts\angulardatatables\angular-datatables.buttons.js" />
+    <Content Include="Scripts\angulardatatables\angular-datatables.buttons.min.js" />
     <Content Include="Scripts\angulardatatables\angular-datatables.directive.js" />
     <Content Include="Scripts\angulardatatables\angular-datatables.factory.js" />
     <Content Include="Scripts\angulardatatables\angular-datatables.instances.js" />

@@ -12,5 +12,9 @@ var MergeServices = angular.module('MergeServices', ['ngResource']);
 
 //var MSMApp = angular.module('MSMApp', ['ngRoute', 'FileServices', 'datatables', 'linqtoexcel']);
 
-var MSMApp = angular.module('MSMApp', ['ngRoute', 'FileServices', 'MergeServices', 'datatables', 'datatables.bootstrap']);
+var MSMApp = angular.module('MSMApp', ['ngRoute', 'FileServices', 'MergeServices', 'datatables', 'datatables.bootstrap', 'datatables.buttons']);
+   
+ 
+    
+
 

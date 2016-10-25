@@ -80,7 +80,9 @@
                      defer.resolve(result.data);
                  });
                  return defer.promise;
-             }).withPaginationType('full_numbers');
+             }).withPaginationType('full_numbers')
+             .withButtons(['print']);
+
              vm.dtColumns = [
                  DTColumnBuilder.newColumn('Date').withTitle('Date').renderWith(function (data, type) {
                      return $filter('date')(data, 'dd/MM/yyyy')
@@ -106,7 +108,9 @@
                      defer.resolve(result.data);
                  });
                  return defer.promise;
-             }).withPaginationType('full_numbers');
+             }).withPaginationType('full_numbers')
+               .withButtons(['print']);
+             
 
              vm.dtColumns = [
                       DTColumnBuilder.newColumn('Date').withTitle('Date').renderWith(function (data, type) {
