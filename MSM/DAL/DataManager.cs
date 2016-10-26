@@ -253,11 +253,35 @@ namespace MSM.DAL
 
         public static void NewUnmatchedCheck(DispositionRow row, string service)
         {
+            int checkNum;
+
+            switch (service)
+            {
+                case "LBVD":
+                    checkNum = row.LBVDCheckNum;
+                    break;
+                case "TID":
+                    checkNum = row.TIDCheckNum;
+                    break;
+                case "TDL":
+                    checkNum = row.TDLCheckNum;
+                    break;
+                case "MBVD":
+                    checkNum = row.MBVDCheckNum;
+                    break;
+                case "SD":
+                    checkNum = row.SDCheckNum;
+                    break;
+                default:
+                    checkNum = -1;
+                    break;
+            }
+
              unmatchedChecks.Add(new Check
                     {
                         RecordID = row.RecordID,
                         InterviewRecordID = row.InterviewRecordID,
-                        Num = row.LBVDCheckNum,
+                        Num = checkNum,    
                         Name = string.Format("{0}, {1}", row.Lname, row.Fname),
                         Date = row.Date,
                         Service = service
