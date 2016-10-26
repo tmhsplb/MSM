@@ -16,7 +16,7 @@ namespace MSM.Controllers
         {
             List<Check> longUnmatchedChecks = new List<Check>();
 
-            using (var dbCtx = new MSMEntities1())
+            using (var dbCtx = new MSMEntities())
             {
                 var longUnmatched = dbCtx.Set<LongUnmatched>();
                 

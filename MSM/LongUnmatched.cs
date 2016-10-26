@@ -20,7 +20,6 @@ namespace MSM
         public string Name { get; set; }
         public int Num { get; set; }
         public System.DateTime Date { get; set; }
-        public string Type { get; set; }
         public string Service { get; set; }
         public bool Matched { get; set; }
     }

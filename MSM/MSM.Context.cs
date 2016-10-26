@@ -13,10 +13,10 @@ namespace MSM
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MSMEntities1 : DbContext
+    public partial class MSMEntities : DbContext
     {
-        public MSMEntities1()
-            : base("name=MSMEntities1")
+        public MSMEntities()
+            : base("name=MSMEntities")
         {
         }
     

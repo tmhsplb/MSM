@@ -1,4 +1,5 @@
-﻿using MSM.Models;
+﻿using MSM.DAL;
+using MSM.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,33 +12,18 @@ namespace MSM.Controllers
 {
     public class ResolvedController : ApiController
     {
-        private static List<Check> resolvedChecks = null;
-        private static List<DispositionRow> importRows;
-
-        public static void SetImportRows(List<DispositionRow> updatedRows)
-        {
-            importRows = updatedRows;
-        }
-
-        public static void SetResolved(List<Check> resolved)
-        {
-            resolvedChecks = resolved;
-        }
-
+        
         [HttpGet]
         public List<Check> GetResolvedChecks()
         {
-            if (resolvedChecks == null)
-            {
-                return new List<Check>();
-            }
+            List<DispositionRow> importRows = DataManager.GetUpdatedRows();
 
             if (importRows != null)
             {
                 PrepareImportFile(importRows);
             }
 
-            return resolvedChecks;
+            return DataManager.GetResolvedChecks();
         }
 
         private static void PrepareImportHeader()
