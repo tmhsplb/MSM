@@ -68,8 +68,8 @@ namespace MSM
 
           config.Routes.MapHttpRoute(
                  name: "Download",
-                 routeTemplate: "api/download",
-                 defaults: new {  controller = "FileUploader", action="DownloadFile"} 
+                 routeTemplate: "api/downloadimportme",
+                 defaults: new {  controller = "FileDownloader", action="DownloadImportMe"} 
              );
 
           config.Routes.MapHttpRoute(

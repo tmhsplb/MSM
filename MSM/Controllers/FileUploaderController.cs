@@ -45,34 +45,6 @@ namespace MSM.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage DownloadFile(string fileName, string fileType)
-        {
-            Byte[] bytes = null;
-            if (fileName != null)
-            {
-                string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", fileName, fileType));
-               // string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}", fileName));
-                FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-                BinaryReader br = new BinaryReader(fs);
-                bytes = br.ReadBytes((Int32)fs.Length);
-                br.Close();
-                fs.Close();
-            }
-
-            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-            System.IO.MemoryStream stream = new MemoryStream(bytes);
-            result.Content = new StreamContent(stream);
-           // result.Content.Headers.ContentType = new MediaTypeHeaderValue(fileType);
-          //  result.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
-            result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/force-download");
-            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-            {
-                FileName = fileName
-            };
-            return (result);
-        }
-
-        [HttpGet]
         public bool GetCheckvalidity(string ftype, string fname, string fext)
         {
             string fpath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", fname, fext));
