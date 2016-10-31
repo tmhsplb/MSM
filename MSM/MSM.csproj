@@ -299,6 +299,7 @@
       <DependentUpon>MSM.edmx</DependentUpon>
       <LastGenOutput>MSM.cs</LastGenOutput>
     </Content>
+    <Content Include="App_Data\Private\Empty.xlsx" />
     <None Include="Scripts\jquery-1.7.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />

@@ -269,14 +269,20 @@ MSMApp.controller('mergeController', ['$scope', '$http', 'FileManager', 'MergeMa
 
 
                 
-                    $scope.mergeStatus = "Merging...";
+                $scope.mergeStatus = "Merging...";
 
-                    console.log("vcFileName.vcFileType = " + vcFileName + "." + vcFileType);
-                    console.log("apFileName.apFileType = " + apFileName + "." + apFileType);
-                    console.log("qbFileName.qbFileType = " + qbFileName + "." + qbFileType);
-                    MergeManager.merge(vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType).then(function (ms) {
-                        $scope.mergeStatus = "Merge completed";
-                    });   
+                //console.log("vcFileName.vcFileType = " + vcFileName + "." + vcFileType);
+                //console.log("apFileName.apFileType = " + apFileName + "." + apFileType);
+                //console.log("qbFileName.qbFileType = " + qbFileName + "." + qbFileType);
+                MergeManager.merge(vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType).then(function (ms) {
+                    $scope.VCUploadedFile = "";
+                    $scope.APUploadedFile = "";
+                    $scope.QBUploadedFile = "";
+                    FileManager.setVCFileName("unknown");
+                    FileManager.setAPFileName("unknown");
+                    FileManager.setQBFileName("unknown");
+                    $scope.mergeStatus = "Merge completed";
+                });   
             }
         }
 ]);

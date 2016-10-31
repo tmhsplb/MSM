@@ -9,7 +9,6 @@ namespace MSM.DAL
 {
     public class DataManager
     {
-        private static List<int> matchedChecks;
         private static List<int> knownDisposition;
 
         private static List<Check> unmatchedChecks;
@@ -18,7 +17,6 @@ namespace MSM.DAL
 
         public static void Init()
         {
-            matchedChecks = new List<int>();
             knownDisposition = new List<int>();
             unmatchedChecks = new List<Check>();
             resolvedChecks = new List<Check>();
@@ -117,26 +115,9 @@ namespace MSM.DAL
             knownDisposition.Add(checkNum);
         }
 
-        public static void SetMatchedCheck(int checkNum)
-        {
-            matchedChecks.Add(checkNum);
-        }
-
         private static bool IsKnownDisposition(int checkNum)
         {
             bool has = knownDisposition.Any(cnum => cnum == checkNum);
-            return has;
-        }
-
-        public static bool IsMatched(int checkNum)
-        {
-            bool has = matchedChecks.Any(cnum => cnum == checkNum);
-            return has;
-        }
-
-        public static bool IsUnmatched(int checkNum)
-        {
-            bool has = unmatchedChecks.Any(c => c.Num == checkNum);
             return has;
         }
 
@@ -144,96 +125,17 @@ namespace MSM.DAL
         {
             AppendToLongUnmatched(unmatchedChecks);
         }
-
-        public static void UpdateMatchedChecks()
+    
+        private static bool IsResolved(int checkNum)
         {
-            MarkAsMatched(knownDisposition);
+            var rc = (from c in resolvedChecks
+                      where c.Num == checkNum
+                      select c).FirstOrDefault();
+
+            return rc != null;
         }
 
-        public static void RemoveMatchedChecks()
-        {
-            DeleteMatchedChecks();
-        }
-
-        public static Check GetResolvedCheck(LongUnmatched lu, DispositionRow d)
-        {
-            bool addCheck = false;
-
-            Check resolvedCheck = new Check
-            {
-                RecordID = d.RecordID,
-                InterviewRecordID = d.InterviewRecordID,
-                Name = lu.Name, 
-                Date = d.Date
-            };
-
-            switch (lu.Service)
-            {
-                case "LBVD":
-                    if (d.LBVDCheckNum == lu.Num && d.LBVDCheckDisposition != null)
-                    {
-                        addCheck = true;
-                        lu.Matched = true;
-                        resolvedCheck.Num = lu.Num;
-                        resolvedCheck.Service = "LBVD";
-                        resolvedCheck.Clr = d.LBVDCheckDisposition;
-                    }
-                    break;
-
-                case "TID":
-                    if (d.TIDCheckNum == lu.Num && d.TIDCheckDisposition != null)
-                    {
-                        addCheck = true;
-                        lu.Matched = true;
-                        resolvedCheck.Num = lu.Num;
-                        resolvedCheck.Service = "TID";
-                        resolvedCheck.Clr = d.TIDCheckDisposition;
-                    }
-                    break;
-
-                case "TDL":
-                    if (d.TDLCheckNum == lu.Num && d.TDLCheckDisposition != null)
-                    {
-                        addCheck = true;
-                        lu.Matched = true;
-                        resolvedCheck.Num = lu.Num;
-                        resolvedCheck.Service = "TDL";
-                        resolvedCheck.Clr = d.TDLCheckDisposition;
-                    }
-                    break;
-
-                case "MBVD":
-                    if (d.MBVDCheckNum == lu.Num && d.MBVDCheckDisposition != null)
-                    {
-                        addCheck = true;
-                        lu.Matched = true;
-                        resolvedCheck.Num = lu.Num;
-                        resolvedCheck.Service = "MBVD";
-                        resolvedCheck.Clr = d.MBVDCheckDisposition;
-                    }
-                    break;
-
-                case "SD":
-                    if (d.SDCheckNum == lu.Num && d.SDCheckDisposition != null)
-                    {
-                        addCheck = true;
-                        lu.Matched = true;
-                        resolvedCheck.Num = lu.Num;
-                        resolvedCheck.Service = "SD";
-                        resolvedCheck.Clr = d.SDCheckDisposition;
-                    }
-                    break;
-            }
-
-            if (addCheck)
-            {
-                return resolvedCheck;
-            }
-
-            return null;
-        }
-
-        private static void MarkAsMatched(List<int> knownDisposition)
+        public static void MarkResolvedChecks()
         {
             using (var dbCtx = new MSMEntities())
             {
@@ -241,7 +143,7 @@ namespace MSM.DAL
 
                 foreach (LongUnmatched lu in longUnmatched)
                 {
-                    if (IsKnownDisposition(lu.Num))
+                    if (IsResolved(lu.Num))
                     {
                         lu.Matched = true;
                     }
@@ -249,6 +151,63 @@ namespace MSM.DAL
 
                 dbCtx.SaveChanges();
             }
+        }
+
+        public static void RemoveResolvedChecks()
+        {
+            MarkResolvedChecks();
+            DeleteMatchedChecks();
+        }
+
+        public static void NewResolvedCheck(DispositionRow row, string service)
+        {
+            int checkNum;
+            string status;
+
+            switch (service)
+            {
+                case "LBVD":
+                    checkNum = row.LBVDCheckNum;
+                    status = row.LBVDCheckDisposition;
+                    break;
+                case "TID":
+                    checkNum = row.TIDCheckNum;
+                    status = row.TIDCheckDisposition;
+                    break;
+                case "TDL":
+                    checkNum = row.TDLCheckNum;
+                    status = row.TDLCheckDisposition;
+                    break;
+                case "MBVD":
+                    checkNum = row.MBVDCheckNum;
+                    status = row.MBVDCheckDisposition;
+                    break;
+                case "SD":
+                    checkNum = row.SDCheckNum;
+                    status = row.SDCheckDisposition;
+                    break;
+                default:
+                    checkNum = -1;
+                    status = "unknown";
+                    break;
+            }
+
+            resolvedChecks.Add(new Check
+            {
+                RecordID = row.RecordID,
+                InterviewRecordID = row.InterviewRecordID,
+                Num = checkNum,
+                Name = (row.Name != null ? row.Name : string.Format("{0}, {1}", row.Lname, row.Fname)),
+                Date = row.Date,
+                Clr = status,
+                Service = service
+            });
+        }
+
+        public static void NewResolvedCheck(Check check, string status)
+        {
+            check.Clr = status;
+            resolvedChecks.Add(check);
         }
 
         public static void NewUnmatchedCheck(DispositionRow row, string service)
@@ -277,7 +236,7 @@ namespace MSM.DAL
                     break;
             }
 
-             unmatchedChecks.Add(new Check
+            unmatchedChecks.Add(new Check
                     {
                         RecordID = row.RecordID,
                         InterviewRecordID = row.InterviewRecordID,
@@ -286,18 +245,6 @@ namespace MSM.DAL
                         Date = row.Date,
                         Service = service
                     });
-        }
-
-        public static void NewResolvedCheck(Check check)
-        {
-            resolvedChecks.Add(check);
-        }
-
-        public static Check GetExistingResolvedCheck(int interviewRecordID)
-        {
-            return (from c in resolvedChecks
-                              where c.InterviewRecordID == interviewRecordID
-                              select c).FirstOrDefault();
         }
 
         public static List<Check> GetResolvedChecks()
@@ -320,100 +267,38 @@ namespace MSM.DAL
             updatedRows.Add(d);
         }
 
-        public static List<DispositionRow> GetLongUnmatchedDispositionRows()
+        public static List<Check> GetLongUnmatchedChecks()
         {
-            List<DispositionRow> longUnmatchedDispositionRows = new List<DispositionRow>();
+            List<Check> longUnmatchedChecks = new List<Check>();
 
             using (var dbCtx = new MSMEntities())
             {
                 var longUnmatched = dbCtx.Set<LongUnmatched>();
 
-                foreach (var unmatched in longUnmatched)
+                foreach (var lu in longUnmatched)
                 {
-                    if (unmatched.InterviewRecordID != 0)
+                    longUnmatchedChecks.Add(new Check
                     {
-                        DispositionRow d = (from r in longUnmatchedDispositionRows
-                                            where r.InterviewRecordID == unmatched.InterviewRecordID
-                                            select r).FirstOrDefault();
-
-                        if (d == null)
-                        {
-                            d = new DispositionRow
-                            {
-                                RecordID = unmatched.RecordID,
-                                Name = unmatched.Name,
-                                InterviewRecordID = unmatched.InterviewRecordID,
-                                Date = unmatched.Date
-                            };
-                        }
-
-                        switch (unmatched.Service)
-                        {
-                            case "LBVD":
-                                d.LBVDCheckNum = unmatched.Num;
-                                break;
-                            case "TID":
-                                d.TIDCheckNum = unmatched.Num;
-                                break;
-                            case "TDL":
-                                d.TDLCheckNum = unmatched.Num;
-                                break;
-                            case "MBVD":
-                                d.MBVDCheckNum = unmatched.Num;
-                                break;
-                            case "SD":
-                                d.SDCheckNum = unmatched.Num;
-                                break;
-                        }
-
-                        longUnmatchedDispositionRows.Add(d);
-                    }
+                        RecordID = lu.RecordID,
+                        InterviewRecordID = lu.InterviewRecordID,
+                        Num = lu.Num,
+                        Name = lu.Name,
+                        Date = lu.Date,
+                        Service = lu.Service
+                    });
                 }
             }
 
-            return longUnmatchedDispositionRows;
+            return longUnmatchedChecks;
         }
 
-        public static void UpdateResolvedChecks()
+        private static void AppendToLongUnmatched(List<Check> checks)
         {
             using (var dbCtx = new MSMEntities())
             {
                 var longUnmatched = dbCtx.Set<LongUnmatched>();
 
-                foreach (LongUnmatched lu in longUnmatched)
-                {
-                    DispositionRow d = (from row in GetUpdatedRows()
-                                        where row.InterviewRecordID == lu.InterviewRecordID
-                                        select row).FirstOrDefault();
-
-                    if (d != null)
-                    {
-                        Check existing = GetExistingResolvedCheck(d.InterviewRecordID);
-
-                        if (existing == null)
-                        {
-                            // Prevent addition of duplicates to list of resolvedChecks.
-                            Check resolvedCheck = GetResolvedCheck(lu, d);
-
-                            if (resolvedCheck != null)
-                            {
-                               NewResolvedCheck(resolvedCheck);
-                            }
-                        }
-                    }
-                }
-
-                dbCtx.SaveChanges();
-            }
-        }
-
-        private static void AppendToLongUnmatched(List<Check> unmatchedChecks)
-        {
-            using (var dbCtx = new MSMEntities())
-            {
-                var longUnmatched = dbCtx.Set<LongUnmatched>();
-
-                foreach (Check check in unmatchedChecks)
+                foreach (Check check in checks)
                 {
                     LongUnmatched existing = (from c in longUnmatched
                                               where c.Num == check.Num
@@ -449,6 +334,5 @@ namespace MSM.DAL
                 dbCtx.SaveChanges();
             }
         }
-
     }
 }

@@ -31,7 +31,7 @@ namespace MSM.Controllers
         public List<Check> GetQuickbooksFile(string qbFile, string fileType)
         {
 
-            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", qbFile, fileType));
+            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", qbFile, fileType));
 
           //  var quickbooksFile = new ExcelQueryFactory(filePath);
 
@@ -49,7 +49,7 @@ namespace MSM.Controllers
         // This method is used to return the Voided Checks file for inspection on the Inspect tab.
         public List<Check> GetVoidedchecksFile(string vcFile, string fileType)
         {
-            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", vcFile, fileType));
+            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", vcFile, fileType));
           //  var voidedChecksFile = new ExcelQueryFactory(filePath);
 
             // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
@@ -67,7 +67,7 @@ namespace MSM.Controllers
         // This method is used to return the Apricot Report File for inspection on the Inspect tab.
         public List<DispositionRow> GetApricotFile(string apricotFile, string fileType)
         {
-            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", apricotFile, fileType));
+            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", apricotFile, fileType));
             return Linq2Excel.GetDispositionRows(filePath);
         }
 
@@ -76,7 +76,7 @@ namespace MSM.Controllers
         // at least supply an empty file!
         public EmptyCol[] GetEmptyFile(string emptyFile, string fileType)
         {
-            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", emptyFile, fileType));
+            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Private/{0}.{1}", emptyFile, fileType));
 
             var nodataFile = new ExcelQueryFactory(filePath);
 

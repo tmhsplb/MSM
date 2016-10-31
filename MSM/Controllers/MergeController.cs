@@ -36,40 +36,40 @@ namespace MSM.Controllers
 
         private static void UpdateDisposition(bool lbvd, bool tid, bool tdl, bool mbvd, bool sd, DispositionRow d, Check check)
         {
-            if (lbvd)
+            if (lbvd && d.LBVDCheckDisposition == null)
             {
                 d.LBVDCheckDisposition = GetDispositionFromCheck(check);
-                DataManager.SetMatchedCheck(d.LBVDCheckNum);
+                DataManager.NewResolvedCheck(d, "LBVD");
             }
 
-            if (tid)
+            if (tid && d.TIDCheckDisposition == null)
             {
                 d.TIDCheckDisposition = GetDispositionFromCheck(check);
-                DataManager.SetMatchedCheck(d.TIDCheckNum);
+                DataManager.NewResolvedCheck(d, "TID");
             }
 
-            if (tdl)
+            if (tdl && d.TDLCheckDisposition == null)
             {
                 d.TDLCheckDisposition = GetDispositionFromCheck(check);
-                DataManager.SetMatchedCheck(d.TDLCheckNum);
+                DataManager.NewResolvedCheck(d, "TDL");
             }
 
-            if (mbvd)
+            if (mbvd && d.MBVDCheckDisposition == null)
             {
                 d.MBVDCheckDisposition = GetDispositionFromCheck(check);
-                DataManager.SetMatchedCheck(d.MBVDCheckNum);
+                DataManager.NewResolvedCheck(d, "MBVD");
             }
 
-            if (sd)
+            if (sd && d.SDCheckDisposition == null)
             {
                 d.SDCheckDisposition = GetDispositionFromCheck(check);
-                DataManager.SetMatchedCheck(d.SDCheckNum);
+                DataManager.NewResolvedCheck(d, "SD");
             }
         }
 
         private static void UpdateLBVD(DispositionRow row)
         {
-            if (row.LBVDCheckNum != 0 && !DataManager.IsMatched(row.LBVDCheckNum) && !DataManager.IsUnmatched(row.LBVDCheckNum))
+            if (row.LBVDCheckNum != 0)
             {
                 if (row.LBVDCheckDisposition != null)
                 {
@@ -84,7 +84,7 @@ namespace MSM.Controllers
 
         private static void UpdateTID(DispositionRow row)
         {
-            if (row.TIDCheckNum != 0 && !DataManager.IsMatched(row.TIDCheckNum) && !DataManager.IsUnmatched(row.TIDCheckNum))
+            if (row.TIDCheckNum != 0)
             {
                 if (row.TIDCheckDisposition != null)
                 {
@@ -99,7 +99,7 @@ namespace MSM.Controllers
 
         private static void UpdateTDL(DispositionRow row)
         {
-            if (row.TDLCheckNum != 0 && !DataManager.IsMatched(row.TDLCheckNum) && !DataManager.IsUnmatched(row.TDLCheckNum))
+            if (row.TDLCheckNum != 0)
             {
                 if (row.TDLCheckDisposition != null)
                 {
@@ -114,7 +114,7 @@ namespace MSM.Controllers
 
         private static void UpdateMBVD(DispositionRow row)
         {
-            if (row.MBVDCheckNum != 0 && !DataManager.IsMatched(row.MBVDCheckNum) && !DataManager.IsUnmatched(row.MBVDCheckNum))
+            if (row.MBVDCheckNum != 0)
             {
                 if (row.MBVDCheckDisposition != null)
                 {
@@ -129,7 +129,7 @@ namespace MSM.Controllers
 
         private static void UpdateSD(DispositionRow row)
         {
-            if (row.SDCheckNum != 0 && !DataManager.IsMatched(row.SDCheckNum) && !DataManager.IsUnmatched(row.SDCheckNum))
+            if (row.SDCheckNum != 0)
             {
                 if (row.SDCheckDisposition != null)
                 {
@@ -142,7 +142,7 @@ namespace MSM.Controllers
             }
         }
 
-        private static void ProcessChecks(List<Check> checks, IEnumerable<DispositionRow> originalRows)
+        private static void ProcessChecks(List<Check> checks, List<DispositionRow> originalRows)
         {
             foreach (var check in checks)
             {
@@ -183,28 +183,35 @@ namespace MSM.Controllers
             }
         }
 
+        // The user did not specify an Apricot Reprot File on the merge screen. The user is trying
+        // to resolve some long unmatched checks.
         private static void ResolveLongUnmatched(string vcFileName, string vcFileType, string qbFileName, string qbFileType)
         {
-            List<DispositionRow> longUnmatchedDispositionRows = DataManager.GetLongUnmatchedDispositionRows();
-            ProcessLongUnmatched(longUnmatchedDispositionRows, vcFileName, vcFileType, qbFileName, qbFileType);
-        }
+            DataManager.Init();
 
-        private static void ProcessLongUnmatched(List<DispositionRow> longUnmatchedDispositionRows, string vcFileName, string vcFileType, string qbFileName, string qbFileType)
-        {
+            List<Check> longUnmatchedChecks = DataManager.GetLongUnmatchedChecks();
             List<Check> qbChecks = DataManager.GetQuickbookChecks(qbFileName, qbFileType);
             List<Check> voidedChecks = DataManager.GetVoidedChecks(vcFileName, vcFileType);
 
-            DataManager.Init();
-      
-            ProcessChecks(voidedChecks, longUnmatchedDispositionRows);
-            ProcessChecks(qbChecks, longUnmatchedDispositionRows);
+            ProcessChecks(qbChecks, longUnmatchedChecks);
+            ProcessChecks(voidedChecks, longUnmatchedChecks);
 
-            DetermineUnmatchedChecks(longUnmatchedDispositionRows);
+            DataManager.RemoveResolvedChecks();
+        }
 
-            DataManager.PersistUnmatchedChecks();
+        private static void ProcessChecks(List<Check> checks, List<Check> longUnmatchedChecks)
+        {
+            foreach (Check check in checks)
+            {
+                Check matched = (from c in longUnmatchedChecks
+                                 where c.Num == check.Num
+                                 select c).FirstOrDefault();
 
-            DataManager.UpdateResolvedChecks();
-            DataManager.RemoveMatchedChecks();
+                if (matched != null)
+                {
+                    DataManager.NewResolvedCheck(matched, GetDispositionFromCheck(check));
+                }
+            } 
         }
 
         private static void DetermineUnmatchedChecks(List<DispositionRow> rows)
@@ -219,6 +226,8 @@ namespace MSM.Controllers
             }
         }
 
+        // The user has only specified an Apricot Report File. Use this file to update the 
+        // long unmatched checks.
         private static void UpdateLongUnmatched(string apFileName, string apFileType)
         {
             // Deliberately get the file VCEmpty.xlsx.
@@ -229,17 +238,14 @@ namespace MSM.Controllers
             // This is tricky. We know that the set of voided checks is empty. So this call has
             // the effect of creating a set of unmatched checks from the Apricot Report File.
             // This set will then be appended to the long unmatched checks below.
-            // This call also has the side effect of creating a list of check numbers of
-            // known disposition. This set will be used to mark as matched any check number
-            // of known disposition that occurs among the long unmatched checks.
             ProcessChecks(voidedChecks, originalRows);
 
             DetermineUnmatchedChecks(originalRows);
             DataManager.PersistUnmatchedChecks();
-            DataManager.UpdateMatchedChecks();
-            DataManager.RemoveMatchedChecks();
         }
 
+        // The user has supplied either a voided checks file or a Quickbooks file or both to resolve
+        // unmatched checks occuring on the supplied Apricot Report File.
         private static void ResolveUnmatchedChecks(string vcFileName, string vcFileType, string apFileName, string apFileType, string qbFileName, string qbFileType)
         {
             int z;
@@ -256,9 +262,6 @@ namespace MSM.Controllers
             DetermineUnmatchedChecks(originalRows);
 
             DataManager.PersistUnmatchedChecks();
-
-            DataManager.UpdateResolvedChecks();
-            DataManager.RemoveMatchedChecks();
         }
 
         [HttpGet]
