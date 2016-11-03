@@ -1,6 +1,5 @@
 ﻿ 
 
-
 <table style="width:100%;border:solid;">
     <tr>
         <td>
@@ -11,3 +10,21 @@
     </tr>
    
 </table>
+
+<br/><br/>
+<p>Enter a check number in the box below and then click the Resolve Check button to manually remove the check from the research table.</p>
+ <table>
+    <tr>
+       <td>
+          <input type="number" ng-model="resolvedCheck" name="resolvedCheck" ng-pattern="integerval" required />
+          <span ng-show="form.resolvedCheck.$invalid">Please enter an integer value</span>
+       </td>
+    </tr>
+     <tr><td>&nbsp;</td></tr>
+    <tr>
+      <td><input type="button" value="Resolve Check" ng-click="ResolveCheck();" /></td>
+    </tr>
+     <tr><td>&nbsp;</td></tr>
+</table>
+<div><span ng-bind-html="ResolvedStatus"></span></div>
+ 

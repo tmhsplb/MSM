@@ -1,4 +1,5 @@
-﻿using MSM.Models;
+﻿using MSM.DAL;
+using MSM.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,21 @@ namespace MSM.Controllers
             }
 
             return longUnmatchedChecks;
+        }
+
+        [HttpGet]
+        public string ResolveCheck(int checkNum)
+        {
+             
+            string status;
+
+            int z;
+            z = 2;
+
+            status = DataManager.ResolveCheck(checkNum);
+             
+
+            return status;
         }
     }
 }

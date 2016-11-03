@@ -26,6 +26,6 @@ MergeServices.factory('MergeManager', ['$http', function ($http) {
     };
      
     return {
-        merge: merge,
+        merge: merge
     };
 }]);

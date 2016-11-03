@@ -3,6 +3,7 @@ var debugging = true;
 
 var FileServices = angular.module('FileServices', ['ngResource']);
 var MergeServices = angular.module('MergeServices', ['ngResource']);
+var ResearchServices = angular.module('ResearchServices', ['ngResource']);
 
 //angular.module('showcase', ['datatables']);
 
@@ -12,7 +13,7 @@ var MergeServices = angular.module('MergeServices', ['ngResource']);
 
 //var MSMApp = angular.module('MSMApp', ['ngRoute', 'FileServices', 'datatables', 'linqtoexcel']);
 
-var MSMApp = angular.module('MSMApp', ['ngRoute', 'FileServices', 'MergeServices', 'datatables', 'datatables.bootstrap', 'datatables.buttons']);
+var MSMApp = angular.module('MSMApp', ['ngRoute', 'ngSanitize', 'FileServices', 'MergeServices', 'ResearchServices', 'datatables', 'datatables.bootstrap', 'datatables.buttons']);
    
  
     

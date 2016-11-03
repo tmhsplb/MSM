@@ -1,7 +1,8 @@
 ﻿
 
-MSMApp.controller('resolvedController', ['$scope', '$http', '$window', 'FileManager', 'DTOptionsBuilder', 'DTColumnBuilder',
-        function ($scope, $http, $window, FileManager, DTOptionsBuilder, DTColumnBuilder) {
+MSMApp.controller('resolvedController', ['$rootScope', '$scope', '$http', '$window', 'FileManager', 'DTOptionsBuilder', 'DTColumnBuilder',
+        function ($rootScope, $scope, $http, $window, FileManager, DTOptionsBuilder, DTColumnBuilder) {
+            $rootScope.pageTitle = "Main Street Minitries - Resolved";
             $scope.tab = 'resolved';
 
             $scope.Download = function () {

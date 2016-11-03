@@ -1,8 +1,8 @@
 ﻿
  
-MSMApp.controller('inspectController', ['$scope', '$http', '$q', '$route', 'FileManager',
-     function ($scope, $http, $q, $route, FileManager) {
-       
+MSMApp.controller('inspectController', ['$rootScope', '$scope', '$http', '$q', '$route', 'FileManager',
+     function ($rootScope, $scope, $http, $q, $route, FileManager) {
+         $rootScope.pageTitle = "Main Street Ministries - Inspect";
          $scope.menuFiles = FileManager.getMenuFiles();
          $scope.tab = 'inspect'
         

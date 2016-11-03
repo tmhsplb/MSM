@@ -9,6 +9,7 @@ namespace MSM.DAL
 {
     public class DataManager
     {
+        private static bool firstCall = true;
         private static List<int> knownDisposition;
 
         private static List<Check> unmatchedChecks;
@@ -17,10 +18,14 @@ namespace MSM.DAL
 
         public static void Init()
         {
-            knownDisposition = new List<int>();
-            unmatchedChecks = new List<Check>();
-            resolvedChecks = new List<Check>();
-            updatedRows = new List<DispositionRow>();
+            if (firstCall)
+            {
+                knownDisposition = new List<int>();
+                unmatchedChecks = new List<Check>();
+                resolvedChecks = new List<Check>();
+                updatedRows = new List<DispositionRow>();
+                firstCall = false;
+            }
         }
 
         public static List<DispositionRow> GetApricotRows(string apFileName, string apFileType)
@@ -332,6 +337,33 @@ namespace MSM.DAL
             {
                 dbCtx.LongUnmatcheds.RemoveRange(dbCtx.LongUnmatcheds.Where(lu => lu.Matched == true));
                 dbCtx.SaveChanges();
+            }
+        }
+
+        public static string ResolveCheck(int checkNum)
+        {
+            string status;
+             
+            using (var dbCtx = new MSMEntities())
+            {
+                var longUnmatched = dbCtx.Set<LongUnmatched>();
+
+                var check = (from lu in longUnmatched
+                             where lu.Num == checkNum
+                             select lu).FirstOrDefault();
+
+                if (check == null)
+                {
+                    status = string.Format("<p>Could not find check with number {0} in research table.<p>", checkNum);
+                }
+                else
+                {
+                    longUnmatched.Remove(check);
+                    dbCtx.SaveChanges();
+                    status = string.Format("<p>Removed from research table:<br/>&nbsp;&nbsp;&nbsp;Date: {0}<br/>&nbsp;&nbsp;&nbsp;Record ID: {1}<br/>&nbsp;&nbsp;&nbsp;Interview Record ID: {2}<br/>&nbsp;&nbsp;&nbsp;Name: {3}<br/>&nbsp;&nbsp;&nbsp;Check number: {4}<br/>&nbsp;&nbsp;&nbsp;Service: {5}</p>", check.Date.ToString("d"), check.RecordID, check.InterviewRecordID, check.Name, check.Num, check.Service);
+                }
+
+                return status;
             }
         }
     }

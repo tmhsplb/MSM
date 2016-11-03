@@ -1,3 +1,3 @@
-﻿MSMApp.controller('homeController', ['$scope', '$window', 'FileManager', function ($scope, $window) {
-    
+﻿MSMApp.controller('homeController', ['$rootScope', '$scope', '$window', 'FileManager', function ($rootScope, $scope, $window) {
+    $rootScope.pageTitle = "Main Street Ministries - Home";
 }]);

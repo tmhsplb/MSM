@@ -73,6 +73,12 @@ namespace MSM
              );
 
           config.Routes.MapHttpRoute(
+                   name: "Resolve",
+                   routeTemplate: "api/resolvecheck/{checkNum}",
+                   defaults: new { controller = "Research", action = "ResolveCheck" }
+               );
+
+          config.Routes.MapHttpRoute(
                name: "ValidFile",
                routeTemplate: "api/checkvalidity",
                defaults: new { controller = "FileUploader" }

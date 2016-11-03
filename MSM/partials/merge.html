@@ -3,7 +3,7 @@
         <tr>
             <td>Voided Checks File</td>
             <td>
-                <input type="file" ng-model-instant id="VCFileToUpload" onchange="angular.element(this).scope().setFiles('VC', this)" />
+                <input type="file" ng-model id="VCFileToUpload" onchange="angular.element(this).scope().setFiles('VC', this)" />
             </td>
             <td>
                 <input type="button" value="Upload" ng-click="VCUpload();" />
@@ -20,7 +20,7 @@
         <tr>
             <td>Apricot Report File</td>
             <td>
-                <input type="file" ng-model-instant id="APFileToUpload" onchange="angular.element(this).scope().setFiles('AP', this)" />
+                <input type="file" ng-model id="APFileToUpload" onchange="angular.element(this).scope().setFiles('AP', this)" />
             </td>
             <td>
                 <input type="button" value="Upload" ng-click="APUpload();" />
@@ -38,9 +38,7 @@
         <tr>
             <td>Quickbooks File</td>
             <td>
-
-                <input type="file" ng-model-instant id="QBFileToUpload" onchange="angular.element(this).scope().setFiles('QB', this);" />
-
+                <input type="file" ng-model id="QBFileToUpload" onchange="angular.element(this).scope().setFiles('QB', this);" />
             </td>
             <td>
                 <input type="button" value="Upload" ng-click="QBUpload();" />

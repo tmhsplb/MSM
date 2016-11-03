@@ -4,8 +4,9 @@
 // Moved downloading to angular service called fileservices. Was not able to move
 // the uploading process to this service.
 // Added to the download solution using code found at Stack Overflow. See link below.
-MSMApp.controller('mergeController', ['$scope', '$http', 'FileManager', 'MergeManager',
-        function ($scope, $http, FileManager, MergeManager) {
+MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileManager', 'MergeManager',
+        function ($rootScope, $scope, $http, FileManager, MergeManager) {
+            $rootScope.pageTitle = "Main Street Ministries - Merge";
             $scope.mergeStatus = "";
             $scope.files = [];
             $scope.VCUploadedFile = FileManager.getVCFileName();

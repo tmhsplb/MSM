@@ -106,6 +106,7 @@
     <Content Include="angularcontrollers\researchController.js" />
     <Content Include="angularservices\fileservices.js" />
     <Content Include="angularservices\mergeservices.js" />
+    <Content Include="angularservices\researchservices.js" />
     <Content Include="app.js" />
     <Content Include="Content\DataTables\css\autoFill.bootstrap.css" />
     <Content Include="Content\DataTables\css\autoFill.bootstrap.min.css" />
