@@ -73,14 +73,14 @@ namespace MSM.Controllers
                     drows.Add(row);
                 }
 
-                return drows.Count();
+                return drows.Count;
 
               //  return rows.ToList();
                // return new Exception("No exception!");
             }
             catch (Exception e)
             {
-                return -1; // null;
+                return -2; // null;
             }
         }
     }
