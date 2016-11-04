@@ -54,7 +54,8 @@ namespace MSM.Controllers
         }
 
         [HttpGet]
-        public List<DispositionRow> GetDispositionRows(string fileName, string fileType)
+        public Exception GetDispositionRows(string fileName, string fileType)
+        // public List<DispositionRow> GetDispositionRows(string fileName, string fileType)
         {
             try
             {
@@ -63,11 +64,12 @@ namespace MSM.Controllers
 
                 var rows = from c in eqf.Worksheet<DispositionRow>("Sheet1") select c;
 
-                return rows.ToList();
+                //return rows.ToList();
+                return new Exception("No exception!");
             }
             catch (Exception e)
             {
-                return null;
+                return e;
             }
         }
     }
