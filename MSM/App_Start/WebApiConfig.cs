@@ -19,21 +19,21 @@ namespace MSM
             config.Routes.MapHttpRoute(
              name: "GetQBFile",
              routeTemplate: "api/qbfile",
-                  defaults: new { controller = "Inspect"}
+                  defaults: new { controller = "Inspect", action="GetQuickbooksFile"}
             );
 
             // This route is used by datatableController.js
             config.Routes.MapHttpRoute(
             name: "GetVCFile",
             routeTemplate: "api/vcfile",
-                 defaults: new { controller = "Inspect" }
+                 defaults: new { controller = "Inspect", action="GetVoidedchecksFile"}
            );
 
           // This route is used by datatableController.js
           config.Routes.MapHttpRoute(
            name: "GetAPFile",
            routeTemplate: "api/apfile",
-                defaults: new { controller = "Inspect" }
+                defaults: new { controller = "Inspect", action = "GetApricotFile" }
           );
 
           config.Routes.MapHttpRoute(

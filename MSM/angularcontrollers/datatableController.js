@@ -63,7 +63,7 @@
                      });
                  } else {
                      $http({ method: "GET", url: "https://mymsm.apphb.com/api/apfile", params: { "apricotFile": FileManager.getAPFileName(), "fileType": FileManager.getAPFileType() } }).then(function (result) {
-                         return result.data;
+                         defer.resolve(result.data);
                      })
                  }
 

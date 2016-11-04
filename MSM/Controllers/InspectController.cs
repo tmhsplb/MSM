@@ -58,7 +58,8 @@ namespace MSM.Controllers
         // This method is used to return the Apricot Report File for inspection on the Inspect tab.
         public List<DispositionRow> GetApricotFile(string apricotFile, string fileType)
         {
-            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", apricotFile, fileType));
+           // string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", apricotFile, fileType));
+            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", apricotFile, fileType));
             return Linq2Excel.GetDispositionRows(filePath);
         }
 
