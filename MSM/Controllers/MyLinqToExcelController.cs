@@ -58,7 +58,7 @@ namespace MSM.Controllers
         {
             try
             {
-                ExcelQueryFactory eqf = this.GetFactory(fileName, fileType);
+                ExcelQueryFactory eqf = GetFactory(fileName, fileType);
                 PrepareApricotMapping(eqf);
 
                 var rows = from c in eqf.Worksheet<DispositionRow>("Sheet1") select c;
