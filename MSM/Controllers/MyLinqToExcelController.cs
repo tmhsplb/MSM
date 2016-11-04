@@ -59,7 +59,7 @@ namespace MSM.Controllers
        // public DispositionRow GetDispositionRows(string fileName, string fileType)
         public int GetDispositionRows(string fileName, string fileType)
         {
-           // List<DispositionRow> drows = new List<DispositionRow>();
+            List<DispositionRow> drows = new List<DispositionRow>();
 
             try
             {
@@ -68,9 +68,12 @@ namespace MSM.Controllers
 
                 var rows = from c in eqf.Worksheet<DispositionRow>("Sheet1") select c;
 
-              //  return rows.First() as DispositionRow;
+                foreach (DispositionRow row in rows)
+                {
+                    drows.Add(row);
+                }
 
-                return rows.Count();
+                return drows.Count();
 
               //  return rows.ToList();
                // return new Exception("No exception!");
