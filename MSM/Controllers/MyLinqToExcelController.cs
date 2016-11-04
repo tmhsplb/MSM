@@ -12,7 +12,7 @@ namespace MSM.Controllers
     public class MyLinqToExcelController : ApiController
     {
         [HttpGet]
-        public static ExcelQueryFactory GetFactory(string fileName, string fileType)
+        public ExcelQueryFactory GetFactory(string fileName, string fileType)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace MSM.Controllers
         }
 
         [HttpGet]
-        public static List<DispositionRow> GetDispositionRows(string fileName, string fileType)
+        public List<DispositionRow> GetDispositionRows(string fileName, string fileType)
         {
             ExcelQueryFactory eqf = GetFactory(fileName, fileType);
             PrepareApricotMapping(eqf);
