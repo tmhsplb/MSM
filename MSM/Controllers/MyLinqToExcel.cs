@@ -3,16 +3,20 @@ using MSM.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 
-namespace MSM.Utils
+namespace MSM.Controllers
 {
-    public class Linq2Excel
+    public class MyLinqToExcel : ApiController
     {
-        public static ExcelQueryFactory GetFactory(string filePath)
+        [HttpGet]
+        public static ExcelQueryFactory GetFactory(string fileName, string fileType)
         {
             try
             {
+                string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", fileName, fileType));
                 var eqf = new ExcelQueryFactory(filePath);
 
                 // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
@@ -49,9 +53,10 @@ namespace MSM.Utils
             eqf.AddMapping("SDCheckDisposition", "SD Check Disposition");
         }
 
-        public static List<DispositionRow> GetDispositionRows(string filePath)
+        [HttpGet]
+        public static List<DispositionRow> GetDispositionRows(string fileName, string fileType)
         {
-            ExcelQueryFactory eqf = GetFactory(filePath);
+            ExcelQueryFactory eqf = GetFactory(fileName, fileType);
             PrepareApricotMapping(eqf);
 
             var rows = from c in eqf.Worksheet<DispositionRow>("Sheet1") select c;
