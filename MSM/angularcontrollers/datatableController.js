@@ -10,10 +10,12 @@
  
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 $http.get('http://localhost/msm/api/qbfile',
-                    { params: { "qbFile": FileManager.getQBFileName(), "fileType": FileManager.getQBFileType() } }).then(function (result) {
-                     defer.resolve(result.data);
-                 });
+                 if (desktop == true) {
+                     $http.get('http://localhost/msm/api/qbfile',
+                        { params: { "qbFile": FileManager.getQBFileName(), "fileType": FileManager.getQBFileType() } }).then(function (result) {
+                            defer.resolve(result.data);
+                        });
+                 }
                  return defer.promise;
              }).withPaginationType('full_numbers')
                .withDisplayLength(10)
@@ -32,9 +34,11 @@
          {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 $http.get('http://localhost/msm/api/vcfile', { params: { "vcFile": FileManager.getVCFileName(), "fileType": FileManager.getVCFileType() } }).then(function (result) {
-                     defer.resolve(result.data);
-                 });
+                 if (desktop == true) {
+                     $http.get('http://localhost/msm/api/vcfile', { params: { "vcFile": FileManager.getVCFileName(), "fileType": FileManager.getVCFileType() } }).then(function (result) {
+                         defer.resolve(result.data);
+                     });
+                 }
                  return defer.promise;
              }).withPaginationType('full_numbers')
                .withDisplayLength(10)
@@ -52,9 +56,17 @@
          {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 $http.get('http://localhost/msm/api/apfile', { params: { "apricotFile": FileManager.getAPFileName(), "fileType": FileManager.getAPFileType() } }).then(function (result) {
-                     defer.resolve(result.data);
-                 });
+
+                 if (desktop == true) {
+                     $http.get('http://localhost/msm/api/apfile', { params: { "apricotFile": FileManager.getAPFileName(), "fileType": FileManager.getAPFileType() } }).then(function (result) {
+                         defer.resolve(result.data);
+                     });
+                 } else {
+                     $http({ method: "GET", url: "https://mymsm.apphb.com/api/apfile", params: { "apricotFile": FileManager.getAPFileName(), "fileType": FileManager.getAPFileType() } }).then(function (result) {
+                         return result.data;
+                     })
+                 }
+
                  return defer.promise;
              }).withPaginationType('full_numbers')
                .withDisplayLength(10)
@@ -84,9 +96,11 @@
          else if ($scope.tab == 'research') {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 $http.get('http://localhost/msm/api/research').then(function (result) {
-                     defer.resolve(result.data);
-                 });
+                 if (desktop == true) {
+                     $http.get('http://localhost/msm/api/research').then(function (result) {
+                         defer.resolve(result.data);
+                     });
+                 }
                  return defer.promise;
              }).withPaginationType('full_numbers')
                .withDisplayLength(10)
@@ -114,9 +128,11 @@
          function DisplayResolvedChecks() {  // There not be any. This is handled by returning an empty list of checks from the API.
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 $http.get('http://localhost/msm/api/resolved').then(function (result) {
-                     defer.resolve(result.data);
-                 });
+                 if (desktop == true) {
+                     $http.get('http://localhost/msm/api/resolved').then(function (result) {
+                         defer.resolve(result.data);
+                     });
+                 }
                  return defer.promise;
              }).withPaginationType('full_numbers')
                .withDisplayLength(10)
@@ -142,9 +158,11 @@
              $scope.pleaseAct = true;
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 $http.get('http://localhost/msm/api/emptyfile', { params: { "emptyFile": "Empty", "fileType": "XLSX" } }).then(function (result) {
-                     defer.resolve(result.data);
-                 });
+                 if (desktop == true) {
+                     $http.get('http://localhost/msm/api/emptyfile', { params: { "emptyFile": "Empty", "fileType": "XLSX" } }).then(function (result) {
+                         defer.resolve(result.data);
+                     });
+                 }
                  return defer.promise;
              }).withPaginationType('full_numbers');
              vm.dtColumns = [

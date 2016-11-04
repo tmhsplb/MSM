@@ -90,6 +90,12 @@ namespace MSM
                 defaults: new { controller = "Resolved", action="HaveResolvedChecks" }
             );
 
+          config.Routes.MapHttpRoute(
+            name: "ConnectionString",
+            routeTemplate: "api/cs/{id}",
+            defaults: new { controller = "Database" }
+          );
+
             // Used when uploading a file
             /*
             config.Routes.MapHttpRoute(

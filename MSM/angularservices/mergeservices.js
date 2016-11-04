@@ -7,21 +7,23 @@ MergeServices.factory('MergeManager', ['$http', function ($http) {
   //  summary.merge = "unavailable";
 
     var merge = function (vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType) {
-        if (debugging == true) {
-            return $http.get("http://localhost/msm/api/merge",
-                 {
-                     params:
-                        {
-                            "vcFileName": vcFileName,
-                            "vcFileType": vcFileType,
-                            "apFileName": apFileName,
-                            "apFileType": apFileType,
-                            "qbFileName": qbFileName,
-                            "qbFileType": qbFileType
-                        }
-                 }).then(function (result) {
-                     return result.data;
-                 });
+        if (desktop == true) {
+            if (desktop == true) {
+                return $http.get("http://localhost/msm/api/merge",
+                     {
+                         params:
+                            {
+                                "vcFileName": vcFileName,
+                                "vcFileType": vcFileType,
+                                "apFileName": apFileName,
+                                "apFileType": apFileType,
+                                "qbFileName": qbFileName,
+                                "qbFileType": qbFileType
+                            }
+                     }).then(function (result) {
+                         return result.data;
+                     });
+            }
         }
     };
      

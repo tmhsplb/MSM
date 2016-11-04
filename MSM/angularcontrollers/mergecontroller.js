@@ -24,7 +24,9 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                        
                         var xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", VCUploadComplete, false);
-                        xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
+                        if (desktop == true) {
+                            xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
+                        }
                         $scope.progressVisible = true;
                         xhr.send(fd);
                     }
@@ -80,7 +82,9 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
 
                         var xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", QBUploadComplete, false);
-                        xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
+                        if (desktop == true) {
+                            xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
+                        }
                         $scope.progressVisible = true;
                         xhr.send(fd);
                     }
@@ -134,7 +138,9 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                 
                         var xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", APUploadComplete, false);
-                        xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
+                        if (desktop == true) {
+                            xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
+                        }
                         $scope.progressVisible = true;
                         xhr.send(fd);
                     }

@@ -33,11 +33,6 @@ namespace MSM.Controllers
 
             string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", qbFile, fileType));
 
-          //  var quickbooksFile = new ExcelQueryFactory(filePath);
-
-            // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
-          //  quickbooksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
-
             var quickbooksFile = Linq2Excel.GetFactory(filePath);
 
             var checks = from c in quickbooksFile.Worksheet<Check>("Sheet1") select c;
@@ -50,10 +45,6 @@ namespace MSM.Controllers
         public List<Check> GetVoidedchecksFile(string vcFile, string fileType)
         {
             string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", vcFile, fileType));
-          //  var voidedChecksFile = new ExcelQueryFactory(filePath);
-
-            // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
-          //  voidedChecksFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
 
             var voidedChecksFile = Linq2Excel.GetFactory(filePath);
 
@@ -80,13 +71,9 @@ namespace MSM.Controllers
 
             var nodataFile = new ExcelQueryFactory(filePath);
 
-            // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
-            nodataFile.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
-
             var rows = from c in nodataFile.Worksheet<EmptyCol>("Sheet1") select c;
 
             return rows.ToArray();
         }
-    }
-        
+    }   
 }

@@ -1,7 +1,7 @@
 ﻿
 ResearchServices.factory('ResearchManager', ['$http', function ($http) {
     var resolve = function (checkNum) {
-        if (debugging == true) {
+        if (desktop == true) {
             return $http.get("http://localhost/msm/api/resolvecheck/" + checkNum).then(function (result) {
                 return result.data;
             });

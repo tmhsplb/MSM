@@ -382,6 +382,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\DatabaseController.cs" />
     <Compile Include="Controllers\FileDownloaderController.cs" />
     <Compile Include="Controllers\InspectController.cs" />
     <Compile Include="Controllers\FileUploaderController.cs" />
@@ -398,7 +399,6 @@
     <Compile Include="Models\EmptyCol.cs" />
     <Compile Include="Models\Check.cs" />
     <Compile Include="Models\DispositionRow.cs" />
-    <Compile Include="Models\MergeStats.cs" />
     <Compile Include="MSM.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -422,9 +422,9 @@
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-    <None Include="Web.Release.config">
+    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
