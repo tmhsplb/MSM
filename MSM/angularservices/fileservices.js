@@ -120,6 +120,10 @@ FileServices.factory('FileManager', ['$http', function ($http) {
             return $http.get("http://localhost/MSM/api/checkvalidity", { params: { "ftype": ftype, "fname": fname, "fext": fext } }).then(function (result) {
                 return result.data;
             })
+        } else {
+            $http({ method: "GET", url: "https://mymsm.apphb.com/api/checkvalidity", { params: { "ftype": ftype, "fname": fname, "fext": fext } }).then(function (result) {
+                return result.data;
+            })
         }
     }
 
