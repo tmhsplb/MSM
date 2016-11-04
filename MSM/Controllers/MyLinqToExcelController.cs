@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace MSM.Controllers
 {
-    public class MyLinqToExcel : ApiController
+    public class MyLinqToExcelController : ApiController
     {
         [HttpGet]
         public static ExcelQueryFactory GetFactory(string fileName, string fileType)

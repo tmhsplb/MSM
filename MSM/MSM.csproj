@@ -386,7 +386,7 @@
     <Compile Include="Controllers\FileDownloaderController.cs" />
     <Compile Include="Controllers\InspectController.cs" />
     <Compile Include="Controllers\FileUploaderController.cs" />
-    <Compile Include="Controllers\MyLinqToExcel.cs" />
+    <Compile Include="Controllers\MyLinqToExcelController.cs" />
     <Compile Include="Controllers\MergeController.cs" />
     <Compile Include="Controllers\ResearchController.cs" />
     <Compile Include="Controllers\ResolvedController.cs" />
