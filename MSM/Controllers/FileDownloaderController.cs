@@ -53,7 +53,9 @@ namespace MSM.Controllers
 
             Byte[] bytes = null;
             
-            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", "ImportMe", "csv"));
+           // string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", "ImportMe", "csv"));
+
+            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", "BP", "xlsv"));
             
             FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             BinaryReader br = new BinaryReader(fs);
