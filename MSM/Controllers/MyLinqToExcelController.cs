@@ -54,10 +54,10 @@ namespace MSM.Controllers
         }
 
         [HttpGet]
-       // public Exception GetDispositionRows(string fileName, string fileType)
+        public Exception GetDispositionRows(string fileName, string fileType)
        // public List<DispositionRow> GetDispositionRows(string fileName, string fileType)
        // public DispositionRow GetDispositionRows(string fileName, string fileType)
-        public int GetDispositionRows(string fileName, string fileType)
+       // public int GetDispositionRows(string fileName, string fileType)
         {
             List<DispositionRow> drows = new List<DispositionRow>();
 
@@ -73,14 +73,16 @@ namespace MSM.Controllers
                     drows.Add(row);
                 }
 
-                return drows.Count;
+               // return drows.Count;
 
               //  return rows.ToList();
-               // return new Exception("No exception!");
+                string msg = string.Format("No exception! {0} {1}", rows.Count(), drows.Count());
+                return new Exception(msg);
             }
             catch (Exception e)
             {
-                return -2; // null;
+               // return -2; // null;
+                return e;
             }
         }
     }
