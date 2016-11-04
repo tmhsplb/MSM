@@ -121,7 +121,7 @@ FileServices.factory('FileManager', ['$http', function ($http) {
                 return result.data;
             })
         } else {
-            $http({ method: "GET", url: "https://mymsm.apphb.com/api/checkvalidity", params: { "ftype": ftype, "fname": fname, "fext": fext } }).then(function (result) {
+            return $http({ method: "GET", url: "https://mymsm.apphb.com/api/checkvalidity", params: { "ftype": ftype, "fname": fname, "fext": fext } }).then(function (result) {
                 return result.data;
             })
         }
