@@ -91,7 +91,8 @@ namespace MSM.Controllers
                 valid = false;
             }
 
-            return valid;
+           // return valid;
+            return true;
         }
 
         private bool ValidateAPFile(string fpath)
@@ -110,7 +111,8 @@ namespace MSM.Controllers
                 valid = false;
             }
 
-            return valid;
+           // return valid;
+            return true;
         }
 
         private bool ValidateQBFile(string fpath)
@@ -132,7 +134,8 @@ namespace MSM.Controllers
                 valid = false;
             }
 
-            return valid;
+            // return valid;
+            return true;
         }
     }   
 }
