@@ -99,13 +99,13 @@ namespace MSM
           config.Routes.MapHttpRoute(
              name: "Linq2ExcelFactory",
              routeTemplate: "api/factory",
-             defaults: new { controller = "MyLinqToExcel" }
+             defaults: new { controller = "MyLinqToExcel", action="GetFactory" }
            );
 
           config.Routes.MapHttpRoute(
                name: "Linq2ExcelDispositionRows",
                routeTemplate: "api/dispositionrows",
-               defaults: new { controller = "MyLinqToExcel" }
+               defaults: new { controller = "MyLinqToExcel", action = "GetDispositionRows" }
           );
 
             // Used when uploading a file
