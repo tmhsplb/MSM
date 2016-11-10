@@ -7,7 +7,6 @@ MergeServices.factory('MergeManager', ['$http', function ($http) {
   //  summary.merge = "unavailable";
 
     var merge = function (vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType) {
-        if (desktop == true) {
             if (desktop == true) {
                 return $http.get("http://localhost/msm/api/merge",
                      {
@@ -24,7 +23,6 @@ MergeServices.factory('MergeManager', ['$http', function ($http) {
                          return result.data;
                      });
             }
-        }
     };
      
     return {

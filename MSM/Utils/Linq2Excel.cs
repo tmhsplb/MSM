@@ -15,6 +15,7 @@ namespace MSM.Utils
             {
                 var eqf = new ExcelQueryFactory(filePath);
 
+                // See: http://www.codeproject.com/Articles/659643/Csharp-Query-Excel-and-CSV-Files-Using-LinqToExcel
                 // From: http://stackoverflow.com/questions/15741303/64-bits-alternatives-to-linq-to-excel
                 eqf.DatabaseEngine = LinqToExcel.Domain.DatabaseEngine.Ace;
 

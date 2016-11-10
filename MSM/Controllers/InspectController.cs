@@ -31,7 +31,8 @@ namespace MSM.Controllers
         public List<Check> GetQuickbooksFile(string qbFile, string fileType)
         {
 
-            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", qbFile, fileType));
+          //  string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", qbFile, fileType));
+            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", qbFile, fileType));
 
             var quickbooksFile = Linq2Excel.GetFactory(filePath);
 
@@ -44,8 +45,8 @@ namespace MSM.Controllers
         // This method is used to return the Voided Checks file for inspection on the Inspect tab.
         public List<Check> GetVoidedchecksFile(string vcFile, string fileType)
         {
-            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", vcFile, fileType));
-
+           // string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", vcFile, fileType));
+            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", vcFile, fileType));
             var voidedChecksFile = Linq2Excel.GetFactory(filePath);
 
             var checks = from c in voidedChecksFile.Worksheet<Check>("Sheet1") select c;
@@ -68,7 +69,8 @@ namespace MSM.Controllers
         // at least supply an empty file!
         public EmptyCol[] GetEmptyFile(string emptyFile, string fileType)
         {
-            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Private/{0}.{1}", emptyFile, fileType));
+           // string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Private/{0}.{1}", emptyFile, fileType));
+            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", emptyFile, fileType));
 
             var nodataFile = new ExcelQueryFactory(filePath);
 

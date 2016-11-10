@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Excel;
+using System.Data;
 
 namespace MSM.DAL
 {
@@ -30,19 +32,23 @@ namespace MSM.DAL
 
         public static List<DispositionRow> GetApricotRows(string apFileName, string apFileType)
         {
-            List<DispositionRow> originalRows = new List<DispositionRow>();
-            string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", apFileName, apFileType));
-            var apricotReportFile = Linq2Excel.GetFactory(pathToApricotReportFile);
-            Linq2Excel.PrepareApricotMapping(apricotReportFile);
+           // List<DispositionRow> originalRows = new List<DispositionRow>();
+          //  string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", apFileName, apFileType));
+            string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", apFileName, apFileType));
 
-            var apricotRows = from d in apricotReportFile.Worksheet<DispositionRow>("Sheet1") select d;
+            List<DispositionRow> apricotRows = ExcelDataReader.GetApricotRows(pathToApricotReportFile);
+            
+         //   var apricotReportFile = Linq2Excel.GetFactory(pathToApricotReportFile);
+        //    Linq2Excel.PrepareApricotMapping(apricotReportFile);
 
-            foreach (DispositionRow d in apricotRows)
-            {
-                originalRows.Add(d);
-            }
+         //   var apricotRows = from d in apricotReportFile.Worksheet<DispositionRow>("Sheet1") select d;
 
-            return originalRows;
+        //    foreach (DispositionRow d in apricotRows)
+       //     {
+        //        originalRows.Add(d);
+        //    }
+
+            return apricotRows;
         }
 
         public static List<Check> GetVoidedChecks(string vcFileName, string vcFileType)
@@ -52,8 +58,12 @@ namespace MSM.DAL
                 return GetEmptyVoidedChecks();
             }
 
-            List<Check> voidedChecks = new List<Check>();
-            string pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", vcFileName, vcFileType));
+            //List<Check> voidedChecks = new List<Check>();
+            string pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", vcFileName, vcFileType));
+
+            List<Check> voidedChecks = ExcelDataReader.GetVoidedChecks(pathToVoidedChecksFile);
+
+            /*
             var voidedChecksFile = Linq2Excel.GetFactory(pathToVoidedChecksFile);
             var vChecks = from vc in voidedChecksFile.Worksheet<Check>("Sheet1") select vc;
 
@@ -61,19 +71,24 @@ namespace MSM.DAL
             {
                 voidedChecks.Add(check);
             }
+            */
 
             return voidedChecks;
         }
 
-        public static List<Check> GetQuickbookChecks(string qbFileName, string qbFileType)
+        public static List<Check> GetQuickbooksChecks(string qbFileName, string qbFileType)
         {
             if (qbFileName.Equals("unknown"))
             {
                 return GetEmptyQuickbookChecks();
             }
 
-            List<Check> quickbookChecks = new List<Check>();
-            string pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", qbFileName, qbFileType));
+           // List<Check> quickbooksChecks = new List<Check>();
+            string pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", qbFileName, qbFileType));
+
+            List<Check> quickbooksChecks = ExcelDataReader.GetQuickbooksChecks(pathToQuickbooksFile);
+
+            /*
             var quickbooksFile = Linq2Excel.GetFactory(pathToQuickbooksFile);
             var vChecks = from vc in quickbooksFile.Worksheet<Check>("Sheet1") select vc;
 
@@ -81,29 +96,41 @@ namespace MSM.DAL
             {
                 quickbookChecks.Add(check);
             }
+            */
 
-            return quickbookChecks;
+            return quickbooksChecks;
         }
 
         public static List<Check> GetEmptyQuickbookChecks()
         {
-            List<Check> quickbookChecks = new List<Check>();
-            string pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Private/{0}.{1}", "QBEmpty", "xlsx"));
+           // List<Check> quickbooksChecks = new List<Check>();
+            //string pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Private/{0}.{1}", "QBEmpty", "xlsx"));
+            string pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", "QBEmpty", "xlsx"));
+
+            List<Check> quickbooksChecks = ExcelDataReader.GetQuickbooksChecks(pathToQuickbooksFile);
+
+            /*
             var quickbooksFile = Linq2Excel.GetFactory(pathToQuickbooksFile);
+            
             var qbChecks = from vc in quickbooksFile.Worksheet<Check>("Sheet1") select vc;
 
             foreach (Check check in qbChecks)
             {
-                quickbookChecks.Add(check);
+                quickbooksChecks.Add(check);
             }
-
-            return quickbookChecks;
+            */
+            return quickbooksChecks;
         }
 
         public static List<Check> GetEmptyVoidedChecks()
         {
-            List<Check> voidedChecks = new List<Check>();
-            string pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Private/{0}.{1}", "VCEmpty", "xlsx"));
+           // List<Check> voidedChecks = new List<Check>();
+           // string pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Private/{0}.{1}", "VCEmpty", "xlsx"));
+            string pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", "VCEmpty", "xlsx"));
+
+            List<Check> voidedChecks = ExcelDataReader.GetVoidedChecks(pathToVoidedChecksFile);
+
+            /*
             var voidedChecksFile = Linq2Excel.GetFactory(pathToVoidedChecksFile);
             var vChecks = from vc in voidedChecksFile.Worksheet<Check>("Sheet1") select vc;
 
@@ -111,6 +138,7 @@ namespace MSM.DAL
             {
                 voidedChecks.Add(check);
             }
+            */
 
             return voidedChecks;
         }

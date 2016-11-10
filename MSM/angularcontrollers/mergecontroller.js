@@ -138,6 +138,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                 
                         var xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", APUploadComplete, false);
+       
                         if (desktop == true) {
                             xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
                         } else {

@@ -78,8 +78,8 @@ namespace MSM.Controllers
 
         private static void PrepareImportHeader()
         {
-            string pathToDispositionHeader = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Private/Check Disposition Header.csv"));
-            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/importme.csv"));
+            string pathToDispositionHeader = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Check Disposition Header.csv"));
+            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/importme.csv"));
             var retainedLines = File.ReadAllLines(pathToDispositionHeader);
             File.WriteAllLines(pathToImportMeFile, retainedLines);
         }

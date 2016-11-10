@@ -71,7 +71,7 @@ namespace MSM.Controllers
         {
             if (row.LBVDCheckNum != 0)
             {
-                if (row.LBVDCheckDisposition != null)
+                if (!string.IsNullOrEmpty(row.LBVDCheckDisposition))
                 {
                     DataManager.SetKnownDisposition(row.LBVDCheckNum);
                 }
@@ -86,7 +86,7 @@ namespace MSM.Controllers
         {
             if (row.TIDCheckNum != 0)
             {
-                if (row.TIDCheckDisposition != null)
+                if (!string.IsNullOrEmpty(row.TIDCheckDisposition))
                 {
                     DataManager.SetKnownDisposition(row.TIDCheckNum);
                 }
@@ -101,7 +101,7 @@ namespace MSM.Controllers
         {
             if (row.TDLCheckNum != 0)
             {
-                if (row.TDLCheckDisposition != null)
+                if (!string.IsNullOrEmpty(row.TDLCheckDisposition))
                 {
                     DataManager.SetKnownDisposition(row.TDLCheckNum);
                 }
@@ -116,7 +116,7 @@ namespace MSM.Controllers
         {
             if (row.MBVDCheckNum != 0)
             {
-                if (row.MBVDCheckDisposition != null)
+                if (!string.IsNullOrEmpty(row.MBVDCheckDisposition))
                 {
                     DataManager.SetKnownDisposition(row.MBVDCheckNum);
                 }
@@ -190,7 +190,7 @@ namespace MSM.Controllers
             DataManager.Init();
 
             List<Check> longUnmatchedChecks = DataManager.GetLongUnmatchedChecks();
-            List<Check> qbChecks = DataManager.GetQuickbookChecks(qbFileName, qbFileType);
+            List<Check> qbChecks = DataManager.GetQuickbooksChecks(qbFileName, qbFileType);
             List<Check> voidedChecks = DataManager.GetVoidedChecks(vcFileName, vcFileType);
 
             ProcessChecks(qbChecks, longUnmatchedChecks);
@@ -230,9 +230,11 @@ namespace MSM.Controllers
         // long unmatched checks.
         private static void UpdateLongUnmatched(string apFileName, string apFileType)
         {
-            // Deliberately get the file VCEmpty.xlsx.
-            List<Check> voidedChecks = DataManager.GetEmptyVoidedChecks();
             List<DispositionRow> originalRows = DataManager.GetApricotRows(apFileName, apFileType);
+
+            // Deliberately get the file VCEmpty.xlsx.   
+            List<Check> voidedChecks = DataManager.GetEmptyVoidedChecks();
+           
             DataManager.Init();
   
             // This is tricky. We know that the set of voided checks is empty. So this call has
@@ -250,7 +252,7 @@ namespace MSM.Controllers
         {
             int z;
 
-            List<Check> qbChecks = DataManager.GetQuickbookChecks(qbFileName, qbFileType);
+            List<Check> qbChecks = DataManager.GetQuickbooksChecks(qbFileName, qbFileType);
             List<DispositionRow> originalRows = DataManager.GetApricotRows(apFileName, apFileType);
             List<Check> voidedChecks = DataManager.GetVoidedChecks(vcFileName, vcFileType);
 

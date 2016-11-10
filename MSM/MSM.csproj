@@ -44,6 +44,12 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Excel">
+      <HintPath>..\packages\ExcelDataReader.2.1.2.3\lib\net45\Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="LinqToExcel">
       <HintPath>..\packages\LinqToExcel_x64.1.10.1\lib\LinqToExcel.dll</HintPath>
     </Reference>
@@ -386,7 +392,6 @@
     <Compile Include="Controllers\FileDownloaderController.cs" />
     <Compile Include="Controllers\InspectController.cs" />
     <Compile Include="Controllers\FileUploaderController.cs" />
-    <Compile Include="Controllers\MyLinqToExcelController.cs" />
     <Compile Include="Controllers\MergeController.cs" />
     <Compile Include="Controllers\ResearchController.cs" />
     <Compile Include="Controllers\ResolvedController.cs" />
@@ -416,6 +421,8 @@
       <DependentUpon>MSM.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\ExcelData.cs" />
+    <Compile Include="Utils\ExcelDataReader.cs" />
     <Compile Include="Utils\Linq2Excel.cs" />
   </ItemGroup>
   <ItemGroup>
