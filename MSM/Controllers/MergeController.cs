@@ -36,31 +36,31 @@ namespace MSM.Controllers
 
         private static void UpdateDisposition(bool lbvd, bool tid, bool tdl, bool mbvd, bool sd, DispositionRow d, Check check)
         {
-            if (lbvd && d.LBVDCheckDisposition == null)
+            if (lbvd && string.IsNullOrEmpty(d.LBVDCheckDisposition))
             {
                 d.LBVDCheckDisposition = GetDispositionFromCheck(check);
                 DataManager.NewResolvedCheck(d, "LBVD");
             }
 
-            if (tid && d.TIDCheckDisposition == null)
+            if (tid && string.IsNullOrEmpty(d.TIDCheckDisposition))
             {
                 d.TIDCheckDisposition = GetDispositionFromCheck(check);
                 DataManager.NewResolvedCheck(d, "TID");
             }
 
-            if (tdl && d.TDLCheckDisposition == null)
+            if (tdl && string.IsNullOrEmpty(d.TDLCheckDisposition))
             {
                 d.TDLCheckDisposition = GetDispositionFromCheck(check);
                 DataManager.NewResolvedCheck(d, "TDL");
             }
 
-            if (mbvd && d.MBVDCheckDisposition == null)
+            if (mbvd && string.IsNullOrEmpty(d.MBVDCheckDisposition))
             {
                 d.MBVDCheckDisposition = GetDispositionFromCheck(check);
                 DataManager.NewResolvedCheck(d, "MBVD");
             }
 
-            if (sd && d.SDCheckDisposition == null)
+            if (sd && string.IsNullOrEmpty(d.SDCheckDisposition))
             {
                 d.SDCheckDisposition = GetDispositionFromCheck(check);
                 DataManager.NewResolvedCheck(d, "SD");
@@ -148,36 +148,44 @@ namespace MSM.Controllers
             {
                 if (check.Num > 0)
                 {
-                    DispositionRow d = (from r in DataManager.GetUpdatedRows()
+                    // There could be more than a single DispostionRow associated with a check number.
+                    // This will happen when the same check number is used for multiple birth certificates.
+                    List<DispositionRow> drows = (from r in DataManager.GetUpdatedRows()
                                         where r.LBVDCheckNum == check.Num
                                               || r.TIDCheckNum == check.Num
                                               || r.TDLCheckNum == check.Num
                                               || r.MBVDCheckNum == check.Num
                                               || r.SDCheckNum == check.Num
-                                        select r).FirstOrDefault();
+                                        select r).ToList();
 
-                    if (d == null)
+                    if (drows.Count() == 0)
                     {
-                        d = (from r in originalRows
-                             where r.LBVDCheckNum == check.Num
+                        drows = (from r in originalRows
+                                 where r.LBVDCheckNum == check.Num
                                    || r.TIDCheckNum == check.Num
                                    || r.TDLCheckNum == check.Num
                                    || r.MBVDCheckNum == check.Num
                                    || r.SDCheckNum == check.Num
-                             select r).FirstOrDefault();
+                                 select r).ToList();
 
-                        if (d != null)
+                        if (drows.Count() > 0)
                         {
-                            UpdateDisposition(check.Num == d.LBVDCheckNum, check.Num == d.TIDCheckNum, check.Num == d.TDLCheckNum, check.Num == d.MBVDCheckNum, check.Num == d.SDCheckNum, d, check);
-                            DataManager.NewUpdatedRow(d);
+                            foreach (DispositionRow drow in drows)
+                            {
+                                UpdateDisposition(check.Num == drow.LBVDCheckNum, check.Num == drow.TIDCheckNum, check.Num == drow.TDLCheckNum, check.Num == drow.MBVDCheckNum, check.Num == drow.SDCheckNum, drow, check);
+                                DataManager.NewUpdatedRow(drow);
+                            }
                         }
                     }
                     else
                     {
-                        // Found row among already updated rows. There is more than one check
-                        // number on this row. In other words, the client had more than
-                        // one check written for the visit this row corresponds to.
-                        UpdateDisposition(check.Num == d.LBVDCheckNum, check.Num == d.TIDCheckNum, check.Num == d.TDLCheckNum, check.Num == d.MBVDCheckNum, check.Num == d.SDCheckNum, d, check);
+                        foreach (DispositionRow drow in drows)
+                        {
+                            // Found row among already updated rows. There is more than one check
+                            // number on this row. In other words, the client had more than
+                            // one check written for the visit this row corresponds to.
+                            UpdateDisposition(check.Num == drow.LBVDCheckNum, check.Num == drow.TIDCheckNum, check.Num == drow.TDLCheckNum, check.Num == drow.MBVDCheckNum, check.Num == drow.SDCheckNum, drow, check);
+                        }
                     }
                 }
             }
@@ -203,13 +211,26 @@ namespace MSM.Controllers
         {
             foreach (Check check in checks)
             {
-                Check matched = (from c in longUnmatchedChecks
-                                 where c.Num == check.Num
-                                 select c).FirstOrDefault();
-
-                if (matched != null)
+                if (!DataManager.IsKnownDisposition(check.Num))
                 {
-                    DataManager.NewResolvedCheck(matched, GetDispositionFromCheck(check));
+                    List<Check> matchedChecks = (from c in longUnmatchedChecks
+                                                 where c.Num == check.Num
+                                                 select c).ToList();
+
+                    // Normally, matchedChecks.Count() == 0 or matchedChecks.Count == 1 
+                    // But in the case of a birth certificate, a single check number may cover
+                    // multiple children. In this case matchedChecks.Count() > 1.
+                    // The foreach loop below handles both the case where matchedChecks.Count() == 1
+                    // and the case where matchedChecks.Count() > 1.
+                    if (matchedChecks.Count() != 0)
+                    {
+                        foreach (Check matchedCheck in matchedChecks)
+                        {
+                            DataManager.NewResolvedCheck(matchedCheck, GetDispositionFromCheck(check));
+                        }
+
+                        DataManager.SetKnownDisposition(check.Num);
+                    }
                 }
             } 
         }
@@ -250,8 +271,7 @@ namespace MSM.Controllers
         // unmatched checks occuring on the supplied Apricot Report File.
         private static void ResolveUnmatchedChecks(string vcFileName, string vcFileType, string apFileName, string apFileType, string qbFileName, string qbFileType)
         {
-            int z;
-
+ 
             List<Check> qbChecks = DataManager.GetQuickbooksChecks(qbFileName, qbFileType);
             List<DispositionRow> originalRows = DataManager.GetApricotRows(apFileName, apFileType);
             List<Check> voidedChecks = DataManager.GetVoidedChecks(vcFileName, vcFileType);

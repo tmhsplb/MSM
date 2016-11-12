@@ -148,7 +148,7 @@ namespace MSM.DAL
             knownDisposition.Add(checkNum);
         }
 
-        private static bool IsKnownDisposition(int checkNum)
+        public static bool IsKnownDisposition(int checkNum)
         {
             bool has = knownDisposition.Any(cnum => cnum == checkNum);
             return has;
