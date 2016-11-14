@@ -159,7 +159,7 @@
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
                  if (desktop == true) {
-                     $http.get('http://localhost/msm/api/emptyfile', { params: { "emptyFile": "Empty", "fileType": "XLSX" } }).then(function (result) {
+                     $http.get('http://localhost/msm/api/emptyfile', { params: { "emptyFile": "Empty", "fileType": "xlsx" } }).then(function (result) {
                          defer.resolve(result.data);
                      });
                  }

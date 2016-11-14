@@ -95,6 +95,18 @@ namespace MSM.Utils
             return voidedChecks;
         }
 
+        public static List<EmptyCol> GetEmptyFile(string filePath)
+        {
+            List<EmptyCol> emptyCols = new ExcelData(filePath).GetData("Sheet1").Select(dataRow =>
+                new EmptyCol
+                {
+                    Empty = GetEmpty(dataRow)
+                    
+                }).ToList();
+
+            return emptyCols;
+        }
+
         private static DateTime GetDateValue(DataRow row)
         {
             string dvalue;
@@ -161,6 +173,11 @@ namespace MSM.Utils
             }
 
             return svalue;
+        }
+
+        private static string GetEmpty(DataRow row)
+        {
+            return "Empty";
         }
     }
 }
