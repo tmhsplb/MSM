@@ -15,6 +15,11 @@
                         { params: { "qbFile": FileManager.getQBFileName(), "fileType": FileManager.getQBFileType() } }).then(function (result) {
                             defer.resolve(result.data);
                         });
+                 } else {
+                     $http.get('https://mymsm.apphb.com/msm/api/qbfile',
+                        { params: { "qbFile": FileManager.getQBFileName(), "fileType": FileManager.getQBFileType() } }).then(function (result) {
+                             defer.resolve(result.data);
+                        });
                  }
                  return defer.promise;
              }).withPaginationType('full_numbers')
@@ -36,6 +41,10 @@
                  var defer = $q.defer();
                  if (desktop == true) {
                      $http.get('http://localhost/msm/api/vcfile', { params: { "vcFile": FileManager.getVCFileName(), "fileType": FileManager.getVCFileType() } }).then(function (result) {
+                         defer.resolve(result.data);
+                     });
+                 } else {
+                     $http.get('https://mymsm.apphb.com/api/vcfile', { params: { "vcFile": FileManager.getVCFileName(), "fileType": FileManager.getVCFileType() } }).then(function (result) {
                          defer.resolve(result.data);
                      });
                  }
@@ -100,6 +109,10 @@
                      $http.get('http://localhost/msm/api/research').then(function (result) {
                          defer.resolve(result.data);
                      });
+                 } else {
+                     $http.get('https://mymsm.apphb.com/api/research').then(function (result) {
+                         defer.resolve(result.data);
+                     });
                  }
                  return defer.promise;
              }).withPaginationType('full_numbers')
@@ -132,6 +145,10 @@
                      $http.get('http://localhost/msm/api/resolved').then(function (result) {
                          defer.resolve(result.data);
                      });
+                 } else {
+                     $http.get('https://mymsm.apphb.com/api/resolved').then(function (result) {
+                         defer.resolve(result.data);
+                     });
                  }
                  return defer.promise;
              }).withPaginationType('full_numbers')
@@ -160,6 +177,10 @@
                  var defer = $q.defer();
                  if (desktop == true) {
                      $http.get('http://localhost/msm/api/emptyfile', { params: { "emptyFile": "Empty", "fileType": "xlsx" } }).then(function (result) {
+                         defer.resolve(result.data);
+                     });
+                 } else {
+                     $http.get('https://mymsm.apphb.com/api/emptyfile', { params: { "emptyFile": "Empty", "fileType": "xlsx" } }).then(function (result) {
                          defer.resolve(result.data);
                      });
                  }

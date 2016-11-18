@@ -5,6 +5,10 @@ ResearchServices.factory('ResearchManager', ['$http', function ($http) {
             return $http.get("http://localhost/msm/api/resolvecheck/" + checkNum).then(function (result) {
                 return result.data;
             });
+        } else {
+            return $http.get("https://mymsm.apphb.cpm/api/resolvecheck/" + checkNum).then(function (result) {
+                return result.data;
+            });
         }
     };
 

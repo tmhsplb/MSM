@@ -7,6 +7,11 @@ FileServices.factory('FileManager', ['$http', function ($http) {
                 return result.data;
 
             })
+        } else {
+            return $http.get("https://mymsm.apphb.com/api/downloadimportme").then(function (result) {
+                return result.data;
+
+            })
         }
     };
 
