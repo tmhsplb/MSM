@@ -22,6 +22,21 @@ MergeServices.factory('MergeManager', ['$http', function ($http) {
                      }).then(function (result) {
                          return result.data;
                      });
+            } else {
+                return $http.get("https://mymsm.apphb.com/api/merge",
+                     {
+                         params:
+                            {
+                                "vcFileName": vcFileName,
+                                "vcFileType": vcFileType,
+                                "apFileName": apFileName,
+                                "apFileType": apFileType,
+                                "qbFileName": qbFileName,
+                                "qbFileType": qbFileType
+                            }
+                     }).then(function (result) {
+                         return result.data;
+                     });
             }
     };
      
