@@ -1,5 +1,5 @@
 ﻿
-var desktop = true;
+var desktop = false;
 
 var FileServices = angular.module('FileServices', ['ngResource']);
 var MergeServices = angular.module('MergeServices', ['ngResource']);
