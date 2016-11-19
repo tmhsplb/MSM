@@ -108,7 +108,7 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     var getVCFileName = function () {
         if (uploadedFiles.vcFileName == undefined)
         {
-            return "unkown";
+            return "unknown";
         }
 
         return uploadedFiles.vcFileName;

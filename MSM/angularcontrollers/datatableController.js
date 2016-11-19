@@ -16,7 +16,7 @@
                             defer.resolve(result.data);
                         });
                  } else {
-                     $http.get('https://mymsm.apphb.com/msm/api/qbfile',
+                     $http.get('https://mymsm.apphb.com/api/qbfile',
                         { params: { "qbFile": FileManager.getQBFileName(), "fileType": FileManager.getQBFileType() } }).then(function (result) {
                              defer.resolve(result.data);
                         });
