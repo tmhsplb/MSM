@@ -10,18 +10,11 @@
  
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-               //  alert("datatableController.js: FileManager.getQBFileName() = " + FileManager.getQBFileName());
-                 if (desktop == true) {
-                     $http.get('http://localhost/msm/api/qbfile',
-                        { params: { "qbFile": FileManager.getQBFileName(), "fileType": FileManager.getQBFileType() } }).then(function (result) {
-                            defer.resolve(result.data);
-                        });
-                 } else {
-                     $http.get('https://mymsm.apphb.com/api/qbfile',
-                        { params: { "qbFile": FileManager.getQBFileName(), "fileType": FileManager.getQBFileType() } }).then(function (result) {
-                             defer.resolve(result.data);
-                        });
-                 }
+                 //  alert("datatableController.js: FileManager.getQBFileName() = " + FileManager.getQBFileName());
+                 $http.get(server + "api/qbfile",
+                     { params: { "qbFile": FileManager.getQBFileName(), "fileType": FileManager.getQBFileType() } }).then(function (result) {
+                         defer.resolve(result.data);
+                     });
                  return defer.promise;
              }).withPaginationType('full_numbers')
                .withDisplayLength(10)
@@ -40,16 +33,11 @@
          {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-               //  alert("datatableController.js: FileManager.getVCFileName() = " + FileManager.getVCFileName());
-                 if (desktop == true) {
-                     $http.get('http://localhost/msm/api/vcfile', { params: { "vcFile": FileManager.getVCFileName(), "fileType": FileManager.getVCFileType() } }).then(function (result) {
+                 //  alert("datatableController.js: FileManager.getVCFileName() = " + FileManager.getVCFileName());
+                 $http.get(server + "api/vcfile", 
+                     { params: { "vcFile": FileManager.getVCFileName(), "fileType": FileManager.getVCFileType() } }).then(function (result) {
                          defer.resolve(result.data);
                      });
-                 } else {
-                     $http.get('https://mymsm.apphb.com/api/vcfile', { params: { "vcFile": FileManager.getVCFileName(), "fileType": FileManager.getVCFileType() } }).then(function (result) {
-                         defer.resolve(result.data);
-                     });
-                 }
                  return defer.promise;
              }).withPaginationType('full_numbers')
                .withDisplayLength(10)
@@ -68,16 +56,10 @@
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
               //   alert("datatableController.js: FileManager.getAPFileName() = " + FileManager.getAPFileName());
-                 if (desktop == true) {
-                     $http.get('http://localhost/msm/api/apfile', { params: { "apricotFile": FileManager.getAPFileName(), "fileType": FileManager.getAPFileType() } }).then(function (result) {
+                 $http.get(server + "api/apfile",
+                     { params: { "apricotFile": FileManager.getAPFileName(), "fileType": FileManager.getAPFileType() } }).then(function (result) {
                          defer.resolve(result.data);
                      });
-                 } else {
-                     $http({ method: "GET", url: "https://mymsm.apphb.com/api/apfile", params: { "apricotFile": FileManager.getAPFileName(), "fileType": FileManager.getAPFileType() } }).then(function (result) {
-                         defer.resolve(result.data);
-                     })
-                 }
-
                  return defer.promise;
              }).withPaginationType('full_numbers')
                .withDisplayLength(10)
@@ -107,15 +89,9 @@
          else if ($scope.tab == 'research') {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 if (desktop == true) {
-                     $http.get('http://localhost/msm/api/research').then(function (result) {
-                         defer.resolve(result.data);
-                     });
-                 } else {
-                     $http.get('https://mymsm.apphb.com/api/research').then(function (result) {
-                         defer.resolve(result.data);
-                     });
-                 }
+                 $http.get(server + "api/research").then(function (result) {
+                     defer.resolve(result.data);
+                 });
                  return defer.promise;
              }).withPaginationType('full_numbers')
                .withDisplayLength(10)
@@ -143,22 +119,15 @@
          function DisplayResolvedChecks() {  // There not be any. This is handled by returning an empty list of checks from the API.
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 if (desktop == true) {
-                     $http.get('http://localhost/msm/api/resolved').then(function (result) {
-                         defer.resolve(result.data);
-                     });
-                 } else {
-                     $http.get('https://mymsm.apphb.com/api/resolved').then(function (result) {
-                         defer.resolve(result.data);
-                     });
-                 }
+                 $http.get(server + "api/resolved").then(function (result) {
+                     defer.resolve(result.data);
+                 });
                  return defer.promise;
              }).withPaginationType('full_numbers')
                .withDisplayLength(10)
                .withOption('lengthChange', false)
                .withButtons(['print', 'excel']);
              
-
              vm.dtColumns = [
                       DTColumnBuilder.newColumn('Date').withTitle('Date').renderWith(function (data, type) {
                           return $filter('date')(data, 'dd/MM/yyyy')
@@ -177,15 +146,10 @@
              $scope.pleaseAct = true;
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 if (desktop == true) {
-                     $http.get('http://localhost/msm/api/emptyfile', { params: { "emptyFile": "Empty", "fileType": "xlsx" } }).then(function (result) {
+                 $http.get(server + "api.emptyfile",
+                     { params: { "emptyFile": "Empty", "fileType": "xlsx" } }).then(function (result) {
                          defer.resolve(result.data);
                      });
-                 } else {
-                     $http.get('https://mymsm.apphb.com/api/emptyfile', { params: { "emptyFile": "Empty", "fileType": "xlsx" } }).then(function (result) {
-                         defer.resolve(result.data);
-                     });
-                 }
                  return defer.promise;
              }).withPaginationType('full_numbers');
              vm.dtColumns = [

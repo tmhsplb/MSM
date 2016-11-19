@@ -24,15 +24,6 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                        
                         var xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", VCUploadComplete, false);
-
-                        /*
-                        if (desktop == true) {
-                            xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
-                        } else {
-                            xhr.open("POST", "https://mymsm.apphb.com/api/upload/UploadFile", true);
-                        }
-                        */
-
                         xhr.open("POST", server + "api/upload/UploadFile");
                         $scope.progressVisible = true;
                         xhr.send(fd);
@@ -89,11 +80,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
 
                         var xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", QBUploadComplete, false);
-                        if (desktop == true) {
-                            xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
-                        } else {
-                            xhr.open("POST", "https://mymsm.apphb.com/api/upload/UploadFile", true);
-                        }
+                        xhr.open("POST", server + "api/upload/UploadFile", true);
                         $scope.progressVisible = true;
                         xhr.send(fd);
                     }
@@ -147,12 +134,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                 
                         var xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", APUploadComplete, false);
-       
-                        if (desktop == true) {
-                            xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
-                        } else {
-                            xhr.open("POST", "https://mymsm.apphb.com/api/upload/UploadFile", true);
-                        }
+                        xhr.open("POST", server + "api/upload/UploadFile", true);
                         $scope.progressVisible = true;
                         xhr.send(fd);
                     }
@@ -286,13 +268,8 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                     qbFileType = FileManager.getQBFileType();
                 }
 
-
-                
                 $scope.mergeStatus = "Merging...";
 
-                //console.log("vcFileName.vcFileType = " + vcFileName + "." + vcFileType);
-                //console.log("apFileName.apFileType = " + apFileName + "." + apFileType);
-                //console.log("qbFileName.qbFileType = " + qbFileName + "." + qbFileType);
                 MergeManager.merge(vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType).then(function (ms) {
                     $scope.mergeStatus = "Merge completed";
                 });   

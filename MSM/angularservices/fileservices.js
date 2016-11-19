@@ -2,17 +2,9 @@
 FileServices.factory('FileManager', ['$http', function ($http) {
     var getDownloadFile = function (fileName, fileType) {
        // return $http.get("http://localhost/MSM/api/api/download", { params: { "fileName": fileName, "fileType": fileType } }).then(function (result) {
-        if (desktop == true) {
-            return $http.get("http://localhost/MSM/api/downloadimportme").then(function (result) {
-                return result.data;
-
-            })
-        } else {
-            return $http.get("https://mymsm.apphb.com/api/downloadimportme").then(function (result) {
-                return result.data;
-
-            })
-        }
+       return $http.get(server + "api/downloadimportme").then(function (result) {
+            return result.data;
+        })
     };
 
     var uploadedFiles = {};
@@ -144,15 +136,10 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         var fparts = fileObj.name.split(".");
         var fname = fparts[0];
         var fext = fparts[1];
-        if (desktop == true) {
-            return $http.get("http://localhost/MSM/api/checkvalidity", { params: { "ftype": ftype, "fname": fname, "fext": fext } }).then(function (result) {
+        return $http.get(server + "api/checkvalidity",
+            { params: { "ftype": ftype, "fname": fname, "fext": fext } }).then(function (result) {
                 return result.data;
             })
-        } else {
-            return $http({ method: "GET", url: "https://mymsm.apphb.com/api/checkvalidity", params: { "ftype": ftype, "fname": fname, "fext": fext } }).then(function (result) {
-                return result.data;
-            })
-        }
     }
 
     

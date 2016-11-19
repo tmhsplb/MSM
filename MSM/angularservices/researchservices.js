@@ -1,15 +1,9 @@
 ﻿
 ResearchServices.factory('ResearchManager', ['$http', function ($http) {
     var resolve = function (checkNum) {
-        if (desktop == true) {
-            return $http.get("http://localhost/msm/api/resolvecheck/" + checkNum).then(function (result) {
-                return result.data;
-            });
-        } else {
-            return $http.get("https://mymsm.apphb.cpm/api/resolvecheck/" + checkNum).then(function (result) {
-                return result.data;
-            });
-        }
+        return $http.get(server + "api/resolvecheck" + checkNum).then(function (result) {
+            return result.data;
+        });
     };
 
     var resolvedStatus = "";
@@ -26,7 +20,6 @@ ResearchServices.factory('ResearchManager', ['$http', function ($http) {
 
     return {
         resolve: resolve,
-
         getResolvedStatus: getResolvedStatus,
         setResolvedStatus: setResolvedStatus,    
     };
