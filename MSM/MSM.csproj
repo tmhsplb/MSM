@@ -312,6 +312,8 @@
     <Content Include="App_Data\Check Disposition Header.csv" />
     <Content Include="App_Data\Empty.xlsx" />
     <Content Include="App_Data\VCEmpty.xlsx" />
+    <Content Include="App_Data\QBEmpty.xlsx" />
+    <Content Include="App_Data\unknown.xlsx" />
     <None Include="Scripts\jquery-1.7.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />

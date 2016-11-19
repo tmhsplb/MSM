@@ -18,9 +18,9 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     var uploadedFiles = {};
     var menuFiles = [];
 
-    uploadedFiles.vcFileName = 'unknown';
-    uploadedFiles.apFileName = 'unknown';
-    uploadedFiles.qbFileName = 'unknown';
+  //  uploadedFiles.vcFileName = 'unknown';
+  //  uploadedFiles.apFileName = 'unknown';
+  //  uploadedFiles.qbFileName = 'unknown';
 
     var addToMenuFiles = function (ftype, fname, extension)
     {
@@ -34,7 +34,7 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         var ftype = fparts[1];
         var qbUploaded = uploadedFiles.qbFileName;
 
-        if (qbUploaded == 'unknown' || qbUploaded != fname) {
+        if (qbUploaded == undefined || qbUploaded != fname) {
             uploadedFiles.qbFileName = fname;
             uploadedFiles.qbFileType = ftype;
             addToMenuFiles("Quickbooks", fname, ftype);
@@ -42,6 +42,11 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     }
 
     var getQBFileName = function () {
+        if (uploadedFiles.qbFileName == undefined)
+        {
+            return "Empty";
+        }
+
         return uploadedFiles.qbFileName;
     }
 
@@ -59,7 +64,7 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         var ftype = fparts[1];
         var apUploaded = uploadedFiles.apFileName;
 
-        if (apUploaded == 'unknown' || apUploaded != fname) {
+        if (apUploaded == undefined || apUploaded != fname) {
             uploadedFiles.apFileName = fname;
             uploadedFiles.apFileType = ftype;
             addToMenuFiles("Apricot", fname, ftype);
@@ -72,19 +77,23 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         var ftype = fparts[1];
         var vcUploaded = uploadedFiles.vcFileName;
 
-        if (vcUploaded == 'unknown' || vcUploaded != fname) {
+        if (vcUploaded == undefined || vcUploaded != fname) {
             uploadedFiles.vcFileName = fname;
             uploadedFiles.vcFileType = ftype;
             addToMenuFiles("Voidedchecks", fname, ftype);
         }
     }
 
-    var setSelectedFile = function(ftype)
+    var setSelectedFile = function(fname)
     {
-        uploadedFiles.selectedFile = ftype;
+        uploadedFiles.selectedFile = fname;
     }
 
     var getAPFileName = function () {
+        if (uploadedFiles.apFileName == undefined) {
+            return "Empty";
+        };
+
         return uploadedFiles.apFileName;
     }
 
@@ -97,6 +106,11 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     }
 
     var getVCFileName = function () {
+        if (uploadedFiles.vcFileName == undefined)
+        {
+            return "Empty";
+        }
+
         return uploadedFiles.vcFileName;
     }
 
