@@ -24,11 +24,16 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                        
                         var xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", VCUploadComplete, false);
+
+                        /*
                         if (desktop == true) {
                             xhr.open("POST", "http://localhost/MSM/api/upload/UploadFile", true);
                         } else {
                             xhr.open("POST", "https://mymsm.apphb.com/api/upload/UploadFile", true);
                         }
+                        */
+
+                        xhr.open("POST", server + "api/upload/UploadFile");
                         $scope.progressVisible = true;
                         xhr.send(fd);
                     }

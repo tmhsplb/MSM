@@ -1,5 +1,12 @@
 ﻿
 var desktop = false;
+var server;
+
+if (desktop == true) {
+    server = "http://localhost/msm/";
+} else {
+    server = "https://mymsm.apphb.com/";
+}
 
 
 var FileServices = angular.module('FileServices', ['ngResource']);

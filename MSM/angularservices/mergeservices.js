@@ -7,6 +7,22 @@ MergeServices.factory('MergeManager', ['$http', function ($http) {
   //  summary.merge = "unavailable";
 
     var merge = function (vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType) {
+        return $http.get(server + "/api/merge",
+            {
+                params:
+                   {
+                       "vcFileName": vcFileName,
+                       "vcFileType": vcFileType,
+                       "apFileName": apFileName,
+                       "apFileType": apFileType,
+                       "qbFileName": qbFileName,
+                       "qbFileType": qbFileType
+                   }
+            }).then(function (result) {
+                return result.data;
+            });
+    
+            /*
             if (desktop == true) {
                 return $http.get("http://localhost/msm/api/merge",
                      {
@@ -38,6 +54,7 @@ MergeServices.factory('MergeManager', ['$http', function ($http) {
                          return result.data;
                      });
             }
+            */
     };
      
     return {
