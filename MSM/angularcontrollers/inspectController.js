@@ -4,7 +4,8 @@ MSMApp.controller('inspectController', ['$rootScope', '$scope', '$http', '$q', '
      function ($rootScope, $scope, $http, $q, $route, FileManager) {
          $rootScope.pageTitle = "Main Street Ministries - Inspect";
          $scope.menuFiles = FileManager.getMenuFiles();
-         $scope.tab = 'inspect'
+         $scope.tab = 'inspect';
+
         
          $scope.changedValue = function () {
              if ($scope.selectedFile == "Quickbooks") {

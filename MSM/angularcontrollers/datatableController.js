@@ -10,6 +10,7 @@
  
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
+               //  alert("datatableController.js: FileManager.getQBFileName() = " + FileManager.getQBFileName());
                  if (desktop == true) {
                      $http.get('http://localhost/msm/api/qbfile',
                         { params: { "qbFile": FileManager.getQBFileName(), "fileType": FileManager.getQBFileType() } }).then(function (result) {
@@ -39,6 +40,7 @@
          {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
+               //  alert("datatableController.js: FileManager.getVCFileName() = " + FileManager.getVCFileName());
                  if (desktop == true) {
                      $http.get('http://localhost/msm/api/vcfile', { params: { "vcFile": FileManager.getVCFileName(), "fileType": FileManager.getVCFileType() } }).then(function (result) {
                          defer.resolve(result.data);
@@ -65,7 +67,7 @@
          {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-
+              //   alert("datatableController.js: FileManager.getAPFileName() = " + FileManager.getAPFileName());
                  if (desktop == true) {
                      $http.get('http://localhost/msm/api/apfile', { params: { "apricotFile": FileManager.getAPFileName(), "fileType": FileManager.getAPFileType() } }).then(function (result) {
                          defer.resolve(result.data);

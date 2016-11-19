@@ -9,9 +9,9 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
             $rootScope.pageTitle = "Main Street Ministries - Merge";
             $scope.mergeStatus = "";
             $scope.files = [];
-            $scope.VCUploadedFile = FileManager.getVCFileName();
-            $scope.APUploadedFile = FileManager.getAPFileName();
-            $scope.QBUploadedFile = FileManager.getQBFileName();
+            $scope.VCUploadedFile = FileManager.getVCFileName() + "." + FileManager.getVCFileType();
+            $scope.APUploadedFile = FileManager.getAPFileName() + "." + FileManager.getAPFileType();
+            $scope.QBUploadedFile = FileManager.getQBFileName() + "." + FileManager.getQBFileType();
 
             $scope.VCUpload = function () {
                 var fd = new FormData()
@@ -48,7 +48,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                             if (jsonObj.ftype == 'VC' & jsonObj.seen == "false") {
                                 FileManager.getValidFile('VC', jsonObj.file).then(function (v) {
                                     jsonObj.seen = "true";
-                                    $scope.VCUploadedFile = jsonObj.file.name;  
+                                    $scope.VCUploadedFile = jsonObj.file.name;  // this include the extension
                                     
                                     // Don't know why have to set variable valid, but does not work otherwise.
                                     var valid = (v === "true" ? true : false);
@@ -107,7 +107,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                             if (jsonObj.ftype == 'QB' & jsonObj.seen == "false") {
                                 FileManager.getValidFile('QB', jsonObj.file).then(function (v) {
                                     jsonObj.seen = "true";
-                                    $scope.QBUploadedFile = jsonObj.file.name;
+                                    $scope.QBUploadedFile = jsonObj.file.name;  // this includes the extension
 
                                     // Don't know why have to set variable valid, but does not work otherwise.
                                     var valid = (v === "true" ? true : false);
@@ -167,7 +167,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                             if (jsonObj.ftype == 'AP' & jsonObj.seen == "false") {
                                 FileManager.getValidFile('AP', jsonObj.file).then(function (v) {
                                     jsonObj.seen = "true";
-                                    $scope.APUploadedFile = jsonObj.file.name;
+                                    $scope.APUploadedFile = jsonObj.file.name;  // this includes the extension
 
                                     // Don't know why have to set variable valid, but does not work otherwise.
                                     var valid = (v === "true" ? true : false);
@@ -289,12 +289,6 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                 //console.log("apFileName.apFileType = " + apFileName + "." + apFileType);
                 //console.log("qbFileName.qbFileType = " + qbFileName + "." + qbFileType);
                 MergeManager.merge(vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType).then(function (ms) {
-                    $scope.VCUploadedFile = "";
-                    $scope.APUploadedFile = "";
-                    $scope.QBUploadedFile = "";
-                    FileManager.setVCFileName("unknown");
-                    FileManager.setAPFileName("unknown");
-                    FileManager.setQBFileName("unknown");
                     $scope.mergeStatus = "Merge completed";
                 });   
             }

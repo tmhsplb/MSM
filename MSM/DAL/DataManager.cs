@@ -225,22 +225,28 @@ namespace MSM.DAL
                     break;
             }
 
-            resolvedChecks.Add(new Check
+            if (!IsResolved(checkNum))
             {
-                RecordID = row.RecordID,
-                InterviewRecordID = row.InterviewRecordID,
-                Num = checkNum,
-                Name = (row.Name != null ? row.Name : string.Format("{0}, {1}", row.Lname, row.Fname)),
-                Date = row.Date,
-                Clr = status,
-                Service = service
-            });
+                resolvedChecks.Add(new Check
+                {
+                    RecordID = row.RecordID,
+                    InterviewRecordID = row.InterviewRecordID,
+                    Num = checkNum,
+                    Name = (row.Name != null ? row.Name : string.Format("{0}, {1}", row.Lname, row.Fname)),
+                    Date = row.Date,
+                    Clr = status,
+                    Service = service
+                });
+            }
         }
 
         public static void NewResolvedCheck(Check check, string status)
         {
             check.Clr = status;
-            resolvedChecks.Add(check);
+            if (!IsResolved(check.Num))
+            {
+                resolvedChecks.Add(check);
+            }
         }
 
         public static void NewUnmatchedCheck(DispositionRow row, string service)

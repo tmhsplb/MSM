@@ -18,10 +18,6 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     var uploadedFiles = {};
     var menuFiles = [];
 
-  //  uploadedFiles.vcFileName = 'unknown';
-  //  uploadedFiles.apFileName = 'unknown';
-  //  uploadedFiles.qbFileName = 'unknown';
-
     var addToMenuFiles = function (ftype, fname, extension)
     {
         fileName = fname + "." + extension;
@@ -55,6 +51,11 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     }
 
     var getQBFileType = function () {
+        if (uploadedFiles.qbFileType == undefined)
+        {
+            return "";
+        }
+
         return uploadedFiles.qbFileType;
     }
 
@@ -102,6 +103,10 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     }
    
     var getAPFileType = function () {
+        if (uploadedFiles.apFileType == undefined)
+        {
+            return "";
+        }
         return uploadedFiles.apFileType;
     }
 
@@ -119,6 +124,10 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     }
 
     var getVCFileType = function () {
+        if (uploadedFiles.vcFileType == undefined)
+        {
+            return "";
+        }
         return uploadedFiles.vcFileType;
     }
 
