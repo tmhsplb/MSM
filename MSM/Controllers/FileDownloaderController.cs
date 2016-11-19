@@ -88,7 +88,7 @@ namespace MSM.Controllers
         {
             // Create file importme.csv and write 2 header lines from Check Disposition Header.csv
             PrepareImportHeader();
-            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/importme.csv"));
+            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/importme.csv"));
 
             // Append lines to file importme.csv
             //  using (StreamWriter writer = new StreamWriter(@"C:\\Methodist\\OPID\\Linq\\importme.csv", true))

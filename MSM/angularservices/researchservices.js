@@ -1,7 +1,7 @@
 ﻿
 ResearchServices.factory('ResearchManager', ['$http', function ($http) {
     var resolve = function (checkNum) {
-        return $http.get(server + "api/resolvecheck" + checkNum).then(function (result) {
+        return $http.get(server + "api/resolvecheck/" + checkNum).then(function (result) {
             return result.data;
         });
     };
