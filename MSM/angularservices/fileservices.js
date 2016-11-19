@@ -44,7 +44,7 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     var getQBFileName = function () {
         if (uploadedFiles.qbFileName == undefined)
         {
-            return "Empty";
+            return "unknown";
         }
 
         return uploadedFiles.qbFileName;
@@ -91,7 +91,7 @@ FileServices.factory('FileManager', ['$http', function ($http) {
 
     var getAPFileName = function () {
         if (uploadedFiles.apFileName == undefined) {
-            return "Empty";
+            return "unknown";
         };
 
         return uploadedFiles.apFileName;
@@ -108,7 +108,7 @@ FileServices.factory('FileManager', ['$http', function ($http) {
     var getVCFileName = function () {
         if (uploadedFiles.vcFileName == undefined)
         {
-            return "Empty";
+            return "unkown";
         }
 
         return uploadedFiles.vcFileName;
