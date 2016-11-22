@@ -314,6 +314,7 @@
     <Content Include="App_Data\VCEmpty.xlsx" />
     <Content Include="App_Data\QBEmpty.xlsx" />
     <Content Include="App_Data\unknown.xlsx" />
+    <Content Include="App_Data\Import Me Header.csv" />
     <None Include="Scripts\jquery-1.7.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
@@ -445,7 +446,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\Public\" />
+    <Folder Include="Downloads\" />
+    <Folder Include="Uploads\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

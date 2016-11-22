@@ -25,16 +25,18 @@ namespace MSM.DAL
                 knownDisposition = new List<int>();
                 unmatchedChecks = new List<Check>();
                 resolvedChecks = new List<Check>();
-                updatedRows = new List<DispositionRow>();
+            //    updatedRows = new List<DispositionRow>();
                 firstCall = false;
             }
+
+            updatedRows = new List<DispositionRow>();
         }
 
         public static List<DispositionRow> GetApricotRows(string apFileName, string apFileType)
         {
            // List<DispositionRow> originalRows = new List<DispositionRow>();
           //  string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", apFileName, apFileType));
-            string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", apFileName, apFileType));
+            string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}.{1}", apFileName, apFileType));
 
             List<DispositionRow> apricotRows = ExcelDataReader.GetApricotRows(pathToApricotReportFile);
             
@@ -59,7 +61,7 @@ namespace MSM.DAL
             }
 
             //List<Check> voidedChecks = new List<Check>();
-            string pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", vcFileName, vcFileType));
+            string pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}.{1}", vcFileName, vcFileType));
 
             List<Check> voidedChecks = ExcelDataReader.GetVoidedChecks(pathToVoidedChecksFile);
 
@@ -84,7 +86,7 @@ namespace MSM.DAL
             }
 
            // List<Check> quickbooksChecks = new List<Check>();
-            string pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", qbFileName, qbFileType));
+            string pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}.{1}", qbFileName, qbFileType));
 
             List<Check> quickbooksChecks = ExcelDataReader.GetQuickbooksChecks(pathToQuickbooksFile);
 
@@ -225,8 +227,8 @@ namespace MSM.DAL
                     break;
             }
 
-            if (!IsResolved(checkNum))
-            {
+          //  if (!IsResolved(checkNum))
+          //  {
                 resolvedChecks.Add(new Check
                 {
                     RecordID = row.RecordID,
@@ -237,16 +239,19 @@ namespace MSM.DAL
                     Clr = status,
                     Service = service
                 });
-            }
+          //  }
         }
 
         public static void NewResolvedCheck(Check check, string status)
         {
             check.Clr = status;
+            resolvedChecks.Add(check);
+            /*
             if (!IsResolved(check.Num))
             {
                 resolvedChecks.Add(check);
             }
+             */
         }
 
         public static void NewUnmatchedCheck(DispositionRow row, string service)
@@ -304,6 +309,26 @@ namespace MSM.DAL
         public static void NewUpdatedRow(DispositionRow d)
         {
             updatedRows.Add(d);
+        }
+
+        public static void NewUpdatedRow(Check matchedCheck, string disposition)
+        {
+            DispositionRow drow = new DispositionRow
+            {         
+                InterviewRecordID = matchedCheck.InterviewRecordID,
+                LBVDCheckNum = (matchedCheck.Service.Equals("LBVD") ? matchedCheck.Num : 0),
+                LBVDCheckDisposition = (matchedCheck.Service.Equals("LBVD") ? disposition : ""),
+                TIDCheckNum = (matchedCheck.Service.Equals("TID") ? matchedCheck.Num : 0),
+                TIDCheckDisposition = (matchedCheck.Service.Equals("TID") ? disposition : ""),
+                TDLCheckNum = (matchedCheck.Service.Equals("TDL") ? matchedCheck.Num : 0),
+                TDLCheckDisposition = (matchedCheck.Service.Equals("TDL") ? disposition : ""),
+                MBVDCheckNum = (matchedCheck.Service.Equals("MBVD") ? matchedCheck.Num : 0),
+                MBVDCheckDisposition = (matchedCheck.Service.Equals("MBVD") ? disposition : ""),
+                SDCheckNum = (matchedCheck.Service.Equals("SD") ? matchedCheck.Num : 0),
+                SDCheckDisposition = (matchedCheck.Service.Equals("SD") ? disposition : "")
+            };
+
+            updatedRows.Add(drow);
         }
 
         public static List<Check> GetLongUnmatchedChecks()

@@ -13,13 +13,15 @@ namespace MSM.Controllers
 {
     public class FileDownloaderController : ApiController
     {
+        private static string timestamp;
+
         [HttpGet]
         public HttpResponseMessage DownloadFile(string fileName, string fileType)
         {
             Byte[] bytes = null;
             if (fileName != null)
             {
-                string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", fileName, fileType));
+                string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/{0}.{1}", fileName, fileType));
                 // string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}", fileName));
                 FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
                 BinaryReader br = new BinaryReader(fs);
@@ -52,10 +54,11 @@ namespace MSM.Controllers
             }
 
             Byte[] bytes = null;
-            
+           
            // string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", "ImportMe", "csv"));
 
-            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", "importme", "csv"));
+            string fname = string.Format("importme-{0}", timestamp);
+            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/{0}.csv", fname));
             
             FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             BinaryReader br = new BinaryReader(fs);
@@ -71,24 +74,25 @@ namespace MSM.Controllers
             result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/force-download");
             result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
             {
-                FileName = "importme"
+                FileName = fname
             };
             return (result);
         }
 
         private static void PrepareImportHeader()
         {
-            string pathToDispositionHeader = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Check Disposition Header.csv"));
-            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/importme.csv"));
+            string pathToDispositionHeader = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Import Me Header.csv"));
+            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/importme-{0}.csv", timestamp));
             var retainedLines = File.ReadAllLines(pathToDispositionHeader);
             File.WriteAllLines(pathToImportMeFile, retainedLines);
         }
 
         private static void PrepareImportFile(List<DispositionRow> updatedRows)
         {
+            timestamp = DateTime.Now.ToString("dd-MM-yy-hhmm");
             // Create file importme.csv and write 2 header lines from Check Disposition Header.csv
             PrepareImportHeader();
-            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/importme.csv"));
+            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/importme-{0}.csv", timestamp));
 
             // Append lines to file importme.csv
             //  using (StreamWriter writer = new StreamWriter(@"C:\\Methodist\\OPID\\Linq\\importme.csv", true))
@@ -112,6 +116,12 @@ namespace MSM.Controllers
                     writer.WriteLine(csvRow);
                 }
             }
+        }
+
+        [HttpGet]
+        public string GetTimestamp()
+        {
+            return timestamp;
         }
     }
 }

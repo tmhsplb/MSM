@@ -1,4 +1,18 @@
 ﻿<p>
-    Welcome to the MSM External Support Site.
-
+    Welcome to the MSM Check Handling Site.
+</p>
+<p>
+    If you are merging a set of checks against the checks in the research table visible under the Research tab, then
+    make sure the set of resolved checks is currently empty. To do this go to the Resolved tab and make sure that
+    it does not display any resolved checks. If there are no resolved checks, then proceed with the merge operation.
+    If there are resolved checks, the merge operation may not work as expected. Please wait until the next day to
+    perform the merge. By then the resolved checks will be reset to the empty set.
+</p>
+<p>
+    The reason for this precaution is that the set of resolved checks may persist between sessions. Technically,
+    this is because the set of resolved checks is managed as a static variable in the code instead of a session
+    variable. This will be fixed in a future version of this site. For right now, an internal reset of the site is
+    required to re-initialize the static variable managing the set of resolved checks. This internal reset happens
+    at least every day and possibly more frequently. This means that from one day to the next the set of resolved
+    checks will be re-initialized and there will be no resolved checks under the Resolved tab.
 </p>

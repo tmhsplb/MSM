@@ -142,6 +142,12 @@ FileServices.factory('FileManager', ['$http', function ($http) {
             })
     }
 
+    var getTimestamp = function()
+    {
+       return $http.get(server + "api/timestamp").then(function (result) {
+            return result.data;
+        })
+    }
     
     return {
         getDownloadFile: getDownloadFile,
@@ -165,7 +171,8 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         setSelectedFile: setSelectedFile,
         getSelectedFile: getSelectedFile,
         getValidFile: getValidFile,
-       
+
+        getTimestamp: getTimestamp 
     };
 }]);
 

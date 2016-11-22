@@ -31,7 +31,7 @@ namespace MSM.Controllers
                    
                    // string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}", postedFile.FileName));
 
-                    string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}", postedFile.FileName));
+                    string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}", postedFile.FileName));
                     postedFile.SaveAs(filePath);
                     
                     docfiles.Add(filePath);
@@ -52,7 +52,7 @@ namespace MSM.Controllers
         {
           //  string fpath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", fname, fext));
 
-            string fpath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", fname, fext));
+            string fpath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}.{1}", fname, fext));
            
             switch(ftype)
             {

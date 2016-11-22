@@ -34,6 +34,37 @@ namespace MSM.Controllers
             }
         }
 
+        private static void UpdateDisposition(Check matchedCheck, string disposition, DispositionRow drow)
+        {
+            int checkNum = matchedCheck.Num;
+
+            switch (matchedCheck.Service)
+            {
+                case "LBVD":
+                    drow.LBVDCheckNum = checkNum;
+                    drow.LBVDCheckDisposition = disposition;
+                    break;
+                case "TID":
+                    drow.TIDCheckNum = checkNum;
+                    drow.TIDCheckDisposition = disposition;
+                    break;
+                case "TDL":
+                    drow.TDLCheckNum = checkNum;
+                    drow.TDLCheckDisposition = disposition;
+                    break;
+                case "MBVD": 
+                    drow.MBVDCheckNum = checkNum;
+                    drow.MBVDCheckDisposition = disposition;
+                    break;
+                case "SD":
+                    drow.SDCheckNum = checkNum;
+                    drow.SDCheckDisposition = disposition;
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private static void UpdateDisposition(bool lbvd, bool tid, bool tdl, bool mbvd, bool sd, DispositionRow d, Check check)
         {
             if (lbvd && string.IsNullOrEmpty(d.LBVDCheckDisposition))
@@ -148,7 +179,7 @@ namespace MSM.Controllers
             {
                 if (check.Num > 0)
                 {
-                    // There could be more than a single DispostionRow associated with a check number.
+                    // There could be more than a single DispositionRow associated with a check number.
                     // This will happen when the same check number is used for multiple birth certificates.
                     List<DispositionRow> drows = (from r in DataManager.GetUpdatedRows()
                                         where r.LBVDCheckNum == check.Num
@@ -191,7 +222,7 @@ namespace MSM.Controllers
             }
         }
 
-        // The user did not specify an Apricot Reprot File on the merge screen. The user is trying
+        // The user did not specify an Apricot Report File on the merge screen. The user is trying
         // to resolve some long unmatched checks.
         private static void ResolveLongUnmatched(string vcFileName, string vcFileType, string qbFileName, string qbFileType)
         {
@@ -226,7 +257,43 @@ namespace MSM.Controllers
                     {
                         foreach (Check matchedCheck in matchedChecks)
                         {
-                            DataManager.NewResolvedCheck(matchedCheck, GetDispositionFromCheck(check));
+                            string disposition = GetDispositionFromCheck(check);
+
+                            DataManager.NewResolvedCheck(matchedCheck, disposition);
+
+                            List<DispositionRow> drows = (from r in DataManager.GetUpdatedRows()
+                                                          where r.LBVDCheckNum == matchedCheck.Num
+                                                                || r.TIDCheckNum == matchedCheck.Num
+                                                                || r.TDLCheckNum == matchedCheck.Num
+                                                                || r.MBVDCheckNum == matchedCheck.Num
+                                                                || r.SDCheckNum == matchedCheck.Num
+                                                                || r.InterviewRecordID == matchedCheck.InterviewRecordID
+                                                          select r).ToList();
+                            if (drows.Count() == 0)
+                            {
+                                // There is no disposition row representing this matched check.
+                                // Create one.
+                                DataManager.NewUpdatedRow(matchedCheck, disposition);
+                            }
+                            else
+                            {
+                                foreach (DispositionRow drow in drows)
+                                {
+                                    if (matchedCheck.InterviewRecordID != drow.InterviewRecordID)
+                                    {
+                                        // Case of same check number being used for multiple
+                                        // birth certificates.
+                                        DataManager.NewUpdatedRow(matchedCheck, disposition);
+                                    }
+                                    else
+                                    {
+                                        // Found row among already updated rows. There is more than one check
+                                        // number on this row. In other words, the client had more than
+                                        // one check written for the visit this row corresponds to.
+                                        UpdateDisposition(matchedCheck, disposition, drow);
+                                    }
+                                }
+                            }
                         }
 
                         DataManager.SetKnownDisposition(check.Num);
@@ -291,7 +358,7 @@ namespace MSM.Controllers
         {
             if (apFileName.Equals("unknown"))
             {
-                // The user did not specify an Apricot Reprot File on the merge screen. The user is trying
+                // The user did not specify an Apricot Report File on the merge screen. The user is trying
                 // to resolve some long unmatched checks.
                 ResolveLongUnmatched(vcFileName, vcFileType, qbFileName, qbFileType);
             }

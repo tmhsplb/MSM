@@ -11,17 +11,6 @@ namespace MSM.Utils
 {
     public class ExcelDataReader
     {
-        /*
-        private string path;
-        private string worksheetName;
-
-        public ExcelDataReader(string path, string worksheetName)
-        {
-            this.path = path;
-            this.worksheetName = worksheetName;
-        }
-        */
-
         public static List<DispositionRow> GetApricotRows (string filePath)
         {
             List<DispositionRow> apricotRows = new ExcelData(filePath).GetData("Sheet1").Select(dataRow => new DispositionRow
