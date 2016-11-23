@@ -40,15 +40,17 @@ namespace MSM.DAL
 
             List<DispositionRow> apricotRows = ExcelDataReader.GetApricotRows(pathToApricotReportFile);
             
-         //   var apricotReportFile = Linq2Excel.GetFactory(pathToApricotReportFile);
-        //    Linq2Excel.PrepareApricotMapping(apricotReportFile);
+            /*
+            var apricotReportFile = Linq2Excel.GetFactory(pathToApricotReportFile);
+            Linq2Excel.PrepareApricotMapping(apricotReportFile);
 
-         //   var apricotRows = from d in apricotReportFile.Worksheet<DispositionRow>("Sheet1") select d;
+            var apricotRows = from d in apricotReportFile.Worksheet<DispositionRow>("Sheet1") select d;
 
-        //    foreach (DispositionRow d in apricotRows)
-       //     {
-        //        originalRows.Add(d);
-        //    }
+            foreach (DispositionRow d in apricotRows)
+            {
+                originalRows.Add(d);
+            }
+            */
 
             return apricotRows;
         }

@@ -89,9 +89,10 @@ namespace MSM.Controllers
 
         private static void PrepareImportFile(List<DispositionRow> updatedRows)
         {
-            timestamp = DateTime.Now.ToString("dd-MM-yy-hhmm");
             // Create file importme.csv and write 2 header lines from Check Disposition Header.csv
             PrepareImportHeader();
+
+            // Static variable timestamp will be set by this point, because GetTimestamp will have been called.
             string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/importme-{0}.csv", timestamp));
 
             // Append lines to file importme.csv
@@ -121,6 +122,12 @@ namespace MSM.Controllers
         [HttpGet]
         public string GetTimestamp()
         {
+            // Set timestamp when resolved controller is loaded. This allows
+            // the timestamp to be made part of the page title, which allows
+            // the timestamp to appear in the printed file and also as part
+            // of the Excel file name of both the angular datatable and
+            // the importme file.
+            timestamp = DateTime.Now.ToString("dd-MM-yy-hhmm");
             return timestamp;
         }
     }
