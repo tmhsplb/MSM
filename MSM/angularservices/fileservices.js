@@ -142,9 +142,15 @@ FileServices.factory('FileManager', ['$http', function ($http) {
             })
     }
 
-    var getTimestamp = function()
+    var getResolvedTimestamp = function()
     {
-       return $http.get(server + "api/timestamp").then(function (result) {
+       return $http.get(server + "api/resolvedtimestamp").then(function (result) {
+            return result.data;
+        })
+    }
+
+    var getResearchTimestamp = function () {
+        return $http.get(server + "api/researchtimestamp").then(function (result) {
             return result.data;
         })
     }
@@ -172,7 +178,8 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         getSelectedFile: getSelectedFile,
         getValidFile: getValidFile,
 
-        getTimestamp: getTimestamp 
+        getResolvedTimestamp: getResolvedTimestamp,
+        getResearchTimestamp: getResearchTimestamp 
     };
 }]);
 

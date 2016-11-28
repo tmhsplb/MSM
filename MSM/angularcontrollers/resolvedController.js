@@ -5,7 +5,7 @@ MSMApp.controller('resolvedController', ['$rootScope', '$scope', '$http', '$wind
            
             $scope.tab = 'resolved';
 
-            var timestampPromise = FileManager.getTimestamp();
+            var timestampPromise = FileManager.getResolvedTimestamp();
 
             timestampPromise.then(function (d) {
                 // Example: d = ""22-11-0941""
@@ -14,7 +14,7 @@ MSMApp.controller('resolvedController', ['$rootScope', '$scope', '$http', '$wind
                 // This is safe since by construction the string will always have the same length.
                 $scope.timestamp = d.substr(1, 13);
 
-                $rootScope.pageTitle = "Main Street Ministries " + $scope.timestamp;
+                $rootScope.pageTitle = "Resolved " + $scope.timestamp;
             })
        
             $scope.Download = function () {

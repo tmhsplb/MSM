@@ -55,10 +55,16 @@ namespace MSM
              );
 
           config.Routes.MapHttpRoute(
-                  name: "Timestamp",
-                  routeTemplate: "api/timestamp",
+                  name: "ResolvedTimestamp",
+                  routeTemplate: "api/resolvedtimestamp",
                   defaults: new { controller = "FileDownloader", action = "GetTimestamp" }
                );
+
+          config.Routes.MapHttpRoute(
+                   name: "ResearchTimestamp",
+                   routeTemplate: "api/researchtimestamp",
+                   defaults: new { controller = "Research", action = "GetTimestamp" }
+                );
 
           config.Routes.MapHttpRoute(
                name: "Unmatched",

@@ -122,14 +122,11 @@ namespace MSM.Controllers
         [HttpGet]
         public string GetTimestamp()
         {
-            // Set timestamp when resolved controller is loaded. This allows
+            // Set timestamp when resolvedController is loaded. This allows
             // the timestamp to be made part of the page title, which allows
             // the timestamp to appear in the printed file and also as part
             // of the Excel file name of both the angular datatable and
             // the importme file.
-
-            // timestamp = DateTime.Now.ToString("dd-MM-yy-hhmm");
-            // return timestamp;
 
             // This compensates for the fact that DateTime.Now on the AppHarbor server returns
             // the the time in the timezone of the server.
@@ -138,8 +135,9 @@ namespace MSM.Controllers
             // wait and see about this.
             DateTime now = DateTime.Now.ToUniversalTime();
             DateTime cst = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(now, "UTC", "Central Standard Time");
+            timestamp = cst.ToString("dd-MM-yy-hhmm");
 
-            return cst.ToString("dd-MM-yy-hhmm");
+            return timestamp;
         }
     }
 }
