@@ -43,7 +43,7 @@ namespace MSM.Controllers
         // This method is used to return the Apricot Report File for inspection on the Inspect tab.
         public List<DispositionRow> GetApricotFile(string apricotFile, string fileType)
         {
-            return DataManager.GetApricotRows(apricotFile, fileType);
+            return DataManager.GetResearchRows(apricotFile, fileType);
         }
 
         [HttpGet]

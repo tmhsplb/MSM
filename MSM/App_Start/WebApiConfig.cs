@@ -79,7 +79,7 @@ namespace MSM
           config.Routes.MapHttpRoute(
                name: "Unmatched",
                routeTemplate: "api/research",
-               defaults: new { controller = "Research", action="GetLongUnmatched" }
+               defaults: new { controller = "Research", action="GetResearchChecks" }
             );
 
           config.Routes.MapHttpRoute(

@@ -11,7 +11,7 @@ namespace MSM.Utils
 {
     public class ExcelDataReader
     {
-        public static List<DispositionRow> GetApricotRows (string filePath)
+        public static List<DispositionRow> GetResearchRows (string filePath)
         {
             List<DispositionRow> apricotRows = new ExcelData(filePath).GetData("Sheet1").Select(dataRow => new DispositionRow
                 {

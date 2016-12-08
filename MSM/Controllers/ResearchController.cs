@@ -13,9 +13,9 @@ namespace MSM.Controllers
     {
         // This method returns the table displayed on the Research tab.
         [HttpGet]
-        public List<Check> GetLongUnmatched()
+        public List<Check> GetResearchChecks()
         {
-            List<Check> longUnmatchedChecks = new List<Check>();
+            List<Check> researchChecks = new List<Check>();
 
             using (var dbCtx = new MSMEntities())
             {
@@ -23,7 +23,7 @@ namespace MSM.Controllers
                 
                 foreach (LongUnmatched lu in longUnmatched)
                 {
-                    longUnmatchedChecks.Add(new Check
+                    researchChecks.Add(new Check
                     {
                         RecordID = lu.RecordID,
                         InterviewRecordID = lu.InterviewRecordID,
@@ -36,7 +36,7 @@ namespace MSM.Controllers
                 }
             }
 
-            return longUnmatchedChecks;
+            return researchChecks;
         }
 
         [HttpGet]

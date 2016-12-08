@@ -22,23 +22,24 @@ namespace MSM.DAL
         {
             if (firstCall)
             {
-                knownDisposition = new List<int>();
+              //  knownDisposition = new List<int>();
                 unmatchedChecks = new List<Check>();
                 resolvedChecks = new List<Check>();
             //    updatedRows = new List<DispositionRow>();
                 firstCall = false;
             }
 
+            knownDisposition = new List<int>();
             updatedRows = new List<DispositionRow>();
         }
 
-        public static List<DispositionRow> GetApricotRows(string apFileName, string apFileType)
+        public static List<DispositionRow> GetResearchRows(string apFileName, string apFileType)
         {
            // List<DispositionRow> originalRows = new List<DispositionRow>();
           //  string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", apFileName, apFileType));
             string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}.{1}", apFileName, apFileType));
 
-            List<DispositionRow> apricotRows = ExcelDataReader.GetApricotRows(pathToApricotReportFile);
+            List<DispositionRow> apricotRows = ExcelDataReader.GetResearchRows(pathToApricotReportFile);
             
             /*
             var apricotReportFile = Linq2Excel.GetFactory(pathToApricotReportFile);
@@ -158,9 +159,43 @@ namespace MSM.DAL
             return has;
         }
 
-        public static void PersistUnmatchedChecks()
+        private static List<Check> DetermineUnmatchedChecks(List<DispositionRow> researchRows)
         {
-            AppendToLongUnmatched(unmatchedChecks);
+            foreach (DispositionRow row in researchRows)
+            {
+                if (row.LBVDCheckNum != 0 && string.IsNullOrEmpty(row.LBVDCheckDisposition))
+                {
+                    NewUnmatchedCheck(row, "LBVD");
+                }
+
+                if (row.TIDCheckNum != 0 && string.IsNullOrEmpty(row.TIDCheckDisposition))
+                {
+                    NewUnmatchedCheck(row, "TID");
+                }
+
+                if (row.TDLCheckNum != 0 && string.IsNullOrEmpty(row.TDLCheckDisposition))
+                {
+                    NewUnmatchedCheck(row, "TDL");
+                }
+
+                if (row.MBVDCheckNum != 0 && string.IsNullOrEmpty(row.MBVDCheckDisposition))
+                {
+                    NewUnmatchedCheck(row, "MBVD");
+                }
+
+                if (row.SDCheckNum != 0 && string.IsNullOrEmpty(row.SDCheckDisposition))
+                {
+                    NewUnmatchedCheck(row, "SD");
+                }
+            }
+
+            return unmatchedChecks;
+        }
+
+        public static void PersistUnmatchedChecks(List<DispositionRow> researchRows)
+        {
+            List<Check> unmatchedChecks = DetermineUnmatchedChecks(researchRows);
+            AppendToResearchChecks(unmatchedChecks);
         }
     
         private static bool IsResolved(int checkNum)
@@ -193,35 +228,241 @@ namespace MSM.DAL
         public static void RemoveResolvedChecks()
         {
             MarkResolvedChecks();
-            DeleteMatchedChecks();
+            DeleteMarkedChecks();
         }
 
-        public static void NewResolvedCheck(DispositionRow row, string service)
+
+        public static void MarkKnownDispositionChecks()
+        {
+            using (var dbCtx = new MSMEntities())
+            {
+                var longUnmatched = dbCtx.Set<LongUnmatched>();
+
+                foreach (LongUnmatched lu in longUnmatched)
+                {
+                    if (IsKnownDisposition(lu.Num))
+                    {
+                        lu.Matched = true;
+                    }
+                }
+
+                dbCtx.SaveChanges();
+            }
+        }
+
+        public static void RemoveKnownDispositionChecksFromResearchTable()
+        {
+            MarkKnownDispositionChecks();
+            DeleteMarkedChecks();
+        }
+
+        private static void ResolveIncidentalLBVD(DispositionRow row, List<Check> researchChecks)
+        {
+            if (row.LBVDCheckNum != 0
+                && !IsKnownDisposition(row.LBVDCheckNum)
+                && !string.IsNullOrEmpty(row.LBVDCheckDisposition))
+            {
+                SetKnownDisposition(row.LBVDCheckNum);
+
+                // Find all checks among the researchChecks which are incidentally resolved by
+                // this check number.
+                List<Check> incidentalChecks = researchChecks.FindAll(c => c.Num == row.LBVDCheckNum).ToList();
+
+                foreach (Check incidentalCheck in incidentalChecks)
+                {
+                    incidentalCheck.Clr = row.LBVDCheckDisposition;
+                }
+            }
+        }
+
+        private static void ResolveIncidentalTID(DispositionRow row, List<Check> researchChecks)
+        {
+            if (row.TIDCheckNum != 0
+                && !IsKnownDisposition(row.TIDCheckNum)
+                && !string.IsNullOrEmpty(row.TIDCheckDisposition))
+            {
+                SetKnownDisposition(row.TIDCheckNum);
+
+                // Find all checks among the researchChecks which are incidentally resolved by
+                // this check number.
+                List<Check> incidentalChecks = researchChecks.FindAll(c => c.Num == row.TIDCheckNum).ToList();
+
+                foreach (Check incidentalCheck in incidentalChecks)
+                {
+                    incidentalCheck.Clr = row.TIDCheckDisposition;
+                }
+            }
+        }
+
+        private static void ResolveIncidentalTDL(DispositionRow row, List<Check> researchChecks)
+        {
+            if (row.TDLCheckNum != 0
+                && !IsKnownDisposition(row.TDLCheckNum)
+                && !string.IsNullOrEmpty(row.TDLCheckDisposition))
+            {
+                SetKnownDisposition(row.TDLCheckNum);
+
+                // Find all checks among the researchChecks which are incidentally resolved by
+                // this check number.
+                List<Check> incidentalChecks = researchChecks.FindAll(c => c.Num == row.TDLCheckNum).ToList();
+
+                foreach (Check incidentalCheck in incidentalChecks)
+                {
+                    incidentalCheck.Clr = row.TDLCheckDisposition;
+                }
+            }
+        }
+
+        private static void ResolveIncidentalMBVD(DispositionRow row, List<Check> researchChecks)
+        {
+            if (row.MBVDCheckNum != 0
+                && !IsKnownDisposition(row.MBVDCheckNum)
+                && !string.IsNullOrEmpty(row.MBVDCheckDisposition))
+            {
+                SetKnownDisposition(row.MBVDCheckNum);
+
+                // Find all checks among the researchChecks which are incidentally resolved by
+                // this check number.
+                List<Check> incidentalChecks = researchChecks.FindAll(c => c.Num == row.MBVDCheckNum).ToList();
+
+                foreach (Check incidentalCheck in incidentalChecks)
+                {
+                    incidentalCheck.Clr = row.MBVDCheckDisposition;
+                }
+            }
+        }
+
+        private static void ResolveIncidentalSD(DispositionRow row, List<Check> researchChecks)
+        {
+            if (row.SDCheckNum != 0
+                && !IsKnownDisposition(row.SDCheckNum)
+                && !string.IsNullOrEmpty(row.SDCheckDisposition))
+            {
+                SetKnownDisposition(row.SDCheckNum);
+
+                // Find all checks among the researchChecks which are incidentally resolved by
+                // this check number.
+                List<Check> incidentalChecks = researchChecks.FindAll(c => c.Num == row.SDCheckNum).ToList();
+
+                foreach (Check incidentalCheck in incidentalChecks)
+                {
+                    incidentalCheck.Clr = row.SDCheckDisposition;
+                }
+            }
+        }
+
+        private static void ResolveIncidentalChecks(List<DispositionRow> researchRows, List<Check> researchChecks)
+        {
+            foreach (DispositionRow row in researchRows)
+            {
+                ResolveIncidentalLBVD(row, researchChecks);
+                ResolveIncidentalTID(row, researchChecks);
+                ResolveIncidentalTDL(row, researchChecks);
+                ResolveIncidentalMBVD(row, researchChecks);
+                ResolveIncidentalSD(row, researchChecks);
+            }
+        }
+
+        public static void HandleIncidentalChecks(List<DispositionRow> researchRows)
+        {
+            List<Check> researchChecks = GetResearchChecks();
+            ResolveIncidentalChecks(researchRows, researchChecks);
+
+            // When merging a Research File against the Research Table, a check of
+            // known disposition may resolve a check in the Research Table. Find
+            // any such check and use it to create a new "incidental" resolved check
+            // The status of an incidental resolved check will have been set by the call
+            // to method ResolveIncidentalChecks above. If it has not been set, then
+            // use "Resolved" as its status. By construction, checks in the Research Table
+            // are only those which had no disposition on a Research File that has been used
+            // as an input. Hence, only these checks can become new resolved checks.
+            CreateIncidentalResolvedChecks(researchChecks);
+
+            // Remove from the Research Table any incidental resolved checks created 
+            // by the previous call. 
+            RemoveResolvedChecks();
+        }
+
+        public static bool IsIncidental(int checkNum, List<int>incidentals)
+        {
+            bool incidental = incidentals.Any(cnum => cnum == checkNum);
+            return incidental;
+        }
+
+        private static void CreateIncidentalResolvedChecks(List <Check> researchChecks)
+        {
+            List<int> incidentals = new List<int>();
+
+            foreach (int cnum in knownDisposition)
+            {
+                if (!IsIncidental(cnum, incidentals))
+                {
+                    // Find all the research checks which have the same number as a check of
+                    // of known disposition.
+                    List<Check> matchedChecks = researchChecks.FindAll(c => c.Num == cnum);
+
+                    foreach (Check matchedCheck in matchedChecks)
+                    {
+                        NewResolvedCheck(matchedCheck, (string.IsNullOrEmpty(matchedCheck.Clr) ? "Resolved" : matchedCheck.Clr));
+                    }
+
+                    incidentals.Add(cnum);
+                }
+            }
+        }
+
+        public static string GetDispositionFromCheck(Check check)
+        {
+            switch (check.Clr)
+            {
+                case "C":
+                    return "Cleared";
+                case "V":
+                    return "Voided";
+                default:
+                    if (check.Clr != null && check.Clr[0] == 0xD6)
+                    {
+                        // Check mark in Quickbooks is character 0xD6
+                        return "Cleared";
+                    }
+                    return "Voided";
+            }
+        }
+
+        // This method has a side effect on argument row. It sets a componet of row that is
+        // read by the caller.
+        public static void NewResolvedCheck(Check check, DispositionRow row, string service)
         {
             int checkNum;
             string status;
+            string disposition = GetDispositionFromCheck(check);
 
             switch (service)
             {
                 case "LBVD":
+                    row.LBVDCheckDisposition = disposition;
                     checkNum = row.LBVDCheckNum;
-                    status = row.LBVDCheckDisposition;
+                    status = disposition;
                     break;
                 case "TID":
+                    row.TIDCheckDisposition = disposition;
                     checkNum = row.TIDCheckNum;
-                    status = row.TIDCheckDisposition;
+                    status = disposition;
                     break;
                 case "TDL":
+                    row.TIDCheckDisposition = disposition;
                     checkNum = row.TDLCheckNum;
-                    status = row.TDLCheckDisposition;
+                    status = disposition;
                     break;
                 case "MBVD":
+                    row.MBVDCheckDisposition = disposition;
                     checkNum = row.MBVDCheckNum;
-                    status = row.MBVDCheckDisposition;
+                    status = disposition;
                     break;
                 case "SD":
+                    row.SDCheckDisposition = disposition;
                     checkNum = row.SDCheckNum;
-                    status = row.SDCheckDisposition;
+                    status = disposition;
                     break;
                 default:
                     checkNum = -1;
@@ -333,9 +574,9 @@ namespace MSM.DAL
             updatedRows.Add(drow);
         }
 
-        public static List<Check> GetLongUnmatchedChecks()
+        public static List<Check> GetResearchChecks()
         {
-            List<Check> longUnmatchedChecks = new List<Check>();
+            List<Check> researchChecks = new List<Check>();
 
             using (var dbCtx = new MSMEntities())
             {
@@ -343,7 +584,7 @@ namespace MSM.DAL
 
                 foreach (var lu in longUnmatched)
                 {
-                    longUnmatchedChecks.Add(new Check
+                    researchChecks.Add(new Check
                     {
                         RecordID = lu.RecordID,
                         InterviewRecordID = lu.InterviewRecordID,
@@ -355,10 +596,10 @@ namespace MSM.DAL
                 }
             }
 
-            return longUnmatchedChecks;
+            return researchChecks;
         }
 
-        private static void AppendToLongUnmatched(List<Check> checks)
+        private static void AppendToResearchChecks(List<Check> checks)
         {
             using (var dbCtx = new MSMEntities())
             {
@@ -392,7 +633,7 @@ namespace MSM.DAL
             }
         }
 
-        private static void DeleteMatchedChecks()
+        private static void DeleteMarkedChecks()
         {
             using (var dbCtx = new MSMEntities())
             {
