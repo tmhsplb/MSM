@@ -412,6 +412,7 @@
     <Compile Include="LongUnmatched.cs">
       <DependentUpon>MSM.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ModifcationRow.cs" />
     <Compile Include="Models\EmptyCol.cs" />
     <Compile Include="Models\Check.cs" />
     <Compile Include="Models\DispositionRow.cs" />

@@ -1,4 +1,43 @@
 ﻿ <div>
+
+    <fieldset>
+        <legend>Research Files</legend>
+        <table style="width:100%;">
+            <tr>
+                <td>Normal Research File</td>
+                <td>
+                    <input type="file" ng-model="APUploadedFile" onchange="angular.element(this).scope().setFiles('AP', this)" />
+                </td>
+                <td>
+                    <input type="button" value="Upload" ng-click="APUpload();" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Uploaded File
+                </td>
+                <td>{{APUploadedFile}}</td>
+            </tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr>
+                <td>Mods Research File</td>
+                <td>
+                    <input type="file" ng-model="MDUploadedFile" onchange="angular.element(this).scope().setFiles('MD', this)" />
+                </td>
+                <td>
+                    <input type="button" value="Upload" ng-click="MDUpload();" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Uploaded File
+                </td>
+                <td>{{MDUploadedFile}}</td>
+        </table>
+    </fieldset>
+    <br/><br/><br/>
+    <fieldset>
+        <legend>Disposition Files</legend>
     <table style="width:100%;">
         <tr>
             <td>Voided Checks File</td>
@@ -17,24 +56,7 @@
             <td>{{VCUploadedFile}}</td>
         </tr>
         <tr><td>&nbsp;</td></tr>
-        <tr>
-            <td>Research File</td>
-            <td>
-                <input type="file" ng-model="APUploadedFile" onchange="angular.element(this).scope().setFiles('AP', this)" />
-            </td>
-            <td>
-                <input type="button" value="Upload" ng-click="APUpload();" />
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                Uploaded File
-            </td>
-            <td>{{APUploadedFile}}</td>
-        </tr>
-        <tr><td>&nbsp;</td></tr>
-        
+      
         <tr>
             <td>Quickbooks File</td>
             <td>
@@ -52,9 +74,10 @@
             </td>
             <td>{{QBUploadedFile}}</td>
         </tr>
-
-        <tr><td>&nbsp;</td></tr>
-
+      </table>
+    </fieldset>
+    <br/><br/><br/>
+    <table width="100%">
         <tr>
             <td>
                 <input type="button" value="Merge" ng-click="Merge()" />
@@ -65,9 +88,7 @@
             <td>Merge status:</td>
             <td>&nbsp;</td>
             <td>{{mergeStatus}}</td>
-        </tr>
-
-        <tr><td>&nbsp;</td></tr>        
+        </tr> 
     </table>
 </div>  
 

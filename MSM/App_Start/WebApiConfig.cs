@@ -41,10 +41,17 @@ namespace MSM
 
           // This route is used by datatableController.js
           config.Routes.MapHttpRoute(
-           name: "GetAPFile",
-           routeTemplate: "api/apfile",
-                defaults: new { controller = "Inspect", action = "GetApricotFile" }
+           name: "GetRESFile",
+           routeTemplate: "api/resfile",
+                defaults: new { controller = "Inspect", action = "GetResearchFile" }
           );
+
+          // This route is used by datatableController.js
+          config.Routes.MapHttpRoute(
+             name: "GetMODFile",
+             routeTemplate: "api/modfile",
+                  defaults: new { controller = "Inspect", action = "GetModificationFile" }
+            );
 
           config.Routes.MapHttpRoute(
              name: "GetEmptyFile",

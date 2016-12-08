@@ -60,6 +60,8 @@ namespace MSM.Controllers
                     return ValidateVCFile(fpath);
                 case "AP":
                     return ValidateAPFile(fpath);
+                case "MD":
+                    return true;
                 case "QB":
                     return ValidateQBFile(fpath);
                 default:

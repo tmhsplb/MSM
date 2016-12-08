@@ -11,6 +11,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
             $scope.files = [];
             $scope.VCUploadedFile = FileManager.getVCFileName() + "." + FileManager.getVCFileType();
             $scope.APUploadedFile = FileManager.getAPFileName() + "." + FileManager.getAPFileType();
+            $scope.MDUploadedFile = FileManager.getMDFileName() + "." + FileManager.getMDFileType();
             $scope.QBUploadedFile = FileManager.getQBFileName() + "." + FileManager.getQBFileType();
 
             $scope.VCUpload = function () {
@@ -141,7 +142,6 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                 }
             }
 
-           
             function APUploadComplete(evt) {
                 $scope.progressVisible = false;
                 if (evt.target.status == 201) {
@@ -160,7 +160,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                                     var valid = (v === "true" ? true : false);
 
                                     if (!valid) {
-                                        $scope.APUploadedFile = "Bad format. " + jsonObj.file.name + " does not look like an Apricot Report file.";
+                                        $scope.APUploadedFile = "Bad format. " + jsonObj.file.name + " does not look like a Normal Report file.";
                                         FileManager.setAPFileName($scope.APUploadedFile);
                                     }
                                     else {
@@ -178,7 +178,59 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                 }
             }
 
-          
+            $scope.MDUpload = function () {
+                var fd = new FormData()
+                for (var i in $scope.files) {
+                    // i as an arry index
+                    if ($scope.files[i].ftype == 'MD') {
+                        fd.append("uploadedFile", $scope.files[i].file);
+                        fd.append("ftype", "MD");
+
+                        var xhr = new XMLHttpRequest();
+                        xhr.addEventListener("load", MDUploadComplete, false);
+                        xhr.open("POST", server + "api/upload/UploadFile", true);
+                        $scope.progressVisible = true;
+                        xhr.send(fd);
+                    }
+                }
+            }
+
+            function MDUploadComplete(evt) {
+                $scope.progressVisible = false;
+                if (evt.target.status == 201) {
+                    $scope.FilePath = evt.target.responseText;
+
+                    $scope.$apply(function (scpe) {
+                        $scope.MDUploadStatus = "Upload Complete";
+                        for (var i in $scope.files) {
+                            var jsonObj = $scope.files[i];
+                            if (jsonObj.ftype == 'MD' & jsonObj.seen == "false") {
+                                FileManager.getValidFile('MD', jsonObj.file).then(function (v) {
+                                    jsonObj.seen = "true";
+                                    $scope.MDUploadedFile = jsonObj.file.name;  // this includes the extension
+
+                                    // Don't know why have to set variable valid, but does not work otherwise.
+                                    var valid = (v === "true" ? true : false);
+
+                                    if (!valid) {
+                                        $scope.MDUploadedFile = "Bad format. " + jsonObj.file.name + " does not look like a Mods Report file.";
+                                        FileManager.setMDFileName($scope.MDUploadedFile);
+                                    }
+                                    else {
+                                        FileManager.setMDUploadFile(jsonObj.file);
+                                    }
+                                })
+                            }
+                        }
+                    })
+                }
+                else {
+                    $scope.$apply(function (scpe) {
+                        $scope.UploadStatus = evt.target.responseText;
+                    })
+                }
+            }
+
             $scope.GetFileType = function (fileExtension) {
                 switch (fileExtension.toLowerCase()) {
                     case "doc":
@@ -225,6 +277,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
             }
 
             $scope.setFiles = function (type, element) {
+                // alert("setFiles: type = " + type);
                 $scope.$apply(function (scpe) {
                     for (var i = 0; i < element.files.length; i++) {
                         $scope.files.push({ ftype: type, file: element.files[i], seen: "false" });
@@ -235,6 +288,16 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
 
             $scope.Merge = function () { // called when the Merge button is clicked on file merge.html
                
+                var apFileName = FileManager.getAPFileName();
+                var apFileType;
+
+                if (apFileName == 'unknown') {
+                    apFileType = "xslx";
+                }
+                else {
+                    apFileType = FileManager.getAPFileType();
+                }
+
                 var vcFileName = FileManager.getVCFileName();
                 var vcFileType;
 
@@ -247,17 +310,6 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                    vcFileType = FileManager.getVCFileType();
                 }
                 
-
-                var apFileName = FileManager.getAPFileName();
-                var apFileType;
-
-                if (apFileName == 'unknown') {
-                    apFileType = "xslx";
-                }
-                else {
-                    apFileType = FileManager.getAPFileType();
-                }
-                 
                 var qbFileName = FileManager.getQBFileName();
                 var qbFileType;
 
@@ -268,11 +320,16 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                     qbFileType = FileManager.getQBFileType();
                 }
 
-                $scope.mergeStatus = "Merging...";
+                if (apFileName != 'unknown' && (vcFileName != 'unknown' || qbFileName != 'unknown')) {
+                    alert("Cannot merge both a Research File and a Disposition File at the same time. Please use the browser reload button to reset.")
+                }
+                else {
+                    $scope.mergeStatus = "Merging...";
 
-                MergeManager.merge(vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType).then(function (ms) {
-                    $scope.mergeStatus = "Merge completed";
-                });   
+                    MergeManager.merge(vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType).then(function (ms) {
+                        $scope.mergeStatus = "Merge completed";
+                    });
+                }
             }
         }
 ]);

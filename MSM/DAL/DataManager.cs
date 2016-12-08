@@ -37,9 +37,9 @@ namespace MSM.DAL
         {
            // List<DispositionRow> originalRows = new List<DispositionRow>();
           //  string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", apFileName, apFileType));
-            string pathToApricotReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}.{1}", apFileName, apFileType));
+            string pathToResearchReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}.{1}", apFileName, apFileType));
 
-            List<DispositionRow> apricotRows = ExcelDataReader.GetResearchRows(pathToApricotReportFile);
+            List<DispositionRow> resRows = ExcelDataReader.GetResearchRows(pathToResearchReportFile);
             
             /*
             var apricotReportFile = Linq2Excel.GetFactory(pathToApricotReportFile);
@@ -53,7 +53,15 @@ namespace MSM.DAL
             }
             */
 
-            return apricotRows;
+            return resRows;
+        }
+
+        public static List<ModificationRow> GetModificationRows(string apFileName, string apFileType)
+        {
+            string pathToModificationsReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}.{1}", apFileName, apFileType));
+            List<ModificationRow> modRows = ExcelDataReader.GetModificationRows(pathToModificationsReportFile);
+
+            return modRows;
         }
 
         public static List<Check> GetVoidedChecks(string vcFileName, string vcFileType)

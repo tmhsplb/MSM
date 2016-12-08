@@ -16,38 +16,7 @@ namespace MSM.Controllers
 {
     public class MergeController : ApiController
     {
-       
-        private static void UpdateDisposition(Check matchedCheck, string disposition, DispositionRow drow)
-        {
-            int checkNum = matchedCheck.Num;
-
-            switch (matchedCheck.Service)
-            {
-                case "LBVD":
-                    drow.LBVDCheckNum = checkNum;
-                    drow.LBVDCheckDisposition = disposition;
-                    break;
-                case "TID":
-                    drow.TIDCheckNum = checkNum;
-                    drow.TIDCheckDisposition = disposition;
-                    break;
-                case "TDL":
-                    drow.TDLCheckNum = checkNum;
-                    drow.TDLCheckDisposition = disposition;
-                    break;
-                case "MBVD": 
-                    drow.MBVDCheckNum = checkNum;
-                    drow.MBVDCheckDisposition = disposition;
-                    break;
-                case "SD":
-                    drow.SDCheckNum = checkNum;
-                    drow.SDCheckDisposition = disposition;
-                    break;
-                default:
-                    break;
-            }
-        }
-
+        /*
         private static void UpdateDisposition(bool lbvd, bool tid, bool tdl, bool mbvd, bool sd, DispositionRow d, Check check)
         {
             if (lbvd && string.IsNullOrEmpty(d.LBVDCheckDisposition))
@@ -124,6 +93,63 @@ namespace MSM.Controllers
                 }
             }
         }
+        
+      // The user has supplied either a voided checks file or a Quickbooks file or both to resolve
+      // unmatched checks occuring on the supplied Research File. This will not resolve any checks
+      // in the Research Table except those which are incidentally resolved by their presence on
+      // the Research File.
+      private static void ResolveResearchChecks(string vcFileName, string vcFileType, string apFileName, string apFileType, string qbFileName, string qbFileType)
+      {
+          List<Check> qbChecks = DataManager.GetQuickbooksChecks(qbFileName, qbFileType);
+          List<DispositionRow> researchRows = DataManager.GetResearchRows(apFileName, apFileType);
+          List<Check> voidedChecks = DataManager.GetVoidedChecks(vcFileName, vcFileType);
+
+          DataManager.Init();
+
+          // Do this first.
+          DataManager.HandleIncidentalChecks(researchRows);
+       
+          ProcessChecks(voidedChecks, researchRows);
+          ProcessChecks(qbChecks, researchRows);
+
+          DataManager.PersistUnmatchedChecks(researchRows);
+
+          // As a side effect of processing checks, we will have determined a set of resolved
+          // checks. Remove this set of resolved checks from the Research Table.
+          DataManager.RemoveResolvedChecks();
+      }
+      */
+
+        private static void UpdateDisposition(Check matchedCheck, string disposition, DispositionRow drow)
+        {
+            int checkNum = matchedCheck.Num;
+
+            switch (matchedCheck.Service)
+            {
+                case "LBVD":
+                    drow.LBVDCheckNum = checkNum;
+                    drow.LBVDCheckDisposition = disposition;
+                    break;
+                case "TID":
+                    drow.TIDCheckNum = checkNum;
+                    drow.TIDCheckDisposition = disposition;
+                    break;
+                case "TDL":
+                    drow.TDLCheckNum = checkNum;
+                    drow.TDLCheckDisposition = disposition;
+                    break;
+                case "MBVD":
+                    drow.MBVDCheckNum = checkNum;
+                    drow.MBVDCheckDisposition = disposition;
+                    break;
+                case "SD":
+                    drow.SDCheckNum = checkNum;
+                    drow.SDCheckDisposition = disposition;
+                    break;
+                default:
+                    break;
+            }
+        }
 
         private static void ProcessChecks(List<Check> checks, List<Check> researchChecks)
         {
@@ -181,43 +207,18 @@ namespace MSM.Controllers
                 }
             }
         }
-       
+      
         // The user specified only a Research File. Use this file to update the 
         // research checks. 
         private static void UpdateResearchTable(string apFileName, string apFileType)
         {
             List<DispositionRow> researchRows = DataManager.GetResearchRows(apFileName, apFileType);
-           
-            DataManager.Init();
-   
-            DataManager.PersistUnmatchedChecks(researchRows);
-
-            DataManager.HandleIncidentalChecks(researchRows);
-        }
-
-        // The user has supplied either a voided checks file or a Quickbooks file or both to resolve
-        // unmatched checks occuring on the supplied Research File. This will not resolve any checks
-        // in the Research Table except those which are incidentally resolved by their presence on
-        // the Research File.
-        private static void ResolveResearchChecks(string vcFileName, string vcFileType, string apFileName, string apFileType, string qbFileName, string qbFileType)
-        {
-            List<Check> qbChecks = DataManager.GetQuickbooksChecks(qbFileName, qbFileType);
-            List<DispositionRow> researchRows = DataManager.GetResearchRows(apFileName, apFileType);
-            List<Check> voidedChecks = DataManager.GetVoidedChecks(vcFileName, vcFileType);
 
             DataManager.Init();
 
-            // Do this first.
-            DataManager.HandleIncidentalChecks(researchRows);
-       
-            ProcessChecks(voidedChecks, researchRows);
-            ProcessChecks(qbChecks, researchRows);
-
             DataManager.PersistUnmatchedChecks(researchRows);
 
-            // As a side effect of processing checks, we will have determined a set of resolved
-            // checks. Remove this set of resolved checks from the Research Table.
-            DataManager.RemoveResolvedChecks();
+            DataManager.HandleIncidentalChecks(researchRows);
         }
 
         // The user did not specify a Research File on the merge screen. The user is trying
@@ -242,7 +243,6 @@ namespace MSM.Controllers
             DataManager.RemoveResolvedChecks();
         }
 
-
         [HttpGet]
         public void PerformMerge(string vcFileName, string vcFileType, string apFileName, string apFileType, string qbFileName, string qbFileType)
         {
@@ -258,12 +258,14 @@ namespace MSM.Controllers
                 // research table.
                 UpdateResearchTable(apFileName, apFileType);
             }
+            /*
             else
             {
                 // The user has supplied either a voided checks file or a Quickbooks file or both to resolve
                 // unmatched checks occuring on the supplied Research File.
                 ResolveResearchChecks(vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType); 
             }
+            */
         }
     }
 }
