@@ -210,7 +210,7 @@ namespace MSM.Controllers
       
         // The user specified only a Research File. Use this file to update the 
         // research checks. 
-        private static void UpdateResearchTable(string apFileName, string apFileType)
+        private static void UpdateResearchTableFromResearchFile(string apFileName, string apFileType)
         {
             List<DispositionRow> researchRows = DataManager.GetResearchRows(apFileName, apFileType);
 
@@ -219,6 +219,19 @@ namespace MSM.Controllers
             DataManager.PersistUnmatchedChecks(researchRows);
 
             DataManager.HandleIncidentalChecks(researchRows);
+        }
+
+        // The user specified only a Modifications File. Use this file to update the 
+        // research checks. 
+        private static void UpdateResearchTableFromModsFile(string mdFileName, string mdFileType)
+        {
+            List<ModificationRow> modificationRows = DataManager.GetModificationRows(mdFileName, mdFileType);
+
+            DataManager.Init();
+
+            DataManager.PersistUnmatchedChecks(modificationRows);
+
+            DataManager.HandleIncidentalChecks(modificationRows);
         }
 
         // The user did not specify a Research File on the merge screen. The user is trying
@@ -244,19 +257,28 @@ namespace MSM.Controllers
         }
 
         [HttpGet]
-        public void PerformMerge(string vcFileName, string vcFileType, string apFileName, string apFileType, string qbFileName, string qbFileType)
+        public void PerformMerge(string vcFileName, string vcFileType, string apFileName, string apFileType, string mdFileName, string mdFileType, string qbFileName, string qbFileType)
         {
-            if (apFileName.Equals("unknown"))
+            if (apFileName.Equals("unknown") && mdFileName.Equals("unknown"))
             {
-                // The user did not specify a Research File on the merge screen. The user is trying
-                // to resolve some research checks in the Research Table.
+                // The user did not specify a Research File or a Mods FIle on the merge screen. 
+                // The user is trying to resolve some research checks in the Research Table.
                 ResolveResearchChecks(vcFileName, vcFileType, qbFileName, qbFileType);
             }
             else if (vcFileName.Equals("unknown") && qbFileName.Equals("unknown"))
             {
-                // The user specified only a Research File. Use this file to update the 
-                // research table.
-                UpdateResearchTable(apFileName, apFileType);
+                if (!apFileName.Equals("unknown") && mdFileName.Equals("unknown"))
+                {
+                    // The user specified only a Research File. Use this file to update the 
+                    // research table.
+                    UpdateResearchTableFromResearchFile(apFileName, apFileType);
+                }
+                else if (apFileName.Equals("unknown") && !mdFileName.Equals("unknown"))
+                {
+                    // The user specified only a Modifications File. Use this file to update the 
+                    // research table.
+                    UpdateResearchTableFromModsFile(mdFileName, mdFileType);
+                }
             }
             /*
             else

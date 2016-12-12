@@ -273,6 +273,16 @@
     <Content Include="partials\quickbooks.html" />
     <Content Include="partials\resolved.html" />
     <Content Include="partials\research.html" />
+    <Content Include="Research.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Research.edmx</DependentUpon>
+      <LastGenOutput>Research.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Research.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Research.edmx</DependentUpon>
+      <LastGenOutput>Research.cs</LastGenOutput>
+    </Content>
     <Content Include="routes.js" />
     <Content Include="Scripts\angulardatatables\angular-datatables.bootstrap.min.js" />
     <Content Include="Scripts\angulardatatables\angular-datatables.buttons.js" />
@@ -292,23 +302,6 @@
     <Content Include="App_Data\Private\QBEmpty.xlsx" />
     <Content Include="App_Data\Private\VCEmpty.xlsx" />
     -->
-    <EntityDeploy Include="MSM.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MSM.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="MSM.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MSM.edmx</DependentUpon>
-      <LastGenOutput>MSM.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="MSM.edmx.diagram">
-      <DependentUpon>MSM.edmx</DependentUpon>
-    </Content>
-    <Content Include="MSM.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MSM.edmx</DependentUpon>
-      <LastGenOutput>MSM.cs</LastGenOutput>
-    </Content>
     <!-- <Content Include="App_Data\Private\Empty.xlsx" /> -->
     <Content Include="App_Data\Check Disposition Header.csv" />
     <Content Include="App_Data\Empty.xlsx" />
@@ -316,6 +309,13 @@
     <Content Include="App_Data\QBEmpty.xlsx" />
     <Content Include="App_Data\unknown.xlsx" />
     <Content Include="App_Data\Import Me Header.csv" />
+    <EntityDeploy Include="Research.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Research.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Research.edmx.diagram">
+      <DependentUpon>Research.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.7.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
@@ -409,29 +409,30 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="LongUnmatched.cs">
-      <DependentUpon>MSM.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Models\DataRow.cs" />
     <Compile Include="Models\ModifcationRow.cs" />
     <Compile Include="Models\EmptyCol.cs" />
     <Compile Include="Models\Check.cs" />
     <Compile Include="Models\DispositionRow.cs" />
-    <Compile Include="MSM.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MSM.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MSM.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MSM.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MSM.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MSM.edmx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Research.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Research.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Research.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Research.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Research.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Research.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="ResearchCheck.cs">
+      <DependentUpon>Research.tt</DependentUpon>
+    </Compile>
     <Compile Include="Utils\ExcelData.cs" />
     <Compile Include="Utils\ExcelDataReader.cs" />
     <Compile Include="Utils\Linq2Excel.cs" />

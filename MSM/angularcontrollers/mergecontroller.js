@@ -298,6 +298,16 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                     apFileType = FileManager.getAPFileType();
                 }
 
+                var mdFileName = FileManager.getMDFileName();
+                var mdFileType;
+
+                if (mdFileName == 'unknown') {
+                    mdFileType = "xslx";
+                }
+                else {
+                    mdFileType = FileManager.getMDFileType();
+                }
+
                 var vcFileName = FileManager.getVCFileName();
                 var vcFileType;
 
@@ -326,7 +336,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                 else {
                     $scope.mergeStatus = "Merging...";
 
-                    MergeManager.merge(vcFileName, vcFileType, apFileName, apFileType, qbFileName, qbFileType).then(function (ms) {
+                    MergeManager.merge(vcFileName, vcFileType, apFileName, apFileType, mdFileName, mdFileType, qbFileName, qbFileType).then(function (ms) {
                         $scope.mergeStatus = "Merge completed";
                     });
                 }

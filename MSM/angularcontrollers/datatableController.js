@@ -55,10 +55,11 @@
          {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-              //   alert("datatableController.js: FileManager.getAPFileName() = " + FileManager.getAPFileName());
-                 $http.get(server + "api/resfile",
-                     { params: { "resFile": FileManager.getAPFileName(), "fileType": FileManager.getAPFileType() } }).then(function (result) {
-                         defer.resolve(result.data);
+                 //   alert("datatableController.js: FileManager.getAPFileName() = " + FileManager.getAPFileName());
+                
+                $http.get(server + "api/resfile",
+                    { params: { "resFile": FileManager.getAPFileName(), "fileType": FileManager.getAPFileType() } }).then(function (result) {
+                             defer.resolve(result.data);
                      });
                  return defer.promise;
              }).withPaginationType('full_numbers')
@@ -102,24 +103,24 @@
                  DTColumnBuilder.newColumn('Fname').withTitle("First Name"),
 
                  DTColumnBuilder.newColumn('LBVDModificationReason').withTitle('LBVD Modification Reason'),
-                 DTColumnBuilder.newColumn('LBVDModifiedCheckNum').withTitle('LBVD Modified Check Number'),
-                 DTColumnBuilder.newColumn('LBVDModifiedCheckDisposition').withTitle('LBVD Modified Check Disposition'),
+                 DTColumnBuilder.newColumn('LBVDCheckNum').withTitle('LBVD Modified Check Number'),
+                 DTColumnBuilder.newColumn('LBVDCheckDisposition').withTitle('LBVD Modified Check Disposition'),
 
                  DTColumnBuilder.newColumn('TIDModificationReason').withTitle('TID Modification Reason'),
-                 DTColumnBuilder.newColumn('TIDModifiedCheckNum').withTitle('TID Modified Check Number'),
-                 DTColumnBuilder.newColumn('TIDModifiedCheckDisposition').withTitle('TID Modified Check Disposition'),
+                 DTColumnBuilder.newColumn('TIDCheckNum').withTitle('TID Modified Check Number'),
+                 DTColumnBuilder.newColumn('TIDCheckDisposition').withTitle('TID Modified Check Disposition'),
 
                  DTColumnBuilder.newColumn('TDLModificationReason').withTitle('TDL Modification Reason'),
-                 DTColumnBuilder.newColumn('TDLModifiedCheckNum').withTitle('TDL Modified Check Number'),
-                 DTColumnBuilder.newColumn('TDLModifiedCheckDisposition').withTitle('TDL Check Disposition'),
+                 DTColumnBuilder.newColumn('TDLCheckNum').withTitle('TDL Modified Check Number'),
+                 DTColumnBuilder.newColumn('TDLCheckDisposition').withTitle('TDL Check Disposition'),
 
                  DTColumnBuilder.newColumn('MBVDModificationReason').withTitle('MBVD Modification Reason'),
-                 DTColumnBuilder.newColumn('MBVDModifiedCheckNum').withTitle('MBVD Modified Check Number'),
-                 DTColumnBuilder.newColumn('MBVDModifiedCheckDisposition').withTitle('MBVD Modified Check Disposition'),
+                 DTColumnBuilder.newColumn('MBVDCheckNum').withTitle('MBVD Modified Check Number'),
+                 DTColumnBuilder.newColumn('MBVDCheckDisposition').withTitle('MBVD Modified Check Disposition'),
                  
                  DTColumnBuilder.newColumn('SDMReason').withTitle('SDM Reason'),
-                 DTColumnBuilder.newColumn('SDMCheckNum').withTitle('SDM Check Number'),
-                 DTColumnBuilder.newColumn('SDMCheckDisposition').withTitle('SDM Check Disposition')
+                 DTColumnBuilder.newColumn('SDCheckNum').withTitle('SDM Check Number'),
+                 DTColumnBuilder.newColumn('SDCheckDisposition').withTitle('SDM Check Disposition')
              ];
          }
          else if ($scope.tab == 'resolved') {

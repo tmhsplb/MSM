@@ -25,6 +25,6 @@ namespace MSM
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<LongUnmatched> LongUnmatcheds { get; set; }
+        public virtual DbSet<ResearchCheck> ResearchChecks { get; set; }
     }
 }

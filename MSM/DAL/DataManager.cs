@@ -200,12 +200,51 @@ namespace MSM.DAL
             return unmatchedChecks;
         }
 
+        private static List<Check> DetermineUnmatchedChecks(List<ModificationRow> modificationRows)
+        {
+            foreach (ModificationRow row in modificationRows)
+            {
+                if (row.LBVDCheckNum != 0 && string.IsNullOrEmpty(row.LBVDCheckDisposition))
+                {
+                    NewUnmatchedCheck(row, "LBVD");
+                }
+
+                if (row.TIDCheckNum != 0 && string.IsNullOrEmpty(row.TIDCheckDisposition))
+                {
+                    NewUnmatchedCheck(row, "TID");
+                }
+
+                if (row.TDLCheckNum != 0 && string.IsNullOrEmpty(row.TDLCheckDisposition))
+                {
+                    NewUnmatchedCheck(row, "TDL");
+                }
+
+                if (row.MBVDCheckNum != 0 && string.IsNullOrEmpty(row.MBVDCheckDisposition))
+                {
+                    NewUnmatchedCheck(row, "MBVD");
+                }
+
+                if (row.SDCheckNum != 0 && string.IsNullOrEmpty(row.SDCheckDisposition))
+                {
+                    NewUnmatchedCheck(row, "SD");
+                }
+            }
+
+            return unmatchedChecks;
+        }
         public static void PersistUnmatchedChecks(List<DispositionRow> researchRows)
         {
             List<Check> unmatchedChecks = DetermineUnmatchedChecks(researchRows);
             AppendToResearchChecks(unmatchedChecks);
         }
-    
+
+        
+        public static void PersistUnmatchedChecks(List<ModificationRow> modificationRows)
+        {
+            List<Check> unmatchedChecks = DetermineUnmatchedChecks(modificationRows);
+            AppendToResearchChecks(unmatchedChecks);
+        }
+         
         private static bool IsResolved(int checkNum)
         {
             var rc = (from c in resolvedChecks
@@ -219,9 +258,9 @@ namespace MSM.DAL
         {
             using (var dbCtx = new MSMEntities())
             {
-                var longUnmatched = dbCtx.Set<LongUnmatched>();
+                var longUnmatched = dbCtx.Set<ResearchCheck>();
 
-                foreach (LongUnmatched lu in longUnmatched)
+                foreach (ResearchCheck lu in longUnmatched)
                 {
                     if (IsResolved(lu.Num))
                     {
@@ -244,9 +283,9 @@ namespace MSM.DAL
         {
             using (var dbCtx = new MSMEntities())
             {
-                var longUnmatched = dbCtx.Set<LongUnmatched>();
+                var longUnmatched = dbCtx.Set<ResearchCheck>();
 
-                foreach (LongUnmatched lu in longUnmatched)
+                foreach (ResearchCheck lu in longUnmatched)
                 {
                     if (IsKnownDisposition(lu.Num))
                     {
@@ -264,7 +303,7 @@ namespace MSM.DAL
             DeleteMarkedChecks();
         }
 
-        private static void ResolveIncidentalLBVD(DispositionRow row, List<Check> researchChecks)
+        private static void ResolveIncidentalLBVD(MSM.Models.DataRow row, List<Check> researchChecks)
         {
             if (row.LBVDCheckNum != 0
                 && !IsKnownDisposition(row.LBVDCheckNum)
@@ -283,7 +322,7 @@ namespace MSM.DAL
             }
         }
 
-        private static void ResolveIncidentalTID(DispositionRow row, List<Check> researchChecks)
+        private static void ResolveIncidentalTID(MSM.Models.DataRow row, List<Check> researchChecks)
         {
             if (row.TIDCheckNum != 0
                 && !IsKnownDisposition(row.TIDCheckNum)
@@ -302,7 +341,7 @@ namespace MSM.DAL
             }
         }
 
-        private static void ResolveIncidentalTDL(DispositionRow row, List<Check> researchChecks)
+        private static void ResolveIncidentalTDL(MSM.Models.DataRow row, List<Check> researchChecks)
         {
             if (row.TDLCheckNum != 0
                 && !IsKnownDisposition(row.TDLCheckNum)
@@ -321,7 +360,7 @@ namespace MSM.DAL
             }
         }
 
-        private static void ResolveIncidentalMBVD(DispositionRow row, List<Check> researchChecks)
+        private static void ResolveIncidentalMBVD(MSM.Models.DataRow row, List<Check> researchChecks)
         {
             if (row.MBVDCheckNum != 0
                 && !IsKnownDisposition(row.MBVDCheckNum)
@@ -340,7 +379,7 @@ namespace MSM.DAL
             }
         }
 
-        private static void ResolveIncidentalSD(DispositionRow row, List<Check> researchChecks)
+        private static void ResolveIncidentalSD(MSM.Models.DataRow row, List<Check> researchChecks)
         {
             if (row.SDCheckNum != 0
                 && !IsKnownDisposition(row.SDCheckNum)
@@ -361,7 +400,19 @@ namespace MSM.DAL
 
         private static void ResolveIncidentalChecks(List<DispositionRow> researchRows, List<Check> researchChecks)
         {
-            foreach (DispositionRow row in researchRows)
+            foreach (MSM.Models.DataRow row in researchRows)
+            {
+                ResolveIncidentalLBVD(row, researchChecks);
+                ResolveIncidentalTID(row, researchChecks);
+                ResolveIncidentalTDL(row, researchChecks);
+                ResolveIncidentalMBVD(row, researchChecks);
+                ResolveIncidentalSD(row, researchChecks);
+            }
+        }
+
+        private static void ResolveIncidentalChecks(List<ModificationRow> modificationRows, List<Check> researchChecks)
+        {
+            foreach (MSM.Models.DataRow row in modificationRows)
             {
                 ResolveIncidentalLBVD(row, researchChecks);
                 ResolveIncidentalTID(row, researchChecks);
@@ -377,6 +428,26 @@ namespace MSM.DAL
             ResolveIncidentalChecks(researchRows, researchChecks);
 
             // When merging a Research File against the Research Table, a check of
+            // known disposition may resolve a check in the Research Table. Find
+            // any such check and use it to create a new "incidental" resolved check
+            // The status of an incidental resolved check will have been set by the call
+            // to method ResolveIncidentalChecks above. If it has not been set, then
+            // use "Resolved" as its status. By construction, checks in the Research Table
+            // are only those which had no disposition on a Research File that has been used
+            // as an input. Hence, only these checks can become new resolved checks.
+            CreateIncidentalResolvedChecks(researchChecks);
+
+            // Remove from the Research Table any incidental resolved checks created 
+            // by the previous call. 
+            RemoveResolvedChecks();
+        }
+
+        public static void HandleIncidentalChecks(List<ModificationRow> modificationRows)
+        {
+            List<Check> researchChecks = GetResearchChecks();
+            ResolveIncidentalChecks(modificationRows, researchChecks);
+
+            // When merging a Modifications File against the Research Table, a check of
             // known disposition may resolve a check in the Research Table. Find
             // any such check and use it to create a new "incidental" resolved check
             // The status of an incidental resolved check will have been set by the call
@@ -542,6 +613,43 @@ namespace MSM.DAL
                     });
         }
 
+        public static void NewUnmatchedCheck(ModificationRow row, string service)
+        {
+            int checkNum;
+
+            switch (service)
+            {
+                case "LBVD":
+                    checkNum = -row.LBVDCheckNum;
+                    break;
+                case "TID":
+                    checkNum = -row.TIDCheckNum;
+                    break;
+                case "TDL":
+                    checkNum = -row.TDLCheckNum;
+                    break;
+                case "MBVD":
+                    checkNum = -row.MBVDCheckNum;
+                    break;
+                case "SD":
+                    checkNum = -row.SDCheckNum;
+                    break;
+                default:
+                    checkNum = -1;
+                    break;
+            }
+
+            unmatchedChecks.Add(new Check
+            {
+                RecordID = row.RecordID,
+                InterviewRecordID = row.InterviewRecordID,
+                Num = checkNum,
+                Name = string.Format("{0}, {1}", row.Lname, row.Fname),
+                Date = row.Date,
+                Service = service
+            });
+        }
+
         public static List<Check> GetResolvedChecks()
         {
             if (resolvedChecks == null)
@@ -588,7 +696,7 @@ namespace MSM.DAL
 
             using (var dbCtx = new MSMEntities())
             {
-                var longUnmatched = dbCtx.Set<LongUnmatched>();
+                var longUnmatched = dbCtx.Set<ResearchCheck>();
 
                 foreach (var lu in longUnmatched)
                 {
@@ -611,17 +719,17 @@ namespace MSM.DAL
         {
             using (var dbCtx = new MSMEntities())
             {
-                var longUnmatched = dbCtx.Set<LongUnmatched>();
+                var longUnmatched = dbCtx.Set<ResearchCheck>();
 
                 foreach (Check check in checks)
                 {
-                    LongUnmatched existing = (from c in longUnmatched
+                    ResearchCheck existing = (from c in longUnmatched
                                               where c.Num == check.Num
                                               select c).FirstOrDefault();
 
                     if (existing == null && !IsKnownDisposition(check.Num))
                     {
-                        LongUnmatched unm = new LongUnmatched
+                        ResearchCheck unm = new ResearchCheck
                         {
                             RecordID = check.RecordID,
                             InterviewRecordID = check.InterviewRecordID,
@@ -645,7 +753,7 @@ namespace MSM.DAL
         {
             using (var dbCtx = new MSMEntities())
             {
-                dbCtx.LongUnmatcheds.RemoveRange(dbCtx.LongUnmatcheds.Where(lu => lu.Matched == true));
+                dbCtx.ResearchChecks.RemoveRange(dbCtx.ResearchChecks.Where(lu => lu.Matched == true));
                 dbCtx.SaveChanges();
             }
         }
@@ -656,7 +764,7 @@ namespace MSM.DAL
              
             using (var dbCtx = new MSMEntities())
             {
-                var longUnmatched = dbCtx.Set<LongUnmatched>();
+                var longUnmatched = dbCtx.Set<ResearchCheck>();
 
                 var check = (from lu in longUnmatched
                              where lu.Num == checkNum

@@ -19,9 +19,9 @@ namespace MSM.Controllers
 
             using (var dbCtx = new MSMEntities())
             {
-                var longUnmatched = dbCtx.Set<LongUnmatched>();
+                var longUnmatched = dbCtx.Set<ResearchCheck>();
                 
-                foreach (LongUnmatched lu in longUnmatched)
+                foreach (ResearchCheck lu in longUnmatched)
                 {
                     researchChecks.Add(new Check
                     {

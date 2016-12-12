@@ -35,6 +35,7 @@ namespace MSM.Utils
             return resRows;
         }
 
+        /*
         public static List<ModificationRow> GetModificationRows(string filePath)
         {
             List<ModificationRow> modRows = new ExcelData(filePath).GetData("Sheet1").Select(dataRow => new ModificationRow
@@ -69,7 +70,42 @@ namespace MSM.Utils
 
             return modRows;
         }
+        */
 
+        public static List<ModificationRow> GetModificationRows(string filePath)
+        {
+            List<ModificationRow> modRows = new ExcelData(filePath).GetData("Sheet1").Select(dataRow => new ModificationRow
+            {
+                RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
+                Lname = dataRow["Last Name"].ToString(),
+                Fname = dataRow["First Name"].ToString(),
+                InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
+                Date = Convert.ToDateTime(dataRow["OPID Interview Date"].ToString()),
+                ModificationType = dataRow["Modification Type"].ToString(),
+
+                LBVDModificationReason = dataRow["LBVD Modification Reason"].ToString(),
+                LBVDCheckNum = Convert.ToInt32(dataRow["LBVD Modified Check Number"].ToString()),
+                LBVDCheckDisposition = dataRow["LBVD Modified Check Disposition"].ToString(),
+
+                TIDModificationReason = dataRow["TID Modification Reason"].ToString(),
+                TIDCheckNum = Convert.ToInt32(dataRow["TID Modified Check Number"].ToString()),
+                TIDCheckDisposition = dataRow["TID Modified Check Disposition"].ToString(),
+
+                TDLModificationReason = dataRow["TDL Modification Reason"].ToString(),
+                TDLCheckNum = Convert.ToInt32(dataRow["TDL Modified Check Number"].ToString()),
+                TDLCheckDisposition = dataRow["TDL Modified Check Disposition"].ToString(),
+
+                MBVDModificationReason = dataRow["MBVD Modification Reason"].ToString(),
+                MBVDCheckNum = Convert.ToInt32(dataRow["MBVD Modified Check Number"].ToString()),
+                MBVDCheckDisposition = dataRow["MBVD Modified Check Disposition"].ToString(),
+
+                SDMReason = dataRow["SDM Reason"].ToString(),
+                SDCheckNum = Convert.ToInt32(dataRow["SDM Check Number"].ToString()),
+                SDCheckDisposition = dataRow["SDM Check Disposition"].ToString()
+            }).ToList();
+
+            return modRows;
+        }
 
         public static List<Check> GetQuickbooksChecks(string filePath)
         {
@@ -132,7 +168,7 @@ namespace MSM.Utils
             return emptyCols;
         }
 
-        private static DateTime GetDateValue(DataRow row)
+        private static DateTime GetDateValue(System.Data.DataRow row)
         {
             string dvalue;
 
@@ -150,7 +186,7 @@ namespace MSM.Utils
             return dtime;
         }
 
-        private static int GetCheckNum(DataRow row)
+        private static int GetCheckNum(System.Data.DataRow row)
         {
             string cvalue;
 
@@ -167,7 +203,7 @@ namespace MSM.Utils
             return Convert.ToInt32(cvalue);
         }
 
-        private static string GetMemo(DataRow row)
+        private static string GetMemo(System.Data.DataRow row)
         {
             string mvalue;
 
@@ -184,7 +220,7 @@ namespace MSM.Utils
             return mvalue;
         }
 
-        private static string GetCheckStatus(DataRow row)
+        private static string GetCheckStatus(System.Data.DataRow row)
         {
             string svalue;
 
@@ -200,7 +236,7 @@ namespace MSM.Utils
             return svalue;
         }
 
-        private static string GetEmpty(DataRow row)
+        private static string GetEmpty(System.Data.DataRow row)
         {
             return "Empty";
         }
