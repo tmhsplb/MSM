@@ -98,7 +98,7 @@
 
              vm.dtColumns = [
                  DTColumnBuilder.newColumn('RecordID').withTitle('Record ID'),
-                 DTColumnBuilder.newColumn('InterviewRecordID').withTitle('Interview Record ID'),
+             /*    DTColumnBuilder.newColumn('InterviewRecordID').withTitle('Interview Record ID'), */
                  DTColumnBuilder.newColumn('Lname').withTitle("Last Name"),
                  DTColumnBuilder.newColumn('Fname').withTitle("First Name"),
 
@@ -157,7 +157,7 @@
 
          FileManager.setSelectedFile("Empty");
 
-         function DisplayResolvedChecks() {  // There not be any. This is handled by returning an empty list of checks from the API.
+         function DisplayResolvedChecks() {  // There may not be any. This is handled by returning an empty list of checks from the API.
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
                  $http.get(server + "api/resolved").then(function (result) {
@@ -187,7 +187,7 @@
              $scope.pleaseAct = true;
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 $http.get(server + "api.emptyfile",
+                 $http.get(server + "api/emptyfile",
                      { params: { "emptyFile": "Empty", "fileType": "xlsx" } }).then(function (result) {
                          defer.resolve(result.data);
                      });

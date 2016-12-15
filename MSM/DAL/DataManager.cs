@@ -262,7 +262,7 @@ namespace MSM.DAL
 
                 foreach (ResearchCheck lu in longUnmatched)
                 {
-                    if (IsResolved(lu.Num))
+                    if (IsResolved(lu.Num) || IsResolved(-lu.Num))
                     {
                         lu.Matched = true;
                     }
@@ -508,6 +508,7 @@ namespace MSM.DAL
             }
         }
 
+        /*
         // This method has a side effect on argument row. It sets a componet of row that is
         // read by the caller.
         public static void NewResolvedCheck(Check check, DispositionRow row, string service)
@@ -563,11 +564,13 @@ namespace MSM.DAL
                 });
           //  }
         }
+        */
 
         public static void NewResolvedCheck(Check check, string status)
         {
             check.Clr = status;
             resolvedChecks.Add(check);
+            
             /*
             if (!IsResolved(check.Num))
             {
@@ -642,7 +645,8 @@ namespace MSM.DAL
             unmatchedChecks.Add(new Check
             {
                 RecordID = row.RecordID,
-                InterviewRecordID = row.InterviewRecordID,
+          //      InterviewRecordID = row.InterviewRecordID,
+                InterviewRecordID = 0,
                 Num = checkNum,
                 Name = string.Format("{0}, {1}", row.Lname, row.Fname),
                 Date = row.Date,
@@ -665,15 +669,18 @@ namespace MSM.DAL
             return updatedRows;
         }
 
+        /*
         public static void NewUpdatedRow(DispositionRow d)
         {
             updatedRows.Add(d);
         }
+        */
 
         public static void NewUpdatedRow(Check matchedCheck, string disposition)
         {
             DispositionRow drow = new DispositionRow
             {         
+                RecordID = matchedCheck.RecordID,
                 InterviewRecordID = matchedCheck.InterviewRecordID,
                 LBVDCheckNum = (matchedCheck.Service.Equals("LBVD") ? matchedCheck.Num : 0),
                 LBVDCheckDisposition = (matchedCheck.Service.Equals("LBVD") ? disposition : ""),

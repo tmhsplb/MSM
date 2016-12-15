@@ -96,12 +96,6 @@ namespace MSM
               );
 
           config.Routes.MapHttpRoute(
-                  name: "DownloadFile",
-                  routeTemplate: "api/downloadfile",
-                  defaults: new { controller = "FileDownloader", action = "DownloadFile" }
-              );
-
-          config.Routes.MapHttpRoute(
                  name: "DownloadImportMe",
                  routeTemplate: "api/downloadimportme",
                  defaults: new {  controller = "FileDownloader", action="DownloadImportMe"} 

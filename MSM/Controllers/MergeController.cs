@@ -155,7 +155,7 @@ namespace MSM.Controllers
         {
             foreach (Check check in checks)
             {
-                List<Check> matchedChecks = researchChecks.FindAll(c => c.Num == check.Num);
+                List<Check> matchedChecks = researchChecks.FindAll(c => c.Num == check.Num || c.Num == -check.Num);
 
                 // Normally, matchedChecks.Count() == 0 or matchedChecks.Count == 1 
                 // But in the case of a birth certificate, a single check number may cover
@@ -188,7 +188,9 @@ namespace MSM.Controllers
                         {
                             foreach (DispositionRow drow in drows)
                             {
-                                if (matchedCheck.InterviewRecordID != drow.InterviewRecordID)
+                                if ((matchedCheck.InterviewRecordID != 0 && matchedCheck.InterviewRecordID != drow.InterviewRecordID)
+                                    ||
+                                    (matchedCheck.RecordID != 0 && matchedCheck.RecordID != drow.RecordID))
                                 {
                                     // Case of same check number being used for multiple
                                     // birth certificates.
@@ -261,7 +263,7 @@ namespace MSM.Controllers
         {
             if (apFileName.Equals("unknown") && mdFileName.Equals("unknown"))
             {
-                // The user did not specify a Research File or a Mods FIle on the merge screen. 
+                // The user did not specify a Research File or a Mods File on the merge screen. 
                 // The user is trying to resolve some research checks in the Research Table.
                 ResolveResearchChecks(vcFileName, vcFileType, qbFileName, qbFileType);
             }

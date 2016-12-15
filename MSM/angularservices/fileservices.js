@@ -1,8 +1,8 @@
 ﻿
 FileServices.factory('FileManager', ['$http', function ($http) {
     var getDownloadFile = function (fileName, fileType) {
-       // return $http.get("http://localhost/MSM/api/download", { params: { "fileName": fileName, "fileType": fileType } }).then(function (result) {
-       return $http.get(server + "api/downloadimportme").then(function (result) {
+       // return $http.get(server + "api/downloadimportme").then(function (result) {
+        return $http.get(server + "api/downloadimportme", { params: { "fileName": fileName, "fileType": fileType } }).then(function (result) {
             return result.data;
         })
     };

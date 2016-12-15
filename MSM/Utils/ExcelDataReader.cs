@@ -35,53 +35,17 @@ namespace MSM.Utils
             return resRows;
         }
 
-        /*
         public static List<ModificationRow> GetModificationRows(string filePath)
         {
-            List<ModificationRow> modRows = new ExcelData(filePath).GetData("Sheet1").Select(dataRow => new ModificationRow
+            List<ModificationRow> modRows = new ExcelData(filePath).GetData("Modifications - Rows").Select(dataRow => new ModificationRow
             {
                 RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
                 Lname = dataRow["Last Name"].ToString(),
                 Fname = dataRow["First Name"].ToString(),
-                InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
-                Date = Convert.ToDateTime(dataRow["OPID Interview Date"].ToString()),
-                ModificationType = dataRow["Modification Type"].ToString(),
-
-                LBVDModificationReason = dataRow["LBVD Modification Reason"].ToString(),
-                LBVDModifiedCheckNum = Convert.ToInt32(dataRow["LBVD Modified Check Number"].ToString()),
-                LBVDModifiedCheckDisposition = dataRow["LBVD Modified Check Disposition"].ToString(),
-
-                TIDModificationReason = dataRow["TID Modification Reason"].ToString(),
-                TIDModifiedCheckNum = Convert.ToInt32(dataRow["TID Modified Check Number"].ToString()),
-                TIDModifiedCheckDisposition = dataRow["TID Modified Check Disposition"].ToString(),
-
-                TDLModificationReason = dataRow["TDL Modification Reason"].ToString(),
-                TDLModifiedCheckNum = Convert.ToInt32(dataRow["TDL Modified Check Number"].ToString()),
-                TDLModifiedCheckDisposition = dataRow["TDL Modified Check Disposition"].ToString(),
-
-                MBVDModificationReason = dataRow["MBVD Modification Reason"].ToString(),
-                MBVDModifiedCheckNum = Convert.ToInt32(dataRow["MBVD Modified Check Number"].ToString()),
-                MBVDModifiedCheckDisposition = dataRow["MBVD Modified Check Disposition"].ToString(),
-
-                SDMReason = dataRow["SDM Reason"].ToString(),
-                SDMCheckNum = Convert.ToInt32(dataRow["SDM Check Number"].ToString()),
-                SDMCheckDisposition = dataRow["SDM Check Disposition"].ToString()
-            }).ToList();
-
-            return modRows;
-        }
-        */
-
-        public static List<ModificationRow> GetModificationRows(string filePath)
-        {
-            List<ModificationRow> modRows = new ExcelData(filePath).GetData("Sheet1").Select(dataRow => new ModificationRow
-            {
-                RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
-                Lname = dataRow["Last Name"].ToString(),
-                Fname = dataRow["First Name"].ToString(),
-                InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
-                Date = Convert.ToDateTime(dataRow["OPID Interview Date"].ToString()),
-                ModificationType = dataRow["Modification Type"].ToString(),
+             //   InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
+             //   Date = Convert.ToDateTime(dataRow["OPID Interview Date"].ToString()),
+                Date = Convert.ToDateTime(dataRow["OPID Modification Date"].ToString()),
+             //   ModificationType = dataRow["Modification Type"].ToString(),
 
                 LBVDModificationReason = dataRow["LBVD Modification Reason"].ToString(),
                 LBVDCheckNum = Convert.ToInt32(dataRow["LBVD Modified Check Number"].ToString()),
