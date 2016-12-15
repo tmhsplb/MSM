@@ -308,7 +308,7 @@
     <Content Include="App_Data\VCEmpty.xlsx" />
     <Content Include="App_Data\QBEmpty.xlsx" />
     <Content Include="App_Data\unknown.xlsx" />
-    <Content Include="App_Data\Normal Import Me Header.csv" />
+    <Content Include="App_Data\Interview Import Me Header.csv" />
     <EntityDeploy Include="Research.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Research.Designer.cs</LastGenOutput>

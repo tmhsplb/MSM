@@ -17,9 +17,9 @@ MSMApp.controller('resolvedController', ['$rootScope', '$scope', '$http', '$wind
                 $rootScope.pageTitle = "Resolved " + $scope.timestamp;
             })
        
-            $scope.NormalDownload = function () {
+            $scope.InterviewDownload = function () {
 
-                var filePromise = FileManager.getDownloadFile("normal", "csv");
+                var filePromise = FileManager.getDownloadFile("interview", "csv");
 
                 filePromise.then(function (result) {
 
@@ -31,9 +31,9 @@ MSMApp.controller('resolvedController', ['$rootScope', '$scope', '$http', '$wind
                     var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
 
                     var downloadLink = document.createElement("a");
-                    downloadLink.download = "normal-importme-" + $scope.timestamp + ".csv";
+                    downloadLink.download = "interview-importme-" + $scope.timestamp + ".csv";
 
-                    downloadLink.innerHtml = "Download Normal IMPORTME File";
+                    downloadLink.innerHtml = "Download Interview IMPORTME File";
 
                     if ($window.URL != null) {
                         //  console.log("Download using Chrome");

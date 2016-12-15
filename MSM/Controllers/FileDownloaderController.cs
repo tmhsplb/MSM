@@ -44,8 +44,8 @@ namespace MSM.Controllers
 
             switch (fileName)
             {
-                case "normal":
-                    return DownloadNormalImportMe(importRows);
+                case "interview":
+                    return DownloadInterviewImportMe(importRows);
 
                 case "modifications":
                     return DownloadModificationsImportMe(importRows);
@@ -55,13 +55,13 @@ namespace MSM.Controllers
             }
         }
 
-        public HttpResponseMessage DownloadNormalImportMe(List<DispositionRow> importRows)
+        public HttpResponseMessage DownloadInterviewImportMe(List<DispositionRow> importRows)
         {
             if (importRows != null)
             {
-                PrepareNormalImportFile(importRows);
+                PrepareInterviewImportFile(importRows);
 
-                string fname = string.Format("normal-importme-{0}", timestamp);
+                string fname = string.Format("interview-importme-{0}", timestamp);
                 string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/{0}.csv", fname));
 
                 return DownloadSpecifiedImportMe(fname, filePath);
@@ -86,23 +86,23 @@ namespace MSM.Controllers
             return null;
         }
 
-        private static void PrepareNormalImportHeader()
+        private static void PrepareInterviewImportHeader()
         {
-            string pathToDispositionHeader = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Normal Import Me Header.csv"));
-            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/normal-importme-{0}.csv", timestamp));
+            string pathToDispositionHeader = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Interview Import Me Header.csv"));
+            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/interview-importme-{0}.csv", timestamp));
             var retainedLines = File.ReadAllLines(pathToDispositionHeader);
             File.WriteAllLines(pathToImportMeFile, retainedLines);
         }
 
-        private static void PrepareNormalImportFile(List<DispositionRow> updatedRows)
+        private static void PrepareInterviewImportFile(List<DispositionRow> updatedRows)
         {
-            // Create file importme.csv and write 2 header lines from file "Normal Import Me Header.csv"
-            PrepareNormalImportHeader();
+            // Create file importme.csv and write 2 header lines from file "Interview Import Me Header.csv"
+            PrepareInterviewImportHeader();
 
             // Static variable timestamp will be set by this point, because GetTimestamp will have been called.
-            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/normal-importme-{0}.csv", timestamp));
+            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/interview-importme-{0}.csv", timestamp));
 
-            // Append lines to file normal-importme.csv
+            // Append lines to file interview-importme.csv
             using (StreamWriter writer = new StreamWriter(pathToImportMeFile, true))
             {
                 foreach (DispositionRow d in updatedRows)

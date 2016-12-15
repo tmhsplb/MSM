@@ -160,7 +160,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                                     var valid = (v === "true" ? true : false);
 
                                     if (!valid) {
-                                        $scope.APUploadedFile = "Bad format. " + jsonObj.file.name + " does not look like a Normal Report file.";
+                                        $scope.APUploadedFile = "Bad format. " + jsonObj.file.name + " does not look like an Interview Report file.";
                                         FileManager.setAPFileName($scope.APUploadedFile);
                                     }
                                     else {
