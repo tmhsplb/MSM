@@ -13,7 +13,7 @@ namespace MSM.Utils
     {
         public static List<DispositionRow> GetResearchRows (string filePath)
         {
-            List<DispositionRow> resRows = new ExcelData(filePath).GetData("Sheet1").Select(dataRow => new DispositionRow
+            List<DispositionRow> resRows = new ExcelData(filePath).GetData().Select(dataRow => new DispositionRow
                 {
                     RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
                     Lname = dataRow["Last Name"].ToString(),
@@ -37,7 +37,7 @@ namespace MSM.Utils
 
         public static List<ModificationRow> GetModificationRows(string filePath)
         {
-            List<ModificationRow> modRows = new ExcelData(filePath).GetData("Modifications - Rows").Select(dataRow => new ModificationRow
+            List<ModificationRow> modRows = new ExcelData(filePath).GetData().Select(dataRow => new ModificationRow
             {
                 RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
                 Lname = dataRow["Last Name"].ToString(),
@@ -73,7 +73,7 @@ namespace MSM.Utils
 
         public static List<Check> GetQuickbooksChecks(string filePath)
         {
-            List<Check> rowChecks = new ExcelData(filePath).GetData("Sheet1").Select(dataRow => 
+            List<Check> rowChecks = new ExcelData(filePath).GetData().Select(dataRow => 
                 new Check
                 {
                     Date = GetDateValue(dataRow),
@@ -98,7 +98,7 @@ namespace MSM.Utils
 
         public static List<Check> GetVoidedChecks(string filePath)
         {
-            List<Check> rowChecks = new ExcelData(filePath).GetData("Sheet1").Select(dataRow =>
+            List<Check> rowChecks = new ExcelData(filePath).GetData().Select(dataRow =>
                 new Check
                 {
                     Date = GetDateValue(dataRow),
@@ -122,7 +122,7 @@ namespace MSM.Utils
 
         public static List<EmptyCol> GetEmptyFile(string filePath)
         {
-            List<EmptyCol> emptyCols = new ExcelData(filePath).GetData("Sheet1").Select(dataRow =>
+            List<EmptyCol> emptyCols = new ExcelData(filePath).GetData().Select(dataRow =>
                 new EmptyCol
                 {
                     Empty = GetEmpty(dataRow)
