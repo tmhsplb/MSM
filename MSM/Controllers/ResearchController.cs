@@ -15,37 +15,13 @@ namespace MSM.Controllers
         [HttpGet]
         public List<Check> GetResearchChecks()
         {
-            List<Check> researchChecks = new List<Check>();
-
-            using (var dbCtx = new MSMEntities())
-            {
-                var longUnmatched = dbCtx.Set<ResearchCheck>();
-                
-                foreach (ResearchCheck lu in longUnmatched)
-                {
-                    researchChecks.Add(new Check
-                    {
-                        RecordID = lu.RecordID,
-                        InterviewRecordID = lu.InterviewRecordID,
-                        Name = lu.Name,
-                        Date = lu.Date,
-                        Num = lu.Num,
-                        Service = lu.Service,
-                        Matched = lu.Matched
-                    });
-                }
-            }
-
-            return researchChecks;
+            return DataManager.GetResearchChecks();
         }
 
         [HttpGet]
         public string ResolveCheck(int checkNum)
         {
-             
-            string status = DataManager.ResolveCheck(checkNum);
-
-            return status;
+            return DataManager.ResolveCheck(checkNum);
         }
 
         [HttpGet]

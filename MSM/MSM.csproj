@@ -411,6 +411,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DataRow.cs" />
+    <Compile Include="Models\ImportRow.cs" />
     <Compile Include="Models\ModifcationRow.cs" />
     <Compile Include="Models\EmptyCol.cs" />
     <Compile Include="Models\Check.cs" />

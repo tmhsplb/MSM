@@ -40,7 +40,7 @@ namespace MSM.Controllers
         [HttpGet]
         public HttpResponseMessage DownloadImportMe(string fileName, string fileType)
         {
-            List<DispositionRow> importRows = DataManager.GetUpdatedRows();
+            List<ImportRow> importRows = DataManager.GetImportRows();
 
             switch (fileName)
             {
@@ -55,7 +55,7 @@ namespace MSM.Controllers
             }
         }
 
-        public HttpResponseMessage DownloadInterviewImportMe(List<DispositionRow> importRows)
+        public HttpResponseMessage DownloadInterviewImportMe(List<ImportRow> importRows)
         {
             if (importRows != null)
             {
@@ -71,7 +71,7 @@ namespace MSM.Controllers
         }
 
        
-        public HttpResponseMessage DownloadModificationsImportMe(List<DispositionRow> importRows)
+        public HttpResponseMessage DownloadModificationsImportMe(List<ImportRow> importRows)
         {
             if (importRows != null)
             {
@@ -94,7 +94,7 @@ namespace MSM.Controllers
             File.WriteAllLines(pathToImportMeFile, retainedLines);
         }
 
-        private static void PrepareInterviewImportFile(List<DispositionRow> updatedRows)
+        private static void PrepareInterviewImportFile(List<ImportRow> updatedRows)
         {
             // Create file importme.csv and write 2 header lines from file "Interview Import Me Header.csv"
             PrepareInterviewImportHeader();
@@ -105,7 +105,7 @@ namespace MSM.Controllers
             // Append lines to file interview-importme.csv
             using (StreamWriter writer = new StreamWriter(pathToImportMeFile, true))
             {
-                foreach (DispositionRow d in updatedRows)
+                foreach (ImportRow d in updatedRows)
                 {
                     if (d.LBVDCheckNum > 0 || d.TIDCheckNum > 0 || d.TDLCheckNum > 0 || d.MBVDCheckNum > 0 || d.SDCheckNum > 0)
                     {
@@ -137,7 +137,7 @@ namespace MSM.Controllers
             File.WriteAllLines(pathToImportMeFile, retainedLines);
         }
 
-        private static void PrepareModificationsImportFile(List<DispositionRow> updatedRows)
+        private static void PrepareModificationsImportFile(List<ImportRow> updatedRows)
         {
             // Create file modifications-importme.csv and write 2 header lines from file "Modifications Import Me Header.csv"
             PrepareModificationsImportHeader();
@@ -148,7 +148,7 @@ namespace MSM.Controllers
             // Append lines to file modifications-importme.csv
             using (StreamWriter writer = new StreamWriter(pathToImportMeFile, true))
             {
-                foreach (DispositionRow d in updatedRows)
+                foreach (ImportRow d in updatedRows)
                 {
                     if (d.LBVDCheckNum < 0 || d.TIDCheckNum < 0 || d.TDLCheckNum < 0 || d.MBVDCheckNum < 0 || d.SDCheckNum < 0)
                     {

@@ -160,7 +160,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                                     var valid = (v === "true" ? true : false);
 
                                     if (!valid) {
-                                        $scope.APUploadedFile = "Bad format. " + jsonObj.file.name + " does not look like an Interview Report file.";
+                                        $scope.APUploadedFile = "Bad format. " + jsonObj.file.name + " does not look like an Interview Research File.";
                                         FileManager.setAPFileName($scope.APUploadedFile);
                                     }
                                     else {
@@ -213,7 +213,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                                     var valid = (v === "true" ? true : false);
 
                                     if (!valid) {
-                                        $scope.MDUploadedFile = "Bad format. " + jsonObj.file.name + " does not look like a Mods Report file.";
+                                        $scope.MDUploadedFile = "Bad format. " + jsonObj.file.name + " does not look like a Modifications Research File.";
                                         FileManager.setMDFileName($scope.MDUploadedFile);
                                     }
                                     else {
@@ -330,7 +330,10 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                     qbFileType = FileManager.getQBFileType();
                 }
 
-                if (apFileName != 'unknown' && (vcFileName != 'unknown' || qbFileName != 'unknown')) {
+                if (apFileName != 'unknown' && mdFileName != 'unknown') {
+                    alert("Cannot merge two Research Files at the same time. Please use the browser reload button to reset.")
+                }
+                else if (apFileName != 'unknown' && (vcFileName != 'unknown' || qbFileName != 'unknown')) {
                     alert("Cannot merge both a Research File and a Disposition File at the same time. Please use the browser reload button to reset.")
                 }
                 else {

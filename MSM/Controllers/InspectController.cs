@@ -40,14 +40,14 @@ namespace MSM.Controllers
         }
         
         [HttpGet]
-        // This method is used to return the Research Report File for inspection on the Inspect tab.
+        // This method is used to return the Interview Research File for inspection on the Inspect tab.
         public List<DispositionRow> GetResearchFile(string resFile, string fileType)
         {
             return DataManager.GetResearchRows(resFile, fileType);
         }
 
         [HttpGet]
-        // This method is used to return the Modification Report File for inspection on the Inspect tab.
+        // This method is used to return the Modifications Research File for inspection on the Inspect tab.
         public List<ModificationRow> GetModificationFile(string modFile, string fileType)
         {
             return DataManager.GetModificationRows(modFile, fileType);
