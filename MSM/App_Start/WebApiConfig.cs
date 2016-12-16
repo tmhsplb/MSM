@@ -110,7 +110,7 @@ namespace MSM
           config.Routes.MapHttpRoute(
                name: "ValidFile",
                routeTemplate: "api/checkvalidity",
-               defaults: new { controller = "FileUploader" }
+               defaults: new { controller = "FileUploader", action="CheckValidity" }
            );
 
           config.Routes.MapHttpRoute(

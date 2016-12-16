@@ -48,10 +48,8 @@ namespace MSM.Controllers
         }
 
         [HttpGet]
-        public bool GetCheckvalidity(string ftype, string fname, string fext)
+        public bool Checkvalidity(string ftype, string fname, string fext)
         {
-          //  string fpath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", fname, fext));
-
             string fpath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}.{1}", fname, fext));
            
             switch(ftype)
@@ -61,7 +59,7 @@ namespace MSM.Controllers
                 case "AP":
                     return ValidateAPFile(fpath);
                 case "MD":
-                    return true;
+                    return ValidateMDFile(fpath);
                 case "QB":
                     return ValidateQBFile(fpath);
                 default:
@@ -69,21 +67,63 @@ namespace MSM.Controllers
             }
         }
 
+        
+        private bool ValidateAPFile(string fpath)
+        {
+            bool valid = true;
+ 
+            try
+            {
+                List<DispositionRow> rows = ExcelDataReader.GetResearchRows(fpath);
+
+                int zeroRecords = rows.Count(r => r.InterviewRecordID == 0);
+ 
+                valid = (zeroRecords == 0);
+
+            } catch (Exception e)
+            {
+                valid = false;
+            }
+
+            return valid;
+           // return true;
+        }
+
+        private bool ValidateMDFile(string fpath)
+        {
+            bool valid = true;
+
+            try
+            {
+                List<ModificationRow> rows = ExcelDataReader.GetModificationRows(fpath);
+
+                int zeroRecords = rows.Count(r => r.InterviewRecordID == 0);
+
+                valid = (zeroRecords != 0);
+
+            }
+            catch (Exception e)
+            {
+                valid = false;
+            }
+
+            return valid;
+           // return true;
+        }
+
         private bool ValidateVCFile(string fpath)
         {
             bool valid = true;
 
-            var voidedChecksFile = Linq2Excel.GetFactory(fpath);
-
             try
             {
-                var checks = from vc in voidedChecksFile.Worksheet<Check>("Sheet1") select vc;
+                var checks = ExcelDataReader.GetVoidedChecks(fpath);
 
                 var clr = (from c in checks
-                           where (c.Clr != null && c.Clr != "*")
+                           where (string.IsNullOrEmpty(c.Clr))
                            select c).FirstOrDefault();
 
-                if (clr != null)
+                if (clr == null)
                 {
                     valid = false;
                 }
@@ -93,51 +133,29 @@ namespace MSM.Controllers
                 valid = false;
             }
 
-           // return valid;
-            return true;
-        }
-
-        private bool ValidateAPFile(string fpath)
-        {
-            bool valid = true;
- 
-            try
-            {
-                List<DispositionRow> rows = Linq2Excel.GetDispositionRows(fpath);
-                int zeroRecords = rows.Count(r => r.RecordID == 0);
- 
-                valid = (zeroRecords == 0);
-
-            } catch (Exception e)
-            {
-                valid = false;
-            }
-
-           // return valid;
-            return true;
+            return valid;
+           // return true;
         }
 
         private bool ValidateQBFile(string fpath)
         {
             bool valid = true;
  
-            var quickbooksFile = Linq2Excel.GetFactory(fpath);
-
             try
             {
-                var checks = from check in quickbooksFile.Worksheet<Check>("Sheet1") select check;
+                var checks = ExcelDataReader.GetQuickbooksChecks(fpath);
 
-                int starredRecords = checks.Count(c => c.Clr == "*");
+                var clr = checks.Count(c => c.Clr.Equals("Unknown"));
 
-                valid = starredRecords == 0;
+                valid = clr == 0;
             }
             catch (Exception e)
             {
                 valid = false;
             }
 
-            // return valid;
-            return true;
+            return valid;
+           // return true;
         }
     }   
 }
