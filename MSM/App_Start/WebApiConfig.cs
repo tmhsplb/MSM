@@ -91,8 +91,8 @@ namespace MSM
 
           config.Routes.MapHttpRoute(
                   name: "Upload",
-                  routeTemplate: "api/upload",
-                  defaults: new { controller = "FileUploader", action="UploadFile"}
+                  routeTemplate: "api/upload/{action}",
+                  defaults: new { controller = "FileUploader"}
               );
 
           config.Routes.MapHttpRoute(

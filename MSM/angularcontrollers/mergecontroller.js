@@ -132,7 +132,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                     {
                         fd.append("uploadedFile", $scope.files[i].file);
                         fd.append("ftype", "AP");
-                
+                        console.log("Upload file " + $scope.files[i].file);
                         var xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", APUploadComplete, false);
                         xhr.open("POST", server + "api/upload/UploadFile", true);
