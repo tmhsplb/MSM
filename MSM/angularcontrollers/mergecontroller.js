@@ -132,7 +132,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                     {
                         fd.append("uploadedFile", $scope.files[i].file);
                         fd.append("ftype", "AP");
-                        console.log("Upload file " + $scope.files[i].file);
+                        console.log("Upload file " + $scope.files[i].file.name);
                         var xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", APUploadComplete, false);
                         xhr.open("POST", server + "api/upload/UploadFile", true);
@@ -172,6 +172,7 @@ MSMApp.controller('mergeController', ['$rootScope', '$scope', '$http', 'FileMana
                     })
                 }
                 else {
+                    console.log("server response to upload is: " + evt.target.responseText);
                     $scope.$apply(function (scpe) {
                         $scope.UploadStatus = evt.target.responseText;
                     })
