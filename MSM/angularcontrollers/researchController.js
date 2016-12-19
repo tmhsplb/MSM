@@ -1,10 +1,7 @@
 ﻿
-
 MSMApp.controller('researchController', ['$rootScope', '$scope', '$http', '$route', 'FileManager', 'ResearchManager', 'DTOptionsBuilder', 'DTColumnBuilder',
         function ($rootScope, $scope, $http, $route, FileManager, ResearchManager, DTOptionsBuilder, DTColumnBuilder) {
-           
             $scope.tab = 'research';
-
             var timestampPromise = FileManager.getResearchTimestamp();
 
             timestampPromise.then(function (d) {
@@ -17,20 +14,15 @@ MSMApp.controller('researchController', ['$rootScope', '$scope', '$http', '$rout
                 $rootScope.pageTitle = "Research " + $scope.timestamp;
             })
 
-            $scope.integerval = /^\d*$/;
+            $scope.integerval = /^-?\d*$/;
             $scope.resolvedCheck = "";
             $scope.ResolvedStatus = ResearchManager.getResolvedStatus();
 
             $scope.ResolveCheck = function () {
-              //  console.log("Resolved check: " + $scope.resolvedCheck);
-                
+                //  console.log("Resolved check: " + $scope.resolvedCheck);
                 ResearchManager.resolve($scope.resolvedCheck).then(function (r) {
-                 
-                    //  $scope.ResolvedStatus = [r].join(", ");
-
                     ResearchManager.setResolvedStatus(r);
                     $route.reload();
-                    
                 })   
             }
         }]);
