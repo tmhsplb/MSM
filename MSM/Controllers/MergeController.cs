@@ -32,7 +32,7 @@ namespace MSM.Controllers
                 {
                     foreach (Check matchedCheck in matchedChecks)
                     {
-                        DataManager.NewResolvedCheck(matchedCheck);
+                        DataManager.NewResolvedCheck(matchedCheck, DataManager.GetDispositionFromCheck(check));
                     }
                 }
             }
@@ -61,8 +61,7 @@ namespace MSM.Controllers
         }
 
         // The user did not specify a Research File on the merge screen. The user is trying
-        // to resolve some checks currently in research. Since no Research File has been supplied
-        // there are no incidentally resolved checks to handle.
+        // to resolve some checks currently in research.
         private static void ResolveResearchChecks(string vcFileName, string vcFileType, string qbFileName, string qbFileType)
         {
             DataManager.Init();

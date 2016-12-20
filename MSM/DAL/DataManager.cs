@@ -458,7 +458,7 @@ namespace MSM.DAL
             }
         }
 
-        private static string GetDispositionFromCheck(Check check)
+        public static string GetDispositionFromCheck(Check check)
         {
             switch (check.Clr)
             {
@@ -478,30 +478,10 @@ namespace MSM.DAL
             }
         }
 
-        public static void NewResolvedCheck(Check check)
-        {
-            check.Clr = GetDispositionFromCheck(check);
-            resolvedChecks.Add(check);
-            
-            /*
-            if (!IsResolved(check.Num))
-            {
-                resolvedChecks.Add(check);
-            }
-             */
-        }
-
         public static void NewResolvedCheck(Check check, string disposition)
         {
             check.Clr = disposition;
             resolvedChecks.Add(check);
-
-            /*
-            if (!IsResolved(check.Num))
-            {
-                resolvedChecks.Add(check);
-            }
-             */
         }
 
         public static void NewUnmatchedCheck(DispositionRow row, string service)
