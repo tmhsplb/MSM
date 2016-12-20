@@ -89,11 +89,25 @@ namespace MSM
                defaults: new { controller = "Research", action="GetResearchChecks" }
             );
 
+          // Test using Postman
+          config.Routes.MapHttpRoute(
+                    name: "UploadPath",
+                    routeTemplate: "api/uploadpath",
+                    defaults: new { controller = "FileUploader", action="UploadPath" }
+                );
+
           config.Routes.MapHttpRoute(
                   name: "Upload",
                   routeTemplate: "api/upload/{action}",
                   defaults: new { controller = "FileUploader"}
               );
+
+          // Test using Postman
+          config.Routes.MapHttpRoute(
+                    name: "DownloadPath",
+                    routeTemplate: "api/downloadpath",
+                    defaults: new { controller = "FileDownloader", action = "DownloadPath" }
+                );
 
           config.Routes.MapHttpRoute(
                  name: "DownloadImportMe",

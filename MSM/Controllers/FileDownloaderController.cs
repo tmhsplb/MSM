@@ -37,6 +37,14 @@ namespace MSM.Controllers
             return (result);
         }
 
+        // Strictly for testing by Postman.
+        [HttpGet]
+        public string DownloadPath()
+        {
+            string downloadPath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/{0}.csv", "importme"));
+            return downloadPath;
+        }
+
         [HttpGet]
         public HttpResponseMessage DownloadImportMe(string fileName, string fileType)
         {

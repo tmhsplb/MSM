@@ -47,6 +47,14 @@ namespace MSM.Controllers
             return result;
         }
 
+        // Strictly for testing by Postman.
+        [HttpGet]
+        public string UploadPath()
+        {
+            string uploadPath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}", "BP.xlsx"));
+            return uploadPath;
+        }
+
         [HttpGet]
         public bool Checkvalidity(string ftype, string fname, string fext)
         {
