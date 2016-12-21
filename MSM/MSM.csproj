@@ -312,8 +312,6 @@
     <!-- <Content Include="App_Data\Private\Empty.xlsx" /> -->
     <Content Include="App_Data\Check Disposition Header.csv" />
     <Content Include="App_Data\Empty.xlsx" />
-    <Content Include="App_Data\VCEmpty.xlsx" />
-    <Content Include="App_Data\QBEmpty.xlsx" />
     <Content Include="App_Data\unknown.xlsx" />
     <Content Include="App_Data\Import Me Header.csv" />
     <None Include="Scripts\jquery-1.7.2.intellisense.js" />
