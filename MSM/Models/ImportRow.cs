@@ -5,7 +5,7 @@ using System.Web;
 
 namespace MSM.Models
 {
-    public class DispositionRow : DataRow
+    public class ImportRow : DataRow
     {
         
     }

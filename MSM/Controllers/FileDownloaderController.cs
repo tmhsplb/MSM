@@ -15,57 +15,15 @@ namespace MSM.Controllers
     {
         private static string timestamp;
 
-        [HttpGet]
-        public HttpResponseMessage DownloadFile(string fileName, string fileType)
+        private HttpResponseMessage DownloadSpecifiedImportMe(string fname, string filePath)
         {
             Byte[] bytes = null;
-            if (fileName != null)
-            {
-                string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/{0}.{1}", fileName, fileType));
-                // string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}", fileName));
-                FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-                BinaryReader br = new BinaryReader(fs);
-                bytes = br.ReadBytes((Int32)fs.Length);
-                br.Close();
-                fs.Close();
-            }
-
-            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-            System.IO.MemoryStream stream = new MemoryStream(bytes);
-            result.Content = new StreamContent(stream);
-            // result.Content.Headers.ContentType = new MediaTypeHeaderValue(fileType);
-            //  result.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
-            result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/force-download");
-            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-            {
-                FileName = fileName
-            };
-            return (result);
-        }
-
-        [HttpGet]
-        public HttpResponseMessage DownloadImportMe()
-        {
-            List<DispositionRow> importRows = DataManager.GetUpdatedRows();
-
-            if (importRows != null)
-            {
-                PrepareImportFile(importRows);
-            }
-
-            Byte[] bytes = null;
-           
-           // string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Public/{0}.{1}", "ImportMe", "csv"));
-
-            string fname = string.Format("importme-{0}", timestamp);
-            string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/{0}.csv", fname));
-            
             FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             BinaryReader br = new BinaryReader(fs);
             bytes = br.ReadBytes((Int32)fs.Length);
             br.Close();
             fs.Close();
-            
+
             HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
             System.IO.MemoryStream stream = new MemoryStream(bytes);
             result.Content = new StreamContent(stream);
@@ -79,42 +37,145 @@ namespace MSM.Controllers
             return (result);
         }
 
-        private static void PrepareImportHeader()
+        // Strictly for testing by Postman.
+        [HttpGet]
+        public string DownloadPath()
         {
-            string pathToDispositionHeader = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Import Me Header.csv"));
-            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/importme-{0}.csv", timestamp));
+            string downloadPath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/{0}.csv", "importme"));
+            return downloadPath;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage DownloadImportMe(string fileName, string fileType)
+        {
+            List<ImportRow> importRows = DataManager.GetImportRows();
+
+            switch (fileName)
+            {
+                case "interview":
+                    return DownloadInterviewImportMe(importRows);
+
+                case "modifications":
+                    return DownloadModificationsImportMe(importRows);
+
+                default:
+                    return null;
+            }
+        }
+
+        public HttpResponseMessage DownloadInterviewImportMe(List<ImportRow> importRows)
+        {
+            if (importRows != null)
+            {
+                PrepareInterviewImportFile(importRows);
+
+                string fname = string.Format("interview-importme-{0}", timestamp);
+                string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/{0}.csv", fname));
+
+                return DownloadSpecifiedImportMe(fname, filePath);
+            }
+
+            return null;
+        }
+
+       
+        public HttpResponseMessage DownloadModificationsImportMe(List<ImportRow> importRows)
+        {
+            if (importRows != null)
+            {
+                PrepareModificationsImportFile(importRows);
+
+                string fname = string.Format("modifications-importme-{0}", timestamp);
+                string filePath = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/{0}.csv", fname));
+
+                return DownloadSpecifiedImportMe(fname, filePath);
+            }
+
+            return null;
+        }
+
+        private static void PrepareInterviewImportHeader()
+        {
+            string pathToDispositionHeader = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Interview Import Me Header.csv"));
+            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/interview-importme-{0}.csv", timestamp));
             var retainedLines = File.ReadAllLines(pathToDispositionHeader);
             File.WriteAllLines(pathToImportMeFile, retainedLines);
         }
 
-        private static void PrepareImportFile(List<DispositionRow> updatedRows)
+        private static void PrepareInterviewImportFile(List<ImportRow> updatedRows)
         {
-            // Create file importme.csv and write 2 header lines from Check Disposition Header.csv
-            PrepareImportHeader();
+            // Create file importme.csv and write 2 header lines from file "Interview Import Me Header.csv"
+            PrepareInterviewImportHeader();
 
             // Static variable timestamp will be set by this point, because GetTimestamp will have been called.
-            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/importme-{0}.csv", timestamp));
+            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/interview-importme-{0}.csv", timestamp));
 
-            // Append lines to file importme.csv
-            //  using (StreamWriter writer = new StreamWriter(@"C:\\Methodist\\OPID\\Linq\\importme.csv", true))
+            // Append lines to file interview-importme.csv
             using (StreamWriter writer = new StreamWriter(pathToImportMeFile, true))
             {
-                foreach (DispositionRow d in updatedRows)
+                foreach (ImportRow d in updatedRows)
                 {
-                    string csvRow = string.Format(",{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
-                        d.InterviewRecordID,
-                        d.LBVDCheckNum,
-                        d.LBVDCheckDisposition,
-                        d.TIDCheckNum,
-                        d.TIDCheckDisposition,
-                        d.TDLCheckNum,
-                        d.TDLCheckDisposition,
-                        d.MBVDCheckNum,
-                        d.MBVDCheckDisposition,
-                        d.SDCheckNum,
-                        d.SDCheckDisposition);
+                    if (d.LBVDCheckNum > 0 || d.TIDCheckNum > 0 || d.TDLCheckNum > 0 || d.MBVDCheckNum > 0 || d.SDCheckNum > 0)
+                    {
+                        // Only create a row if it contains a modified check number.
+                        string csvRow = string.Format(",{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
+                            d.InterviewRecordID,
+                            (d.LBVDCheckNum > 0 ? d.LBVDCheckNum : 0),
+                            (d.LBVDCheckNum > 0 ? d.LBVDCheckDisposition : string.Empty),
+                            (d.TIDCheckNum > 0 ? d.TIDCheckNum : 0),
+                            (d.TIDCheckNum > 0 ? d.TIDCheckDisposition : string.Empty),
+                            (d.TDLCheckNum > 0 ? d.TDLCheckNum : 0),
+                            (d.TDLCheckNum > 0 ? d.TDLCheckDisposition : string.Empty),
+                            (d.MBVDCheckNum > 0 ? d.MBVDCheckNum : 0),
+                            (d.MBVDCheckNum > 0 ? d.MBVDCheckDisposition : string.Empty),
+                            (d.SDCheckNum > 0 ? d.SDCheckNum : 0),
+                            (d.SDCheckNum > 0 ? d.SDCheckDisposition : string.Empty));
 
-                    writer.WriteLine(csvRow);
+                        writer.WriteLine(csvRow);
+                    }
+                }
+            }
+        }
+
+        private static void PrepareModificationsImportHeader()
+        {
+            string pathToDispositionHeader = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Modifications Import Me Header.csv"));
+            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/modifications-importme-{0}.csv", timestamp));
+            var retainedLines = File.ReadAllLines(pathToDispositionHeader);
+            File.WriteAllLines(pathToImportMeFile, retainedLines);
+        }
+
+        private static void PrepareModificationsImportFile(List<ImportRow> updatedRows)
+        {
+            // Create file modifications-importme.csv and write 2 header lines from file "Modifications Import Me Header.csv"
+            PrepareModificationsImportHeader();
+
+            // Static variable timestamp will be set by this point, because GetTimestamp will have been called.
+            string pathToImportMeFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/modifications-importme-{0}.csv", timestamp));
+
+            // Append lines to file modifications-importme.csv
+            using (StreamWriter writer = new StreamWriter(pathToImportMeFile, true))
+            {
+                foreach (ImportRow d in updatedRows)
+                {
+                    if (d.LBVDCheckNum < 0 || d.TIDCheckNum < 0 || d.TDLCheckNum < 0 || d.MBVDCheckNum < 0 || d.SDCheckNum < 0)
+                    {
+                        // Only create a row if it contains a modified check number
+                        string csvRow = string.Format(",{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
+                            d.RecordID,
+                            (d.LBVDCheckNum < 0 ? -d.LBVDCheckNum : 0),
+                            (d.LBVDCheckNum < 0 ? d.LBVDCheckDisposition : string.Empty),
+                            (d.TIDCheckNum < 0 ? -d.TIDCheckNum : 0),
+                            (d.TIDCheckNum < 0 ? d.TIDCheckDisposition : string.Empty),
+                            (d.TDLCheckNum < 0 ? -d.TDLCheckNum : 0),
+                            (d.TDLCheckNum < 0 ? d.TDLCheckDisposition : string.Empty),
+                            (d.MBVDCheckNum < 0 ? -d.MBVDCheckNum : 0),
+                            (d.MBVDCheckNum < 0 ? d.MBVDCheckDisposition : string.Empty),
+                            (d.SDCheckNum < 0 ? -d.SDCheckNum : 0),
+                            (d.SDCheckNum < 0 ? d.SDCheckDisposition : string.Empty));
+
+                        writer.WriteLine(csvRow);
+                    }
                 }
             }
         }
@@ -129,7 +190,7 @@ namespace MSM.Controllers
             // the importme file.
 
             // This compensates for the fact that DateTime.Now on the AppHarbor server returns
-            // the the time in the timezone of the server.
+            // the time in the timezone of the server.
             // Here we convert UTC to Central Standard Time to get the time in Houston.
             // This is supposed to handle daylight savings time also. We will have to
             // wait and see about this.

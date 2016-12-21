@@ -33,7 +33,7 @@ namespace MSM.Utils
             }
             else
             {
-                //Throw exception for things you cannot correct
+                // Throw exception for things you cannot correct
                 throw new Exception("The file to be processed is not an Excel file");
             }
 
@@ -64,6 +64,31 @@ namespace MSM.Utils
     public IEnumerable<DataRow> GetData(string workSheetName, bool isFirstRowAsColumnNames = true)
     {
         DataTable workSheet = GetExcelWorkSheet(workSheetName, isFirstRowAsColumnNames);
+
+        IEnumerable<DataRow> rows = from DataRow row in workSheet.Rows
+                                    select row;
+
+        return rows;
+    }
+
+    private DataTable GetExcelWorkSheet(bool isFirstRowAsColumnNames)
+    {
+        DataSet dataSet = GetExcelDataAsDataSet(isFirstRowAsColumnNames);
+        // We are always interested in the first worksheet in the workbook.
+        // This eliminates dependence on the particular worksheet name.
+        DataTable workSheet = dataSet.Tables[0];
+      
+        if (workSheet == null)
+        {
+            throw new Exception(string.Format("This workbook has no worksheets!"));
+        }
+
+        return workSheet;
+    }
+
+    public IEnumerable<DataRow> GetData(bool isFirstRowAsColumnNames = true)
+    {
+        DataTable workSheet = GetExcelWorkSheet(isFirstRowAsColumnNames);
 
         IEnumerable<DataRow> rows = from DataRow row in workSheet.Rows
                                     select row;

@@ -1,8 +1,8 @@
 ﻿
 FileServices.factory('FileManager', ['$http', function ($http) {
     var getDownloadFile = function (fileName, fileType) {
-       // return $http.get("http://localhost/MSM/api/download", { params: { "fileName": fileName, "fileType": fileType } }).then(function (result) {
-       return $http.get(server + "api/downloadimportme").then(function (result) {
+       // return $http.get(server + "api/downloadimportme").then(function (result) {
+        return $http.get(server + "api/downloadimportme", { params: { "fileName": fileName, "fileType": fileType } }).then(function (result) {
             return result.data;
         })
     };
@@ -60,7 +60,20 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         if (apUploaded == undefined || apUploaded != fname) {
             uploadedFiles.apFileName = fname;
             uploadedFiles.apFileType = ftype;
-            addToMenuFiles("Apricot", fname, ftype);
+            addToMenuFiles("Research", fname, ftype);
+        }
+    }
+
+    var setMDUploadFile = function (fileObj) {
+        var fparts = fileObj.name.split(".");
+        var fname = fparts[0];
+        var ftype = fparts[1];
+        var mdUploaded = uploadedFiles.mdFileName;
+
+        if (mdUploaded == undefined || mdUploaded != fname) {
+            uploadedFiles.mdFileName = fname;
+            uploadedFiles.mdFileType = ftype;
+            addToMenuFiles("Modifications", fname, ftype);
         }
     }
 
@@ -100,6 +113,25 @@ FileServices.factory('FileManager', ['$http', function ($http) {
             return "";
         }
         return uploadedFiles.apFileType;
+    }
+
+    var getMDFileName = function () {
+        if (uploadedFiles.mdFileName == undefined) {
+            return "unknown";
+        };
+
+        return uploadedFiles.mdFileName;
+    }
+
+    var setMDFileName = function (name) {
+        uploadedFiles.mdFileName = name;
+    }
+
+    var getMDFileType = function () {
+        if (uploadedFiles.mdFileType == undefined) {
+            return "";
+        }
+        return uploadedFiles.mdFileType;
     }
 
     var getVCFileName = function () {
@@ -168,6 +200,11 @@ FileServices.factory('FileManager', ['$http', function ($http) {
         getAPFileType: getAPFileType,
         setAPUploadFile: setAPUploadFile,
 
+        getMDFileName: getMDFileName,
+        setMDFileName: setMDFileName,
+        getMDFileType: getMDFileType,
+        setMDUploadFile: setMDUploadFile,
+      
         getVCFileName: getVCFileName,
         setVCFileName : setVCFileName,
         getVCFileType: getVCFileType,

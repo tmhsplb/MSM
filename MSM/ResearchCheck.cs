@@ -12,7 +12,7 @@ namespace MSM
     using System;
     using System.Collections.Generic;
     
-    public partial class LongUnmatched
+    public partial class ResearchCheck
     {
         public int Id { get; set; }
         public int RecordID { get; set; }

@@ -40,10 +40,17 @@ namespace MSM.Controllers
         }
         
         [HttpGet]
-        // This method is used to return the Apricot Report File for inspection on the Inspect tab.
-        public List<DispositionRow> GetApricotFile(string apricotFile, string fileType)
+        // This method is used to return the Interview Research File for inspection on the Inspect tab.
+        public List<DispositionRow> GetResearchFile(string resFile, string fileType)
         {
-            return DataManager.GetApricotRows(apricotFile, fileType);
+            return DataManager.GetResearchRows(resFile, fileType);
+        }
+
+        [HttpGet]
+        // This method is used to return the Modifications Research File for inspection on the Inspect tab.
+        public List<ModificationRow> GetModificationFile(string modFile, string fileType)
+        {
+            return DataManager.GetModificationRows(modFile, fileType);
         }
 
         [HttpGet]

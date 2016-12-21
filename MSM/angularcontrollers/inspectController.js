@@ -12,8 +12,12 @@ MSMApp.controller('inspectController', ['$rootScope', '$scope', '$http', '$q', '
                  FileManager.setSelectedFile("Quickbooks");
                  $route.reload();
              }
-             else if ($scope.selectedFile == "Apricot") {
-                 FileManager.setSelectedFile("Apricot");
+             else if ($scope.selectedFile == "Research") {
+                 FileManager.setSelectedFile("Research");
+                 $route.reload();
+             }
+             else if ($scope.selectedFile == "Modifications") {
+                 FileManager.setSelectedFile("Modifications");
                  $route.reload();
              }
              else if ($scope.selectedFile == "Voidedchecks") {

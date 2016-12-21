@@ -41,10 +41,17 @@ namespace MSM
 
           // This route is used by datatableController.js
           config.Routes.MapHttpRoute(
-           name: "GetAPFile",
-           routeTemplate: "api/apfile",
-                defaults: new { controller = "Inspect", action = "GetApricotFile" }
+           name: "GetRESFile",
+           routeTemplate: "api/resfile",
+                defaults: new { controller = "Inspect", action = "GetResearchFile" }
           );
+
+          // This route is used by datatableController.js
+          config.Routes.MapHttpRoute(
+             name: "GetMODFile",
+             routeTemplate: "api/modfile",
+                  defaults: new { controller = "Inspect", action = "GetModificationFile" }
+            );
 
           config.Routes.MapHttpRoute(
              name: "GetEmptyFile",
@@ -79,20 +86,28 @@ namespace MSM
           config.Routes.MapHttpRoute(
                name: "Unmatched",
                routeTemplate: "api/research",
-               defaults: new { controller = "Research", action="GetLongUnmatched" }
+               defaults: new { controller = "Research", action="GetResearchChecks" }
             );
+
+          // Test using Postman
+          config.Routes.MapHttpRoute(
+                    name: "UploadPath",
+                    routeTemplate: "api/uploadpath",
+                    defaults: new { controller = "FileUploader", action="UploadPath" }
+                );
 
           config.Routes.MapHttpRoute(
                   name: "Upload",
                   routeTemplate: "api/upload/{action}",
-                  defaults: new { controller = "FileUploader" }
+                  defaults: new { controller = "FileUploader"}
               );
 
+          // Test using Postman
           config.Routes.MapHttpRoute(
-                  name: "DownloadFile",
-                  routeTemplate: "api/downloadfile",
-                  defaults: new { controller = "FileDownloader", action = "DownloadFile" }
-              );
+                    name: "DownloadPath",
+                    routeTemplate: "api/downloadpath",
+                    defaults: new { controller = "FileDownloader", action = "DownloadPath" }
+                );
 
           config.Routes.MapHttpRoute(
                  name: "DownloadImportMe",
@@ -109,7 +124,7 @@ namespace MSM
           config.Routes.MapHttpRoute(
                name: "ValidFile",
                routeTemplate: "api/checkvalidity",
-               defaults: new { controller = "FileUploader" }
+               defaults: new { controller = "FileUploader", action="CheckValidity" }
            );
 
           config.Routes.MapHttpRoute(

@@ -13,39 +13,15 @@ namespace MSM.Controllers
     {
         // This method returns the table displayed on the Research tab.
         [HttpGet]
-        public List<Check> GetLongUnmatched()
+        public List<Check> GetResearchChecks()
         {
-            List<Check> longUnmatchedChecks = new List<Check>();
-
-            using (var dbCtx = new MSMEntities())
-            {
-                var longUnmatched = dbCtx.Set<LongUnmatched>();
-                
-                foreach (LongUnmatched lu in longUnmatched)
-                {
-                    longUnmatchedChecks.Add(new Check
-                    {
-                        RecordID = lu.RecordID,
-                        InterviewRecordID = lu.InterviewRecordID,
-                        Name = lu.Name,
-                        Date = lu.Date,
-                        Num = lu.Num,
-                        Service = lu.Service,
-                        Matched = lu.Matched
-                    });
-                }
-            }
-
-            return longUnmatchedChecks;
+            return DataManager.GetResearchChecks();
         }
 
         [HttpGet]
         public string ResolveCheck(int checkNum)
         {
-             
-            string status = DataManager.ResolveCheck(checkNum);
-
-            return status;
+            return DataManager.ResolveCheck(checkNum);
         }
 
         [HttpGet]
