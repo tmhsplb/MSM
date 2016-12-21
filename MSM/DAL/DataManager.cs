@@ -11,7 +11,7 @@ namespace MSM.DAL
 {
     public class DataManager
     {
-        private static bool firstCall = true;
+        public static bool firstCall = true;
         private static List<int> knownDisposition;
 
         private static List<Check> unmatchedChecks;
