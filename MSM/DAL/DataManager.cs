@@ -65,7 +65,8 @@ namespace MSM.DAL
         {
             if (vcFileName.Equals("unknown"))
             {
-                return GetEmptyVoidedChecks();
+                // Return an emmpty list of checks.
+                return new List<Check>();
             }
 
             //List<Check> voidedChecks = new List<Check>();
@@ -90,7 +91,8 @@ namespace MSM.DAL
         {
             if (qbFileName.Equals("unknown"))
             {
-                return GetEmptyQuickbookChecks();
+                // Return an emmpty list of checks.
+                return new List<Check>();
             }
 
            // List<Check> quickbooksChecks = new List<Check>();
@@ -111,50 +113,12 @@ namespace MSM.DAL
             return quickbooksChecks;
         }
 
-        public static List<Check> GetEmptyQuickbookChecks()
-        {
-           // List<Check> quickbooksChecks = new List<Check>();
-            string pathToQuickbooksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", "QBEmpty", "xlsx"));
-            List<Check> quickbooksChecks = ExcelDataReader.GetQuickbooksChecks(pathToQuickbooksFile);
-
-            /*
-            var quickbooksFile = Linq2Excel.GetFactory(pathToQuickbooksFile);
-            
-            var qbChecks = from vc in quickbooksFile.Worksheet<Check>("Sheet1") select vc;
-
-            foreach (Check check in qbChecks)
-            {
-                quickbooksChecks.Add(check);
-            }
-            */
-            return quickbooksChecks;
-        }
-
-        public static List<Check> GetEmptyVoidedChecks()
-        {
-           // List<Check> voidedChecks = new List<Check>();          
-            string pathToVoidedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/{0}.{1}", "VCEmpty", "xlsx"));
-            List<Check> voidedChecks = ExcelDataReader.GetVoidedChecks(pathToVoidedChecksFile);
-
-            /*
-            var voidedChecksFile = Linq2Excel.GetFactory(pathToVoidedChecksFile);
-            var vChecks = from vc in voidedChecksFile.Worksheet<Check>("Sheet1") select vc;
-
-            foreach(Check check in vChecks)
-            {
-                voidedChecks.Add(check);
-            }
-            */
-
-            return voidedChecks;
-        }
-
-        public static void SetKnownDisposition(int checkNum)
+        private static void SetKnownDisposition(int checkNum)
         {
             knownDisposition.Add(checkNum);
         }
 
-        public static bool IsKnownDisposition(int checkNum)
+        private static bool IsKnownDisposition(int checkNum)
         {
             bool has = knownDisposition.Any(cnum => cnum == checkNum);
             return has;
@@ -474,7 +438,9 @@ namespace MSM.DAL
                         // Check mark in Quickbooks is character 0xD6
                         return "Cleared";
                     }
-                    return "Voided";
+
+                    // Example: Voided/Replaced
+                    return check.Clr;
             }
         }
 
@@ -728,7 +694,6 @@ namespace MSM.DAL
                         };
 
                         longUnmatched.Add(unm);
-                        // dbCtx.SaveChanges();
                     }
                 }
 

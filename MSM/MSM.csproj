@@ -303,10 +303,7 @@
     <Content Include="App_Data\Private\VCEmpty.xlsx" />
     -->
     <!-- <Content Include="App_Data\Private\Empty.xlsx" /> -->
-    <Content Include="App_Data\Check Disposition Header.csv" />
     <Content Include="App_Data\Empty.xlsx" />
-    <Content Include="App_Data\VCEmpty.xlsx" />
-    <Content Include="App_Data\QBEmpty.xlsx" />
     <Content Include="App_Data\unknown.xlsx" />
     <Content Include="App_Data\Interview Import Me Header.csv" />
     <EntityDeploy Include="Research.edmx">
