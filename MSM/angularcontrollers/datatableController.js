@@ -8,7 +8,6 @@
          if ($scope.tab == 'inspect' && FileManager.getSelectedFile() == "Quickbooks") {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 //  alert("datatableController.js: FileManager.getQBFileName() = " + FileManager.getQBFileName());
                  $http.get(server + "api/qbfile",
                      { params: { "qbFile": FileManager.getQBFileName(), "fileType": FileManager.getQBFileType() } }).then(function (result) {
                          defer.resolve(result.data);
