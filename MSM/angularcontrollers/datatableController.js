@@ -6,8 +6,6 @@
          $scope.pleaseAct = false;
         
          if ($scope.tab == 'inspect' && FileManager.getSelectedFile() == "Quickbooks") {
-            // alert("datatableController fname = " + FileManager.getQBFileName() + " ftype = " + FileManager.getQBFileType());
- 
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
                  //  alert("datatableController.js: FileManager.getQBFileName() = " + FileManager.getQBFileName());
