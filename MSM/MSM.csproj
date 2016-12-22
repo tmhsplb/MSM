@@ -393,6 +393,9 @@
     <Content Include="Scripts\jquery-1.7.2.min.js" />
     <Content Include="Uploads\DummyUploadFile.txt" />
     <Content Include="Web.config" />
+    <None Include="Web.Peter.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
