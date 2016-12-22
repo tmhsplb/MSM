@@ -1,5 +1,5 @@
 ﻿
-var desktop = true;
+var desktop = false;
 var server;
 
 if (desktop == true) {
@@ -7,6 +7,14 @@ if (desktop == true) {
 } else {
     server = "https://myopid.apphb.com/";
 }
+
+ 
+//var server = '@System.Configuration.ConfigurationManager.AppSettings["server"]';
+
+//var server = '<%= System.Configuration.ConfigurationManager.AppSettings["server"].ToString() >';
+
+//alert("server = " + server);
+ 
 
 
 var FileServices = angular.module('FileServices', ['ngResource']);
