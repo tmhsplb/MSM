@@ -52,8 +52,7 @@
          {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 //   alert("datatableController.js: FileManager.getAPFileName() = " + FileManager.getAPFileName());
-                
+              
                 $http.get(server + "api/resfile",
                     { params: { "resFile": FileManager.getAPFileName(), "fileType": FileManager.getAPFileType() } }).then(function (result) {
                              defer.resolve(result.data);
