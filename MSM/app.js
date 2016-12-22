@@ -9,14 +9,6 @@ if (desktop == true) {
 }
 
  
-//var server = '@System.Configuration.ConfigurationManager.AppSettings["server"]';
-
-//var server = '<%= System.Configuration.ConfigurationManager.AppSettings["server"].ToString() >';
-
-//alert("server = " + server);
- 
-
-
 var FileServices = angular.module('FileServices', ['ngResource']);
 var MergeServices = angular.module('MergeServices', ['ngResource']);
 var ResearchServices = angular.module('ResearchServices', ['ngResource']);
