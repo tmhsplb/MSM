@@ -6,11 +6,8 @@
          $scope.pleaseAct = false;
         
          if ($scope.tab == 'inspect' && FileManager.getSelectedFile() == "Quickbooks") {
-            // alert("datatableController fname = " + FileManager.getQBFileName() + " ftype = " + FileManager.getQBFileType());
- 
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 //  alert("datatableController.js: FileManager.getQBFileName() = " + FileManager.getQBFileName());
                  $http.get(server + "api/qbfile",
                      { params: { "qbFile": FileManager.getQBFileName(), "fileType": FileManager.getQBFileType() } }).then(function (result) {
                          defer.resolve(result.data);
@@ -55,8 +52,7 @@
          {
              vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                  var defer = $q.defer();
-                 //   alert("datatableController.js: FileManager.getAPFileName() = " + FileManager.getAPFileName());
-                
+              
                 $http.get(server + "api/resfile",
                     { params: { "resFile": FileManager.getAPFileName(), "fileType": FileManager.getAPFileType() } }).then(function (result) {
                              defer.resolve(result.data);

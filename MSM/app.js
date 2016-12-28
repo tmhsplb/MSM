@@ -1,5 +1,5 @@
 ﻿
-var desktop = true;
+var desktop = false;
 var server;
 
 if (desktop == true) {
@@ -8,7 +8,7 @@ if (desktop == true) {
     server = "https://myopid.apphb.com/";
 }
 
-
+ 
 var FileServices = angular.module('FileServices', ['ngResource']);
 var MergeServices = angular.module('MergeServices', ['ngResource']);
 var ResearchServices = angular.module('ResearchServices', ['ngResource']);

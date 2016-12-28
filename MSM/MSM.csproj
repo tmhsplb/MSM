@@ -19,6 +19,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -306,6 +307,7 @@
     <Content Include="App_Data\Empty.xlsx" />
     <Content Include="App_Data\unknown.xlsx" />
     <Content Include="App_Data\Interview Import Me Header.csv" />
+    <Content Include="App_Data\Modifications Import Me Header.csv" />
     <EntityDeploy Include="Research.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Research.Designer.cs</LastGenOutput>
@@ -313,7 +315,6 @@
     <Content Include="Research.edmx.diagram">
       <DependentUpon>Research.edmx</DependentUpon>
     </Content>
-    <Content Include="App_Data\Modifications Import Me Header.csv" />
     <None Include="Scripts\jquery-1.7.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
@@ -393,6 +394,9 @@
     <Content Include="Scripts\jquery-1.7.2.min.js" />
     <Content Include="Uploads\DummyUploadFile.txt" />
     <Content Include="Web.config" />
+    <Content Include="Web.Peter.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -455,6 +459,14 @@
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Peter|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
